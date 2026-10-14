@@ -42,7 +42,7 @@ export default function AuditAssignment() {
                 },
             });
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             
             if (response.ok) {
                 setAudits(data);
@@ -91,7 +91,7 @@ export default function AuditAssignment() {
         }
     };
     useEffect(() => {
-        console.log("Entered Audit Assignment");
+        // console.log("Entered Audit Assignment");
         
         fetchAudits();
     }, []);
@@ -142,7 +142,7 @@ export default function AuditAssignment() {
         status: a.status,
         application_id : a.id
     }));
-    console.log("formatted audits",formattedAudits);
+    // console.log("formatted audits",formattedAudits);
     
     return (
         <div className="min-h-screen bg-linear-to-br from-[#0f172a] to-[#1e293b] text-white p-6">

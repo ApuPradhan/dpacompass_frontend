@@ -1,40 +1,25 @@
 import { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import DynamicAuditTable from "../AdminDashboard/DynamicAuditTable";
-
 import { FiEye, FiPlay, FiArrowLeft, FiRefreshCw } from "react-icons/fi";
-
 import Loader from "../utilities/Loader";
-
 import AuditViewModal from "./AuditViewModal";
 import ScanResultViewer from "../utilities/ScanResultsViewer";
-
 import { toast } from "react-toastify";
-
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function DataBreachScanner() {
 
     const navigate = useNavigate();
-
     const token = localStorage.getItem("access");
-
     const [pendingAudits, setPendingAudits] = useState([]);
-
     const [scannedAudits, setScannedAudits] = useState([]);
-
     const [loading, setLoading] = useState(true);
-
     const [refreshing, setRefreshing] = useState(false);
-
     const [error, setError] = useState(null);
-
     const [selectedAudit, setSelectedAudit] = useState(null);
-
     const [scanningAuditId, setScanningAuditId] = useState(null);
-
     const [selectedScanResult, setSelectedScanResult] = useState(null);
     const [resultLoading, setResultLoading] = useState(false);
 
@@ -45,173 +30,94 @@ export default function DataBreachScanner() {
     // =====================================================
 
     const fetchDataBreachAudits = async (showLoader = true) => {
-
         try {
-
             if (showLoader) {
-
                 setLoading(true);
-
             } else {
-
                 setRefreshing(true);
-
             }
-
             setError(null);
-
-            const res = await fetch(
-
-                `${BASE_URL}/api/scanner/data-breach/audits/`,
-
+            const res = await fetchWithAuth(
+                `/api/scanner/data-breach/audits/`,
                 {
-
                     method: "GET",
-
                     headers: {
-
                         "Content-Type": "application/json",
-
-                        Authorization: `Bearer ${token}`,
-
                     },
-
                 }
-
             );
-
             const data = await res.json();
-
             if (!res.ok) {
-
                 throw new Error(
-
                     data?.message ||
-
                     data?.error ||
-
                     "Failed to fetch Data Breach audits"
-
                 );
-
             }
 
             setPendingAudits(data?.pending || []);
-
             setScannedAudits(data?.scanned || []);
-
         } catch (err) {
-
             console.error("Data Breach Scanner fetch error:", err);
-
             setError(
-
                 err.message ||
-
                 "Failed to load Data Breach Scanner data."
-
             );
-
         } finally {
-
             setLoading(false);
-
             setRefreshing(false);
-
         }
-
     };
 
-    // =====================================================
-
+    // ====================================================
     // INITIAL LOAD
-
     // =====================================================
 
     useEffect(() => {
-
         fetchDataBreachAudits();
-
     }, []);
 
     // =====================================================
-
     // START DATA BREACH SCAN
-
     // =====================================================
 
     const handleScan = async (row) => {
-
         try {
-
             setScanningAuditId(row.audit_id);
-
-            const res = await fetch(
-
-                `${BASE_URL}/api/scanner/data-breach/${row.audit_id}/scan/`,
-
+            const res = await fetchWithAuth(
+                `/api/scanner/data-breach/${row.audit_id}/scan/`,
                 {
-
                     method: "POST",
-
                     headers: {
-
                         "Content-Type": "application/json",
-
-                        Authorization: `Bearer ${token}`,
-
                     },
-
                 }
-
             );
 
             const data = await res.json();
-
             if (!res.ok) {
-
                 throw new Error(
-
                     data?.message ||
-
                     data?.error ||
-
                     "Failed to start Data Breach scan"
-
                 );
-
             }
 
             toast.success(
-
                 data?.message ||
-
                 "Data Breach scan started successfully."
-
             );
-
             // Refresh both lists after starting the scan
-
             await fetchDataBreachAudits(false);
-
         } catch (err) {
-
             console.error("Data Breach scan error:", err);
-
             toast.error(
-
                 err.message ||
-
                 "Failed to start Data Breach scan."
-
             );
-
         } finally {
-
             setScanningAuditId(null);
-
         }
-
     };
 
     // =====================================================
@@ -225,13 +131,12 @@ export default function DataBreachScanner() {
             setResultLoading(true);
             setSelectedScanResult(null);
 
-            const res = await fetch(
-                `${BASE_URL}/api/scanner/data-breach/${row.audit_id}/results/`,
+            const res = await fetchWithAuth(
+                `/api/scanner/data-breach/${row.audit_id}/results/`,
                 {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
@@ -246,7 +151,7 @@ export default function DataBreachScanner() {
                 );
             }
 
-            console.log("Data Breach Scan Results:", data);
+            // console.log("Data Breach Scan Results:", data);
 
             setSelectedScanResult(data);
         } catch (err) {
@@ -265,52 +170,30 @@ export default function DataBreachScanner() {
     // FORMAT PENDING AUDITS
     // =====================================================
 
-    // =====================================================
 
     const formattedPendingAudits = pendingAudits.map((audit) => ({
-
         id: audit.audit_id,
-
         audit_id: audit.audit_id,
-
         application_id: audit.application_id,
-
         name:
-
             audit.application_name ||
-
             audit.name ||
-
             "N/A",
 
         auditor_name:
-
             audit.auditor_name ||
-
             "N/A",
-
         url:
-
             audit.url ||
-
             "",
-
         status:
-
             audit.status ||
-
             "pending",
-
         scan_status:
-
             audit.scan_status ||
-
             "pending",
-
         created_at:
-
             audit.created_at ||
-
             null,
 
     }));
@@ -533,9 +416,9 @@ export default function DataBreachScanner() {
 
                     className={`transition ${isScanning
 
-                            ? "text-gray-500 cursor-not-allowed"
+                        ? "text-gray-500 cursor-not-allowed"
 
-                            : "text-green-400 hover:text-green-300"
+                        : "text-green-400 hover:text-green-300"
 
                         }`}
 
@@ -936,10 +819,10 @@ export default function DataBreachScanner() {
 
                                                     <span
                                                         className={`px-3 py-1 text-xs rounded-full border ${scannerStatus === "COMPLETED"
-                                                                ? "border-green-500/30 bg-green-500/20 text-green-400"
-                                                                : scannerStatus === "FAILED"
-                                                                    ? "border-red-500/30 bg-red-500/20 text-red-400"
-                                                                    : "border-yellow-500/30 bg-yellow-500/20 text-yellow-400"
+                                                            ? "border-green-500/30 bg-green-500/20 text-green-400"
+                                                            : scannerStatus === "FAILED"
+                                                                ? "border-red-500/30 bg-red-500/20 text-red-400"
+                                                                : "border-yellow-500/30 bg-yellow-500/20 text-yellow-400"
                                                             }`}
                                                     >
                                                         {scannerStatus || "PENDING"}

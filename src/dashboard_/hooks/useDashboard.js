@@ -43,20 +43,20 @@ export default function useDashboard(role) {
         const handleDashboardUpdate =
             (rawData) => {
 
-                console.log(
-                    "Dashboard WebSocket update:",
-                    rawData
-                );
+                // console.log(
+                //     "Dashboard WebSocket update:",
+                //     rawData
+                // );
 
-                console.log(
-                    "Dashboard role:",
-                    rawData?.role
-                );
+                // console.log(
+                //     "Dashboard role:",
+                //     rawData?.role
+                // );
 
-                console.log(
-                    "Dashboard summary:",
-                    rawData?.summary
-                );
+                // console.log(
+                //     "Dashboard summary:",
+                //     rawData?.summary
+                // );
 
 
                 /*

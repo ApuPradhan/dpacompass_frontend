@@ -52,17 +52,17 @@ class DashboardService {
         const url =
             `${BASE_URL}/ws/dashboard/?token=${token}`;
 
-        console.log(
-            "Connecting dashboard WebSocket:",
-            url
-        );
+        // console.log(
+        //     "Connecting dashboard WebSocket:",
+        //     url
+        // );
 
         this.socket = new WebSocket(url);
 
         this.socket.onopen = () => {
-            console.log(
-                "Dashboard WebSocket connected."
-            );
+            // console.log(
+            //     "Dashboard WebSocket connected."
+            // );
 
             this.connected = true;
             this.reconnectAttempts = 0;
@@ -79,10 +79,10 @@ class DashboardService {
             try {
                 const data = JSON.parse(event.data);
 
-                console.log(
-                    "Dashboard WebSocket data:",
-                    data
-                );
+                // console.log(
+                //     "Dashboard WebSocket data:",
+                //     data
+                // );
 
                 this.latestData = data;
 

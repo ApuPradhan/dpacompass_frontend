@@ -335,7 +335,7 @@ function App() {
 
           {/* ---------------- auditee ---------------- */}
           <Route path="/learndpdp" element={
-            <ProtectedRoute allowedRoles={[3]}>
+            <ProtectedRoute allowedRoles={[2,3]}>
               <LearnDPDP />
             </ProtectedRoute>
           } />

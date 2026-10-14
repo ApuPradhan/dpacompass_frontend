@@ -89,16 +89,21 @@ export const sidebarConfig = {
             icon: FiBarChart2,
              path: "/auditor/completedaudits",
         },
-        {
-            label: "Consent Scanner v2",
-            icon: FiBarChart2,
-            path: "/admin/consentv2/demo",
-        },
+        // {
+        //     label: "Consent Scanner v2",
+        //     icon: FiBarChart2,
+        //     path: "/admin/consentv2/demo",
+        // },
         {
             label: "Consent Scanner",
             icon: FiBarChart2,
             path: "/auditor/consentscanner/"
-        }
+        },
+         {
+            label: "Learn DPDP",
+            icon: FiLayers,
+            path: "/learndpdp",
+        },
     ],
 
     auditee: [

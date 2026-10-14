@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 import {
     ArrowLeft,
     RefreshCw,
@@ -23,10 +24,8 @@ import {
 // ============================================================
 // API CONFIGURATION
 // ============================================================
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-const COMPLETED_AUDITS_ENDPOINT = `${API_BASE_URL}/api/audits/completed-both/`;
-const REPORT_GENERATION_BASE_URL =
-    import.meta.env.VITE_REPORT_GENERATION_BASE_URL || "http://10.240.12.249:8001";
+const COMPLETED_AUDITS_ENDPOINT = `/api/audits/completed-both/`;
+const REPORT_GENERATION_BASE_URL = import.meta.env.VITE_REPORT_GENERATION_BASE_URL;
 // ============================================================
 // HELPERS
 // ============================================================
@@ -140,11 +139,10 @@ export default function CompletedReports({ onBack }) {
             return next;
         });
         try {
-            const response = await fetch(COMPLETED_AUDITS_ENDPOINT, {
+            const response = await fetchWithAuth(COMPLETED_AUDITS_ENDPOINT, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",
-                    Authorization: `Bearer ${token}`,
                 },
             });
             if (!response.ok) {
@@ -235,16 +233,16 @@ export default function CompletedReports({ onBack }) {
     const fetchReportHTML = async (audit) => {
         const auditId = audit.audit_id;
         const publicAuditId = audit.public_audit_id;
+
         if (!publicAuditId) {
             throw new Error("The public audit ID is missing; the report cannot be fetched.");
         }
-        const baseUrl = REPORT_GENERATION_BASE_URL.replace(/\/$/, "");
-        const endpoint = `${baseUrl}/api/checklists/html_report/${encodeURIComponent(String(publicAuditId))}/`;
-        const response = await fetch(endpoint, {
+        const endpoint = `/api/checklists/html_report/${encodeURIComponent(String(publicAuditId))}/`;
+
+        const response = await fetchWithAuth(endpoint, {
             method: "GET",
             headers: {
                 Accept: "text/html, application/json",
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
             },
         });
         if (!response.ok) {

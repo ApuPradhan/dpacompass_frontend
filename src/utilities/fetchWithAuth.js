@@ -5,6 +5,7 @@ export const fetchWithAuth = async (url, options = {}) => {
   const refresh = localStorage.getItem("refresh");
   
   const makeRequest = async (token) => {
+    
     return fetch(`${BASE_URL}${url}`, {
       ...options,
       headers: {
@@ -16,7 +17,6 @@ export const fetchWithAuth = async (url, options = {}) => {
   };
 
   let response = await makeRequest(access);
-  // console.log("response", response);
   
   // If access token expired
   if (response.status === 401 && refresh) {
