@@ -1,0 +1,4983 @@
+{
+  "audit": {
+    "url": "http://10.240.10.11:3003/",
+    "generated_at": "2026-09-07T11:27:29.982429+00:00",
+    "steps_executed": [
+      "STEP-01",
+      "STEP-02",
+      "STEP-04",
+      "STEP-05",
+      "STEP-07",
+      "STEP-11"
+    ]
+  },
+  "pages": [
+    {
+      "url": "http://10.240.10.11:3003/",
+      "title": "DPACOMPASS Consent Management Test Site",
+      "status": 200,
+      "depth": 0,
+      "links": 0,
+      "forms": 2,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 0,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3003/",
+          "status_code": 200
+        }
+      ]
+    }
+  ],
+  "step_01": {
+    "step_id": "STEP-01",
+    "title": "Identify Personal Data Collection Points",
+    "status": "PASS",
+    "result_basis": "Pass when all visible and technically observable personal-data collection points are listed before consent testing begins.",
+    "summary": {
+      "pages_with_personal_data_collection": 1,
+      "forms_with_personal_data_collection": 1,
+      "scripts_with_personal_data_collection": 0,
+      "cookies_with_personal_data_collection": 0,
+      "storage_with_personal_data_collection": 0,
+      "widgets_with_personal_data_collection": 0,
+      "tracking_collection_points": 0,
+      "user_journey_collection_points": 0,
+      "personal_data_collection_points": 5,
+      "personal_data_categories": {
+        "name": 1,
+        "email": 1,
+        "phone": 1,
+        "state": 1,
+        "free_text": 1
+      }
+    },
+    "collection_points": [
+      {
+        "collection_point_type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site",
+          "status_code": 200,
+          "depth": 0,
+          "parent_url": null
+        },
+        "form": {
+          "index": 0,
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "enctype": null,
+          "form_id": "contact-form",
+          "form_name": null,
+          "has_submit_button": false,
+          "submit_text": null
+        },
+        "field": {
+          "index": 0,
+          "tag": "input",
+          "field_type": "text",
+          "name": "full_name",
+          "field_id": "full-name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "autocomplete": "name",
+          "aria_label": null,
+          "label": "Full Name"
+        },
+        "classification": {
+          "is_personal_data": true,
+          "category": "name",
+          "confidence": 0.98,
+          "reason": "Autocomplete attribute indicates name."
+        }
+      },
+      {
+        "collection_point_type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site",
+          "status_code": 200,
+          "depth": 0,
+          "parent_url": null
+        },
+        "form": {
+          "index": 0,
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "enctype": null,
+          "form_id": "contact-form",
+          "form_name": null,
+          "has_submit_button": false,
+          "submit_text": null
+        },
+        "field": {
+          "index": 1,
+          "tag": "input",
+          "field_type": "email",
+          "name": "email",
+          "field_id": "email",
+          "placeholder": "Enter your email address",
+          "required": true,
+          "autocomplete": "email",
+          "aria_label": null,
+          "label": "Email Address"
+        },
+        "classification": {
+          "is_personal_data": true,
+          "category": "email",
+          "confidence": 0.99,
+          "reason": "HTML input type is email."
+        }
+      },
+      {
+        "collection_point_type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site",
+          "status_code": 200,
+          "depth": 0,
+          "parent_url": null
+        },
+        "form": {
+          "index": 0,
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "enctype": null,
+          "form_id": "contact-form",
+          "form_name": null,
+          "has_submit_button": false,
+          "submit_text": null
+        },
+        "field": {
+          "index": 2,
+          "tag": "input",
+          "field_type": "tel",
+          "name": "phone",
+          "field_id": "phone",
+          "placeholder": "Enter your phone number",
+          "required": false,
+          "autocomplete": "tel",
+          "aria_label": null,
+          "label": "Phone Number"
+        },
+        "classification": {
+          "is_personal_data": true,
+          "category": "phone",
+          "confidence": 0.99,
+          "reason": "HTML input type is telephone."
+        }
+      },
+      {
+        "collection_point_type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site",
+          "status_code": 200,
+          "depth": 0,
+          "parent_url": null
+        },
+        "form": {
+          "index": 0,
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "enctype": null,
+          "form_id": "contact-form",
+          "form_name": null,
+          "has_submit_button": false,
+          "submit_text": null
+        },
+        "field": {
+          "index": 3,
+          "tag": "select",
+          "field_type": "select",
+          "name": "region",
+          "field_id": "region",
+          "placeholder": null,
+          "required": false,
+          "autocomplete": null,
+          "aria_label": null,
+          "label": "Region"
+        },
+        "classification": {
+          "is_personal_data": true,
+          "category": "state",
+          "confidence": 0.9,
+          "reason": "name metadata matched personal-data indicator 'region'."
+        }
+      },
+      {
+        "collection_point_type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site",
+          "status_code": 200,
+          "depth": 0,
+          "parent_url": null
+        },
+        "form": {
+          "index": 0,
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "enctype": null,
+          "form_id": "contact-form",
+          "form_name": null,
+          "has_submit_button": false,
+          "submit_text": null
+        },
+        "field": {
+          "index": 4,
+          "tag": "textarea",
+          "field_type": "textarea",
+          "name": "message",
+          "field_id": "message",
+          "placeholder": "Enter your message",
+          "required": false,
+          "autocomplete": null,
+          "aria_label": null,
+          "label": "Your Message"
+        },
+        "classification": {
+          "is_personal_data": true,
+          "category": "free_text",
+          "confidence": 0.75,
+          "reason": "User-facing field metadata indicates potential free-text personal data: 'message'."
+        }
+      }
+    ],
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "user_ui_step1": {
+    "step_id": "STEP-01",
+    "title": "Identify Personal Data Collection Points",
+    "summary": {
+      "pages_with_personal_data_collection": 1,
+      "personal_data_collection_points": 5,
+      "personal_data_categories": {
+        "name": 1,
+        "email": 1,
+        "phone": 1,
+        "state": 1,
+        "free_text": 1
+      }
+    },
+    "collection_points": [
+      {
+        "type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "form": {
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "form_id": "contact-form",
+          "form_name": null,
+          "submit_text": null
+        },
+        "field": {
+          "tag": "input",
+          "field_type": "text",
+          "name": "full_name",
+          "field_id": "full-name",
+          "label": "Full Name",
+          "placeholder": "Enter your full name",
+          "required": true,
+          "autocomplete": "name"
+        },
+        "personal_data": {
+          "category": "name",
+          "confidence": 0.98
+        }
+      },
+      {
+        "type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "form": {
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "form_id": "contact-form",
+          "form_name": null,
+          "submit_text": null
+        },
+        "field": {
+          "tag": "input",
+          "field_type": "email",
+          "name": "email",
+          "field_id": "email",
+          "label": "Email Address",
+          "placeholder": "Enter your email address",
+          "required": true,
+          "autocomplete": "email"
+        },
+        "personal_data": {
+          "category": "email",
+          "confidence": 0.99
+        }
+      },
+      {
+        "type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "form": {
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "form_id": "contact-form",
+          "form_name": null,
+          "submit_text": null
+        },
+        "field": {
+          "tag": "input",
+          "field_type": "tel",
+          "name": "phone",
+          "field_id": "phone",
+          "label": "Phone Number",
+          "placeholder": "Enter your phone number",
+          "required": false,
+          "autocomplete": "tel"
+        },
+        "personal_data": {
+          "category": "phone",
+          "confidence": 0.99
+        }
+      },
+      {
+        "type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "form": {
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "form_id": "contact-form",
+          "form_name": null,
+          "submit_text": null
+        },
+        "field": {
+          "tag": "select",
+          "field_type": "select",
+          "name": "region",
+          "field_id": "region",
+          "label": "Region",
+          "placeholder": null,
+          "required": false,
+          "autocomplete": null
+        },
+        "personal_data": {
+          "category": "state",
+          "confidence": 0.9
+        }
+      },
+      {
+        "type": "form_field",
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "form": {
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST",
+          "form_id": "contact-form",
+          "form_name": null,
+          "submit_text": null
+        },
+        "field": {
+          "tag": "textarea",
+          "field_type": "textarea",
+          "name": "message",
+          "field_id": "message",
+          "label": "Your Message",
+          "placeholder": "Enter your message",
+          "required": false,
+          "autocomplete": null
+        },
+        "personal_data": {
+          "category": "free_text",
+          "confidence": 0.75
+        }
+      }
+    ]
+  },
+  "step_02": {
+    "step_id": "STEP-02",
+    "title": "Verify Notice Before or at Personal-Data Collection",
+    "status": "partial",
+    "result_basis": "Pass when a relevant notice is observable before or at the identified personal-data collection point.",
+    "summary": {
+      "total_collection_points": 5,
+      "collection_points_with_sufficient_evidence": 0,
+      "collection_points_with_partial_evidence": 5,
+      "collection_points_with_insufficient_evidence": 0,
+      "collection_points_without_notice": 0,
+      "collection_points_with_errors": 0,
+      "collection_points_with_failed_timing": 0,
+      "notices_found": 5
+    },
+    "collection_points": [
+      {
+        "collection_point_index": 0,
+        "collection_point": {
+          "collection_point_type": "form_field",
+          "page": {
+            "url": "http://10.240.10.11:3003/",
+            "title": "DPACOMPASS Consent Management Test Site",
+            "status_code": 200,
+            "depth": 0,
+            "parent_url": null
+          },
+          "form": {
+            "index": 0,
+            "action": "http://10.240.10.11:3003/submit-contact",
+            "method": "POST",
+            "enctype": null,
+            "form_id": "contact-form",
+            "form_name": null,
+            "has_submit_button": false,
+            "submit_text": null
+          },
+          "field": {
+            "index": 0,
+            "tag": "input",
+            "field_type": "text",
+            "name": "full_name",
+            "field_id": "full-name",
+            "placeholder": "Enter your full name",
+            "required": true,
+            "autocomplete": "name",
+            "aria_label": null,
+            "label": "Full Name"
+          },
+          "classification": {
+            "is_personal_data": true,
+            "category": "name",
+            "confidence": 0.98,
+            "reason": "Autocomplete attribute indicates name."
+          }
+        },
+        "page_url": "http://10.240.10.11:3003/",
+        "field": {
+          "name": "full_name",
+          "id": "full-name",
+          "label": "Full Name",
+          "type": "text",
+          "selector": null
+        },
+        "category": "name",
+        "form": {
+          "id": "contact-form",
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST"
+        },
+        "status": "partial",
+        "notices_found": 1,
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before_or_at_collection",
+          "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+          "timing_method": "direct_dom_order",
+          "confidence": 0.9,
+          "notice_selector": "#privacy-notice",
+          "collection_selector": "[name=\"full_name\"]",
+          "evidence": {
+            "notice_dom_position": 18,
+            "collection_dom_position": 31,
+            "notice_form_position": null,
+            "collection_form_position": 29,
+            "same_form": false,
+            "container_relationship": {
+              "notice_in_collection_container": false
+            },
+            "semantic_relationship": {
+              "associated": false
+            }
+          },
+          "relationship": "before",
+          "timing_verified": true,
+          "associated_with_collection_point": false
+        },
+        "collection_dom_index": 31,
+        "notice_candidates": [
+          {
+            "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "candidate_type": "privacy_notice",
+            "source": "notice_selector",
+            "selector": "#privacy-notice",
+            "visible": true,
+            "tag_name": "SECTION",
+            "element_id": "privacy-notice",
+            "class_name": "notice",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "notice_url_source": "descendant_href",
+            "is_consent_control": false,
+            "language_score": 6,
+            "consent_language": false,
+            "collection_language": true,
+            "purpose_language": true,
+            "candidate_score": 160,
+            "timing": {
+              "relationship": "before",
+              "timing_verified": true,
+              "reason": "Notice candidate appears before the collection field in DOM order."
+            },
+            "notice_dom_index": 18,
+            "collection_dom_index": 31,
+            "timing_verified": true
+          }
+        ],
+        "relevance": {
+          "data_relevance": true,
+          "purpose_relevance": true,
+          "overall_relevance": true,
+          "data": true,
+          "purpose": true,
+          "overall": true,
+          "confidence": 0.92,
+          "category": "",
+          "field_name": "full_name",
+          "data_reason": "The notice generically refers to personal information/data and contains collection context applicable to the Step-1 collection point.",
+          "purpose_reason": "The notice contains language describing the use, processing, reason, or purpose of the collected information.",
+          "explicit_category_matches": [],
+          "generic_data_matches": [
+            "your information",
+            "personal information",
+            "personal data"
+          ],
+          "collection_context_matches": [
+            "collect",
+            "provide"
+          ],
+          "purpose_matches": [
+            "support",
+            "process",
+            "respond",
+            "use",
+            "provide"
+          ],
+          "evidence": [
+            {
+              "type": "generic_personal_data",
+              "term": "your information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal data",
+              "strength": "strong"
+            },
+            {
+              "type": "collection_context",
+              "term": "collect",
+              "strength": "supporting"
+            },
+            {
+              "type": "collection_context",
+              "term": "provide",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "support",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "process",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "respond",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "use",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "provide",
+              "strength": "supporting"
+            }
+          ],
+          "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information."
+        },
+        "evidence": {
+          "step": 2,
+          "step_id": "STEP-02",
+          "requirement": "Verify notice before or at personal-data collection.",
+          "evidence_status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose.",
+          "collected_at": "2026-09-07T11:27:18.539698+00:00",
+          "collection_point": {
+            "available": true,
+            "collection_point_type": "form_field",
+            "page": {
+              "url": "http://10.240.10.11:3003/",
+              "title": "DPACOMPASS Consent Management Test Site",
+              "status_code": 200,
+              "depth": 0,
+              "parent_url": null
+            },
+            "widget": {
+              "index": null,
+              "widget_type": null,
+              "tag": null,
+              "src": null,
+              "title": null,
+              "name": null,
+              "widget_id": null,
+              "provider": null
+            },
+            "field": {
+              "id": null,
+              "name": "full_name",
+              "type": null,
+              "label": "Full Name"
+            },
+            "classification": {
+              "is_personal_data": true,
+              "category": "name",
+              "confidence": 0.98,
+              "reason": "Autocomplete attribute indicates name."
+            }
+          },
+          "notice": {
+            "notice_type": "privacy_notice",
+            "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "page_url": null,
+            "matched_keyword": null,
+            "selector": "#privacy-notice",
+            "source": {
+              "element_tag": null,
+              "element_id": null,
+              "element_class": [],
+              "role": null,
+              "aria_label": null
+            }
+          },
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "visibility_reason": null,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "notice_dom_position": null,
+            "collection_dom_position": null,
+            "associated_with_collection_point": false,
+            "collection_point_type": null,
+            "widget_src": null,
+            "widget_title": null
+          },
+          "relevance": {
+            "checked": false,
+            "data_relevance": true,
+            "purpose_relevance": true,
+            "overall_relevance": true,
+            "data_score": 0.0,
+            "purpose_score": 0.0,
+            "context_score": 0.0,
+            "matched_data_terms": [],
+            "matched_purpose_terms": [],
+            "matched_context_terms": [],
+            "purpose_available": false,
+            "category": "",
+            "classification_confidence": null,
+            "reason": null
+          },
+          "evidence_items": [
+            {
+              "type": "notice_text",
+              "description": "Detected notice text.",
+              "value": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source_url": null
+            },
+            {
+              "type": "notice_url",
+              "description": "Notice or privacy-policy URL.",
+              "value": "http://10.240.10.11:3003/#privacy-policy",
+              "source_url": null
+            },
+            {
+              "type": "visibility",
+              "description": "Whether the notice was visible in the rendered page.",
+              "value": true,
+              "reason": null
+            },
+            {
+              "type": "timing",
+              "description": "Relative position of the notice to the collection point.",
+              "value": "before_or_at_collection",
+              "reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "notice_dom_position": null,
+              "collection_dom_position": null
+            },
+            {
+              "type": "collection_association",
+              "description": "Whether the notice is associated with the identified collection point.",
+              "value": false,
+              "collection_point_type": null
+            },
+            {
+              "type": "data_relevance",
+              "description": "Whether notice content relates to the identified personal-data category.",
+              "value": true,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "context_relevance",
+              "description": "Whether notice content contains context associated with the collection point.",
+              "value": false,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "purpose_relevance",
+              "description": "Whether notice content relates to the collection purpose, when such purpose is available from Step 1.",
+              "value": true,
+              "score": 0.0,
+              "purpose_available": false,
+              "matched_terms": []
+            }
+          ]
+        },
+        "validation": {
+          "step": 2,
+          "status": "PARTIAL",
+          "evidence_status": "partial",
+          "reason": "The notice was visible before or at the collection point, but its association with the specific collection point could not be established.",
+          "requirement": "Verify notice before or at personal-data collection."
+        },
+        "collection_point_consumed": true
+      },
+      {
+        "collection_point_index": 1,
+        "collection_point": {
+          "collection_point_type": "form_field",
+          "page": {
+            "url": "http://10.240.10.11:3003/",
+            "title": "DPACOMPASS Consent Management Test Site",
+            "status_code": 200,
+            "depth": 0,
+            "parent_url": null
+          },
+          "form": {
+            "index": 0,
+            "action": "http://10.240.10.11:3003/submit-contact",
+            "method": "POST",
+            "enctype": null,
+            "form_id": "contact-form",
+            "form_name": null,
+            "has_submit_button": false,
+            "submit_text": null
+          },
+          "field": {
+            "index": 1,
+            "tag": "input",
+            "field_type": "email",
+            "name": "email",
+            "field_id": "email",
+            "placeholder": "Enter your email address",
+            "required": true,
+            "autocomplete": "email",
+            "aria_label": null,
+            "label": "Email Address"
+          },
+          "classification": {
+            "is_personal_data": true,
+            "category": "email",
+            "confidence": 0.99,
+            "reason": "HTML input type is email."
+          }
+        },
+        "page_url": "http://10.240.10.11:3003/",
+        "field": {
+          "name": "email",
+          "id": "email",
+          "label": "Email Address",
+          "type": "email",
+          "selector": null
+        },
+        "category": "email",
+        "form": {
+          "id": "contact-form",
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST"
+        },
+        "status": "partial",
+        "notices_found": 1,
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before_or_at_collection",
+          "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+          "timing_method": "direct_dom_order",
+          "confidence": 0.9,
+          "notice_selector": "#privacy-notice",
+          "collection_selector": "[name=\"email\"]",
+          "evidence": {
+            "notice_dom_position": 18,
+            "collection_dom_position": 33,
+            "notice_form_position": null,
+            "collection_form_position": 29,
+            "same_form": false,
+            "container_relationship": {
+              "notice_in_collection_container": false
+            },
+            "semantic_relationship": {
+              "associated": false
+            }
+          },
+          "relationship": "before",
+          "timing_verified": true,
+          "associated_with_collection_point": false
+        },
+        "collection_dom_index": 33,
+        "notice_candidates": [
+          {
+            "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "candidate_type": "privacy_notice",
+            "source": "notice_selector",
+            "selector": "#privacy-notice",
+            "visible": true,
+            "tag_name": "SECTION",
+            "element_id": "privacy-notice",
+            "class_name": "notice",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "notice_url_source": "descendant_href",
+            "is_consent_control": false,
+            "language_score": 6,
+            "consent_language": false,
+            "collection_language": true,
+            "purpose_language": true,
+            "candidate_score": 160,
+            "timing": {
+              "relationship": "before",
+              "timing_verified": true,
+              "reason": "Notice candidate appears before the collection field in DOM order."
+            },
+            "notice_dom_index": 18,
+            "collection_dom_index": 33,
+            "timing_verified": true
+          }
+        ],
+        "relevance": {
+          "data_relevance": true,
+          "purpose_relevance": true,
+          "overall_relevance": true,
+          "data": true,
+          "purpose": true,
+          "overall": true,
+          "confidence": 0.92,
+          "category": "",
+          "field_name": "email",
+          "data_reason": "The notice generically refers to personal information/data and contains collection context applicable to the Step-1 collection point.",
+          "purpose_reason": "The notice contains language describing the use, processing, reason, or purpose of the collected information.",
+          "explicit_category_matches": [],
+          "generic_data_matches": [
+            "your information",
+            "personal information",
+            "personal data"
+          ],
+          "collection_context_matches": [
+            "collect",
+            "provide"
+          ],
+          "purpose_matches": [
+            "support",
+            "process",
+            "respond",
+            "use",
+            "provide"
+          ],
+          "evidence": [
+            {
+              "type": "generic_personal_data",
+              "term": "your information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal data",
+              "strength": "strong"
+            },
+            {
+              "type": "collection_context",
+              "term": "collect",
+              "strength": "supporting"
+            },
+            {
+              "type": "collection_context",
+              "term": "provide",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "support",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "process",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "respond",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "use",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "provide",
+              "strength": "supporting"
+            }
+          ],
+          "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information."
+        },
+        "evidence": {
+          "step": 2,
+          "step_id": "STEP-02",
+          "requirement": "Verify notice before or at personal-data collection.",
+          "evidence_status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose.",
+          "collected_at": "2026-09-07T11:27:18.667803+00:00",
+          "collection_point": {
+            "available": true,
+            "collection_point_type": "form_field",
+            "page": {
+              "url": "http://10.240.10.11:3003/",
+              "title": "DPACOMPASS Consent Management Test Site",
+              "status_code": 200,
+              "depth": 0,
+              "parent_url": null
+            },
+            "widget": {
+              "index": null,
+              "widget_type": null,
+              "tag": null,
+              "src": null,
+              "title": null,
+              "name": null,
+              "widget_id": null,
+              "provider": null
+            },
+            "field": {
+              "id": null,
+              "name": "email",
+              "type": null,
+              "label": "Email Address"
+            },
+            "classification": {
+              "is_personal_data": true,
+              "category": "email",
+              "confidence": 0.99,
+              "reason": "HTML input type is email."
+            }
+          },
+          "notice": {
+            "notice_type": "privacy_notice",
+            "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "page_url": null,
+            "matched_keyword": null,
+            "selector": "#privacy-notice",
+            "source": {
+              "element_tag": null,
+              "element_id": null,
+              "element_class": [],
+              "role": null,
+              "aria_label": null
+            }
+          },
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "visibility_reason": null,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"email\"]",
+            "notice_dom_position": null,
+            "collection_dom_position": null,
+            "associated_with_collection_point": false,
+            "collection_point_type": null,
+            "widget_src": null,
+            "widget_title": null
+          },
+          "relevance": {
+            "checked": false,
+            "data_relevance": true,
+            "purpose_relevance": true,
+            "overall_relevance": true,
+            "data_score": 0.0,
+            "purpose_score": 0.0,
+            "context_score": 0.0,
+            "matched_data_terms": [],
+            "matched_purpose_terms": [],
+            "matched_context_terms": [],
+            "purpose_available": false,
+            "category": "",
+            "classification_confidence": null,
+            "reason": null
+          },
+          "evidence_items": [
+            {
+              "type": "notice_text",
+              "description": "Detected notice text.",
+              "value": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source_url": null
+            },
+            {
+              "type": "notice_url",
+              "description": "Notice or privacy-policy URL.",
+              "value": "http://10.240.10.11:3003/#privacy-policy",
+              "source_url": null
+            },
+            {
+              "type": "visibility",
+              "description": "Whether the notice was visible in the rendered page.",
+              "value": true,
+              "reason": null
+            },
+            {
+              "type": "timing",
+              "description": "Relative position of the notice to the collection point.",
+              "value": "before_or_at_collection",
+              "reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "notice_dom_position": null,
+              "collection_dom_position": null
+            },
+            {
+              "type": "collection_association",
+              "description": "Whether the notice is associated with the identified collection point.",
+              "value": false,
+              "collection_point_type": null
+            },
+            {
+              "type": "data_relevance",
+              "description": "Whether notice content relates to the identified personal-data category.",
+              "value": true,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "context_relevance",
+              "description": "Whether notice content contains context associated with the collection point.",
+              "value": false,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "purpose_relevance",
+              "description": "Whether notice content relates to the collection purpose, when such purpose is available from Step 1.",
+              "value": true,
+              "score": 0.0,
+              "purpose_available": false,
+              "matched_terms": []
+            }
+          ]
+        },
+        "validation": {
+          "step": 2,
+          "status": "PARTIAL",
+          "evidence_status": "partial",
+          "reason": "The notice was visible before or at the collection point, but its association with the specific collection point could not be established.",
+          "requirement": "Verify notice before or at personal-data collection."
+        },
+        "collection_point_consumed": true
+      },
+      {
+        "collection_point_index": 2,
+        "collection_point": {
+          "collection_point_type": "form_field",
+          "page": {
+            "url": "http://10.240.10.11:3003/",
+            "title": "DPACOMPASS Consent Management Test Site",
+            "status_code": 200,
+            "depth": 0,
+            "parent_url": null
+          },
+          "form": {
+            "index": 0,
+            "action": "http://10.240.10.11:3003/submit-contact",
+            "method": "POST",
+            "enctype": null,
+            "form_id": "contact-form",
+            "form_name": null,
+            "has_submit_button": false,
+            "submit_text": null
+          },
+          "field": {
+            "index": 2,
+            "tag": "input",
+            "field_type": "tel",
+            "name": "phone",
+            "field_id": "phone",
+            "placeholder": "Enter your phone number",
+            "required": false,
+            "autocomplete": "tel",
+            "aria_label": null,
+            "label": "Phone Number"
+          },
+          "classification": {
+            "is_personal_data": true,
+            "category": "phone",
+            "confidence": 0.99,
+            "reason": "HTML input type is telephone."
+          }
+        },
+        "page_url": "http://10.240.10.11:3003/",
+        "field": {
+          "name": "phone",
+          "id": "phone",
+          "label": "Phone Number",
+          "type": "tel",
+          "selector": null
+        },
+        "category": "phone",
+        "form": {
+          "id": "contact-form",
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST"
+        },
+        "status": "partial",
+        "notices_found": 1,
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before_or_at_collection",
+          "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+          "timing_method": "direct_dom_order",
+          "confidence": 0.9,
+          "notice_selector": "#privacy-notice",
+          "collection_selector": "[name=\"phone\"]",
+          "evidence": {
+            "notice_dom_position": 18,
+            "collection_dom_position": 35,
+            "notice_form_position": null,
+            "collection_form_position": 29,
+            "same_form": false,
+            "container_relationship": {
+              "notice_in_collection_container": false
+            },
+            "semantic_relationship": {
+              "associated": false
+            }
+          },
+          "relationship": "before",
+          "timing_verified": true,
+          "associated_with_collection_point": false
+        },
+        "collection_dom_index": 35,
+        "notice_candidates": [
+          {
+            "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "candidate_type": "privacy_notice",
+            "source": "notice_selector",
+            "selector": "#privacy-notice",
+            "visible": true,
+            "tag_name": "SECTION",
+            "element_id": "privacy-notice",
+            "class_name": "notice",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "notice_url_source": "descendant_href",
+            "is_consent_control": false,
+            "language_score": 6,
+            "consent_language": false,
+            "collection_language": true,
+            "purpose_language": true,
+            "candidate_score": 160,
+            "timing": {
+              "relationship": "before",
+              "timing_verified": true,
+              "reason": "Notice candidate appears before the collection field in DOM order."
+            },
+            "notice_dom_index": 18,
+            "collection_dom_index": 35,
+            "timing_verified": true
+          }
+        ],
+        "relevance": {
+          "data_relevance": true,
+          "purpose_relevance": true,
+          "overall_relevance": true,
+          "data": true,
+          "purpose": true,
+          "overall": true,
+          "confidence": 0.92,
+          "category": "",
+          "field_name": "phone",
+          "data_reason": "The notice generically refers to personal information/data and contains collection context applicable to the Step-1 collection point.",
+          "purpose_reason": "The notice contains language describing the use, processing, reason, or purpose of the collected information.",
+          "explicit_category_matches": [],
+          "generic_data_matches": [
+            "your information",
+            "personal information",
+            "personal data"
+          ],
+          "collection_context_matches": [
+            "collect",
+            "provide"
+          ],
+          "purpose_matches": [
+            "support",
+            "process",
+            "respond",
+            "use",
+            "provide"
+          ],
+          "evidence": [
+            {
+              "type": "generic_personal_data",
+              "term": "your information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal data",
+              "strength": "strong"
+            },
+            {
+              "type": "collection_context",
+              "term": "collect",
+              "strength": "supporting"
+            },
+            {
+              "type": "collection_context",
+              "term": "provide",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "support",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "process",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "respond",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "use",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "provide",
+              "strength": "supporting"
+            }
+          ],
+          "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information."
+        },
+        "evidence": {
+          "step": 2,
+          "step_id": "STEP-02",
+          "requirement": "Verify notice before or at personal-data collection.",
+          "evidence_status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose.",
+          "collected_at": "2026-09-07T11:27:18.789812+00:00",
+          "collection_point": {
+            "available": true,
+            "collection_point_type": "form_field",
+            "page": {
+              "url": "http://10.240.10.11:3003/",
+              "title": "DPACOMPASS Consent Management Test Site",
+              "status_code": 200,
+              "depth": 0,
+              "parent_url": null
+            },
+            "widget": {
+              "index": null,
+              "widget_type": null,
+              "tag": null,
+              "src": null,
+              "title": null,
+              "name": null,
+              "widget_id": null,
+              "provider": null
+            },
+            "field": {
+              "id": null,
+              "name": "phone",
+              "type": null,
+              "label": "Phone Number"
+            },
+            "classification": {
+              "is_personal_data": true,
+              "category": "phone",
+              "confidence": 0.99,
+              "reason": "HTML input type is telephone."
+            }
+          },
+          "notice": {
+            "notice_type": "privacy_notice",
+            "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "page_url": null,
+            "matched_keyword": null,
+            "selector": "#privacy-notice",
+            "source": {
+              "element_tag": null,
+              "element_id": null,
+              "element_class": [],
+              "role": null,
+              "aria_label": null
+            }
+          },
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "visibility_reason": null,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"phone\"]",
+            "notice_dom_position": null,
+            "collection_dom_position": null,
+            "associated_with_collection_point": false,
+            "collection_point_type": null,
+            "widget_src": null,
+            "widget_title": null
+          },
+          "relevance": {
+            "checked": false,
+            "data_relevance": true,
+            "purpose_relevance": true,
+            "overall_relevance": true,
+            "data_score": 0.0,
+            "purpose_score": 0.0,
+            "context_score": 0.0,
+            "matched_data_terms": [],
+            "matched_purpose_terms": [],
+            "matched_context_terms": [],
+            "purpose_available": false,
+            "category": "",
+            "classification_confidence": null,
+            "reason": null
+          },
+          "evidence_items": [
+            {
+              "type": "notice_text",
+              "description": "Detected notice text.",
+              "value": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source_url": null
+            },
+            {
+              "type": "notice_url",
+              "description": "Notice or privacy-policy URL.",
+              "value": "http://10.240.10.11:3003/#privacy-policy",
+              "source_url": null
+            },
+            {
+              "type": "visibility",
+              "description": "Whether the notice was visible in the rendered page.",
+              "value": true,
+              "reason": null
+            },
+            {
+              "type": "timing",
+              "description": "Relative position of the notice to the collection point.",
+              "value": "before_or_at_collection",
+              "reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "notice_dom_position": null,
+              "collection_dom_position": null
+            },
+            {
+              "type": "collection_association",
+              "description": "Whether the notice is associated with the identified collection point.",
+              "value": false,
+              "collection_point_type": null
+            },
+            {
+              "type": "data_relevance",
+              "description": "Whether notice content relates to the identified personal-data category.",
+              "value": true,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "context_relevance",
+              "description": "Whether notice content contains context associated with the collection point.",
+              "value": false,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "purpose_relevance",
+              "description": "Whether notice content relates to the collection purpose, when such purpose is available from Step 1.",
+              "value": true,
+              "score": 0.0,
+              "purpose_available": false,
+              "matched_terms": []
+            }
+          ]
+        },
+        "validation": {
+          "step": 2,
+          "status": "PARTIAL",
+          "evidence_status": "partial",
+          "reason": "The notice was visible before or at the collection point, but its association with the specific collection point could not be established.",
+          "requirement": "Verify notice before or at personal-data collection."
+        },
+        "collection_point_consumed": true
+      },
+      {
+        "collection_point_index": 3,
+        "collection_point": {
+          "collection_point_type": "form_field",
+          "page": {
+            "url": "http://10.240.10.11:3003/",
+            "title": "DPACOMPASS Consent Management Test Site",
+            "status_code": 200,
+            "depth": 0,
+            "parent_url": null
+          },
+          "form": {
+            "index": 0,
+            "action": "http://10.240.10.11:3003/submit-contact",
+            "method": "POST",
+            "enctype": null,
+            "form_id": "contact-form",
+            "form_name": null,
+            "has_submit_button": false,
+            "submit_text": null
+          },
+          "field": {
+            "index": 3,
+            "tag": "select",
+            "field_type": "select",
+            "name": "region",
+            "field_id": "region",
+            "placeholder": null,
+            "required": false,
+            "autocomplete": null,
+            "aria_label": null,
+            "label": "Region"
+          },
+          "classification": {
+            "is_personal_data": true,
+            "category": "state",
+            "confidence": 0.9,
+            "reason": "name metadata matched personal-data indicator 'region'."
+          }
+        },
+        "page_url": "http://10.240.10.11:3003/",
+        "field": {
+          "name": "region",
+          "id": "region",
+          "label": "Region",
+          "type": "select",
+          "selector": null
+        },
+        "category": "state",
+        "form": {
+          "id": "contact-form",
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST"
+        },
+        "status": "partial",
+        "notices_found": 1,
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before_or_at_collection",
+          "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+          "timing_method": "direct_dom_order",
+          "confidence": 0.9,
+          "notice_selector": "#privacy-notice",
+          "collection_selector": "[name=\"region\"]",
+          "evidence": {
+            "notice_dom_position": 18,
+            "collection_dom_position": 37,
+            "notice_form_position": null,
+            "collection_form_position": 29,
+            "same_form": false,
+            "container_relationship": {
+              "notice_in_collection_container": false
+            },
+            "semantic_relationship": {
+              "associated": false
+            }
+          },
+          "relationship": "before",
+          "timing_verified": true,
+          "associated_with_collection_point": false
+        },
+        "collection_dom_index": 37,
+        "notice_candidates": [
+          {
+            "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "candidate_type": "privacy_notice",
+            "source": "notice_selector",
+            "selector": "#privacy-notice",
+            "visible": true,
+            "tag_name": "SECTION",
+            "element_id": "privacy-notice",
+            "class_name": "notice",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "notice_url_source": "descendant_href",
+            "is_consent_control": false,
+            "language_score": 6,
+            "consent_language": false,
+            "collection_language": true,
+            "purpose_language": true,
+            "candidate_score": 160,
+            "timing": {
+              "relationship": "before",
+              "timing_verified": true,
+              "reason": "Notice candidate appears before the collection field in DOM order."
+            },
+            "notice_dom_index": 18,
+            "collection_dom_index": 37,
+            "timing_verified": true
+          }
+        ],
+        "relevance": {
+          "data_relevance": true,
+          "purpose_relevance": true,
+          "overall_relevance": true,
+          "data": true,
+          "purpose": true,
+          "overall": true,
+          "confidence": 0.92,
+          "category": "",
+          "field_name": "region",
+          "data_reason": "The notice generically refers to personal information/data and contains collection context applicable to the Step-1 collection point.",
+          "purpose_reason": "The notice contains language describing the use, processing, reason, or purpose of the collected information.",
+          "explicit_category_matches": [],
+          "generic_data_matches": [
+            "your information",
+            "personal information",
+            "personal data"
+          ],
+          "collection_context_matches": [
+            "collect",
+            "provide"
+          ],
+          "purpose_matches": [
+            "support",
+            "process",
+            "respond",
+            "use",
+            "provide"
+          ],
+          "evidence": [
+            {
+              "type": "generic_personal_data",
+              "term": "your information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal data",
+              "strength": "strong"
+            },
+            {
+              "type": "collection_context",
+              "term": "collect",
+              "strength": "supporting"
+            },
+            {
+              "type": "collection_context",
+              "term": "provide",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "support",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "process",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "respond",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "use",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "provide",
+              "strength": "supporting"
+            }
+          ],
+          "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information."
+        },
+        "evidence": {
+          "step": 2,
+          "step_id": "STEP-02",
+          "requirement": "Verify notice before or at personal-data collection.",
+          "evidence_status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose.",
+          "collected_at": "2026-09-07T11:27:18.912257+00:00",
+          "collection_point": {
+            "available": true,
+            "collection_point_type": "form_field",
+            "page": {
+              "url": "http://10.240.10.11:3003/",
+              "title": "DPACOMPASS Consent Management Test Site",
+              "status_code": 200,
+              "depth": 0,
+              "parent_url": null
+            },
+            "widget": {
+              "index": null,
+              "widget_type": null,
+              "tag": null,
+              "src": null,
+              "title": null,
+              "name": null,
+              "widget_id": null,
+              "provider": null
+            },
+            "field": {
+              "id": null,
+              "name": "region",
+              "type": null,
+              "label": "Region"
+            },
+            "classification": {
+              "is_personal_data": true,
+              "category": "state",
+              "confidence": 0.9,
+              "reason": "name metadata matched personal-data indicator 'region'."
+            }
+          },
+          "notice": {
+            "notice_type": "privacy_notice",
+            "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "page_url": null,
+            "matched_keyword": null,
+            "selector": "#privacy-notice",
+            "source": {
+              "element_tag": null,
+              "element_id": null,
+              "element_class": [],
+              "role": null,
+              "aria_label": null
+            }
+          },
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "visibility_reason": null,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"region\"]",
+            "notice_dom_position": null,
+            "collection_dom_position": null,
+            "associated_with_collection_point": false,
+            "collection_point_type": null,
+            "widget_src": null,
+            "widget_title": null
+          },
+          "relevance": {
+            "checked": false,
+            "data_relevance": true,
+            "purpose_relevance": true,
+            "overall_relevance": true,
+            "data_score": 0.0,
+            "purpose_score": 0.0,
+            "context_score": 0.0,
+            "matched_data_terms": [],
+            "matched_purpose_terms": [],
+            "matched_context_terms": [],
+            "purpose_available": false,
+            "category": "",
+            "classification_confidence": null,
+            "reason": null
+          },
+          "evidence_items": [
+            {
+              "type": "notice_text",
+              "description": "Detected notice text.",
+              "value": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source_url": null
+            },
+            {
+              "type": "notice_url",
+              "description": "Notice or privacy-policy URL.",
+              "value": "http://10.240.10.11:3003/#privacy-policy",
+              "source_url": null
+            },
+            {
+              "type": "visibility",
+              "description": "Whether the notice was visible in the rendered page.",
+              "value": true,
+              "reason": null
+            },
+            {
+              "type": "timing",
+              "description": "Relative position of the notice to the collection point.",
+              "value": "before_or_at_collection",
+              "reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "notice_dom_position": null,
+              "collection_dom_position": null
+            },
+            {
+              "type": "collection_association",
+              "description": "Whether the notice is associated with the identified collection point.",
+              "value": false,
+              "collection_point_type": null
+            },
+            {
+              "type": "data_relevance",
+              "description": "Whether notice content relates to the identified personal-data category.",
+              "value": true,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "context_relevance",
+              "description": "Whether notice content contains context associated with the collection point.",
+              "value": false,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "purpose_relevance",
+              "description": "Whether notice content relates to the collection purpose, when such purpose is available from Step 1.",
+              "value": true,
+              "score": 0.0,
+              "purpose_available": false,
+              "matched_terms": []
+            }
+          ]
+        },
+        "validation": {
+          "step": 2,
+          "status": "PARTIAL",
+          "evidence_status": "partial",
+          "reason": "The notice was visible before or at the collection point, but its association with the specific collection point could not be established.",
+          "requirement": "Verify notice before or at personal-data collection."
+        },
+        "collection_point_consumed": true
+      },
+      {
+        "collection_point_index": 4,
+        "collection_point": {
+          "collection_point_type": "form_field",
+          "page": {
+            "url": "http://10.240.10.11:3003/",
+            "title": "DPACOMPASS Consent Management Test Site",
+            "status_code": 200,
+            "depth": 0,
+            "parent_url": null
+          },
+          "form": {
+            "index": 0,
+            "action": "http://10.240.10.11:3003/submit-contact",
+            "method": "POST",
+            "enctype": null,
+            "form_id": "contact-form",
+            "form_name": null,
+            "has_submit_button": false,
+            "submit_text": null
+          },
+          "field": {
+            "index": 4,
+            "tag": "textarea",
+            "field_type": "textarea",
+            "name": "message",
+            "field_id": "message",
+            "placeholder": "Enter your message",
+            "required": false,
+            "autocomplete": null,
+            "aria_label": null,
+            "label": "Your Message"
+          },
+          "classification": {
+            "is_personal_data": true,
+            "category": "free_text",
+            "confidence": 0.75,
+            "reason": "User-facing field metadata indicates potential free-text personal data: 'message'."
+          }
+        },
+        "page_url": "http://10.240.10.11:3003/",
+        "field": {
+          "name": "message",
+          "id": "message",
+          "label": "Your Message",
+          "type": "textarea",
+          "selector": null
+        },
+        "category": "free_text",
+        "form": {
+          "id": "contact-form",
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST"
+        },
+        "status": "partial",
+        "notices_found": 1,
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before_or_at_collection",
+          "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+          "timing_method": "direct_dom_order",
+          "confidence": 0.9,
+          "notice_selector": "#privacy-notice",
+          "collection_selector": "[name=\"message\"]",
+          "evidence": {
+            "notice_dom_position": 18,
+            "collection_dom_position": 43,
+            "notice_form_position": null,
+            "collection_form_position": 29,
+            "same_form": false,
+            "container_relationship": {
+              "notice_in_collection_container": false
+            },
+            "semantic_relationship": {
+              "associated": false
+            }
+          },
+          "relationship": "before",
+          "timing_verified": true,
+          "associated_with_collection_point": false
+        },
+        "collection_dom_index": 43,
+        "notice_candidates": [
+          {
+            "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "candidate_type": "privacy_notice",
+            "source": "notice_selector",
+            "selector": "#privacy-notice",
+            "visible": true,
+            "tag_name": "SECTION",
+            "element_id": "privacy-notice",
+            "class_name": "notice",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "notice_url_source": "descendant_href",
+            "is_consent_control": false,
+            "language_score": 6,
+            "consent_language": false,
+            "collection_language": true,
+            "purpose_language": true,
+            "candidate_score": 160,
+            "timing": {
+              "relationship": "before",
+              "timing_verified": true,
+              "reason": "Notice candidate appears before the collection field in DOM order."
+            },
+            "notice_dom_index": 18,
+            "collection_dom_index": 43,
+            "timing_verified": true
+          }
+        ],
+        "relevance": {
+          "data_relevance": true,
+          "purpose_relevance": true,
+          "overall_relevance": true,
+          "data": true,
+          "purpose": true,
+          "overall": true,
+          "confidence": 0.92,
+          "category": "",
+          "field_name": "message",
+          "data_reason": "The notice generically refers to personal information/data and contains collection context applicable to the Step-1 collection point.",
+          "purpose_reason": "The notice contains language describing the use, processing, reason, or purpose of the collected information.",
+          "explicit_category_matches": [],
+          "generic_data_matches": [
+            "your information",
+            "personal information",
+            "personal data"
+          ],
+          "collection_context_matches": [
+            "collect",
+            "provide"
+          ],
+          "purpose_matches": [
+            "support",
+            "process",
+            "respond",
+            "use",
+            "provide"
+          ],
+          "evidence": [
+            {
+              "type": "generic_personal_data",
+              "term": "your information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal information",
+              "strength": "strong"
+            },
+            {
+              "type": "generic_personal_data",
+              "term": "personal data",
+              "strength": "strong"
+            },
+            {
+              "type": "collection_context",
+              "term": "collect",
+              "strength": "supporting"
+            },
+            {
+              "type": "collection_context",
+              "term": "provide",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "support",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "process",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "respond",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "use",
+              "strength": "supporting"
+            },
+            {
+              "type": "purpose",
+              "term": "provide",
+              "strength": "supporting"
+            }
+          ],
+          "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information."
+        },
+        "evidence": {
+          "step": 2,
+          "step_id": "STEP-02",
+          "requirement": "Verify notice before or at personal-data collection.",
+          "evidence_status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose.",
+          "collected_at": "2026-09-07T11:27:19.036639+00:00",
+          "collection_point": {
+            "available": true,
+            "collection_point_type": "form_field",
+            "page": {
+              "url": "http://10.240.10.11:3003/",
+              "title": "DPACOMPASS Consent Management Test Site",
+              "status_code": 200,
+              "depth": 0,
+              "parent_url": null
+            },
+            "widget": {
+              "index": null,
+              "widget_type": null,
+              "tag": null,
+              "src": null,
+              "title": null,
+              "name": null,
+              "widget_id": null,
+              "provider": null
+            },
+            "field": {
+              "id": null,
+              "name": "message",
+              "type": null,
+              "label": "Your Message"
+            },
+            "classification": {
+              "is_personal_data": true,
+              "category": "free_text",
+              "confidence": 0.75,
+              "reason": "User-facing field metadata indicates potential free-text personal data: 'message'."
+            }
+          },
+          "notice": {
+            "notice_type": "privacy_notice",
+            "notice_text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+            "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+            "page_url": null,
+            "matched_keyword": null,
+            "selector": "#privacy-notice",
+            "source": {
+              "element_tag": null,
+              "element_id": null,
+              "element_class": [],
+              "role": null,
+              "aria_label": null
+            }
+          },
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "visibility_reason": null,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"message\"]",
+            "notice_dom_position": null,
+            "collection_dom_position": null,
+            "associated_with_collection_point": false,
+            "collection_point_type": null,
+            "widget_src": null,
+            "widget_title": null
+          },
+          "relevance": {
+            "checked": false,
+            "data_relevance": true,
+            "purpose_relevance": true,
+            "overall_relevance": true,
+            "data_score": 0.0,
+            "purpose_score": 0.0,
+            "context_score": 0.0,
+            "matched_data_terms": [],
+            "matched_purpose_terms": [],
+            "matched_context_terms": [],
+            "purpose_available": false,
+            "category": "",
+            "classification_confidence": null,
+            "reason": null
+          },
+          "evidence_items": [
+            {
+              "type": "notice_text",
+              "description": "Detected notice text.",
+              "value": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source_url": null
+            },
+            {
+              "type": "notice_url",
+              "description": "Notice or privacy-policy URL.",
+              "value": "http://10.240.10.11:3003/#privacy-policy",
+              "source_url": null
+            },
+            {
+              "type": "visibility",
+              "description": "Whether the notice was visible in the rendered page.",
+              "value": true,
+              "reason": null
+            },
+            {
+              "type": "timing",
+              "description": "Relative position of the notice to the collection point.",
+              "value": "before_or_at_collection",
+              "reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "notice_dom_position": null,
+              "collection_dom_position": null
+            },
+            {
+              "type": "collection_association",
+              "description": "Whether the notice is associated with the identified collection point.",
+              "value": false,
+              "collection_point_type": null
+            },
+            {
+              "type": "data_relevance",
+              "description": "Whether notice content relates to the identified personal-data category.",
+              "value": true,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "context_relevance",
+              "description": "Whether notice content contains context associated with the collection point.",
+              "value": false,
+              "score": 0.0,
+              "matched_terms": []
+            },
+            {
+              "type": "purpose_relevance",
+              "description": "Whether notice content relates to the collection purpose, when such purpose is available from Step 1.",
+              "value": true,
+              "score": 0.0,
+              "purpose_available": false,
+              "matched_terms": []
+            }
+          ]
+        },
+        "validation": {
+          "step": 2,
+          "status": "PARTIAL",
+          "evidence_status": "partial",
+          "reason": "The notice was visible before or at the collection point, but its association with the specific collection point could not be established.",
+          "requirement": "Verify notice before or at personal-data collection."
+        },
+        "collection_point_consumed": true
+      }
+    ],
+    "forms": [
+      {
+        "form": {
+          "id": "contact-form",
+          "action": "http://10.240.10.11:3003/submit-contact",
+          "method": "POST"
+        },
+        "fields": [
+          {
+            "field": {
+              "name": "full_name",
+              "id": "full-name",
+              "label": "Full Name",
+              "type": "text",
+              "selector": null
+            },
+            "category": "name",
+            "status": "partial",
+            "notices_found": 1,
+            "timing": {
+              "checked": true,
+              "visible": true,
+              "timing": "before_or_at_collection",
+              "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "timing_method": "direct_dom_order",
+              "confidence": 0.9,
+              "notice_selector": "#privacy-notice",
+              "collection_selector": "[name=\"full_name\"]",
+              "evidence": {
+                "notice_dom_position": 18,
+                "collection_dom_position": 31,
+                "notice_form_position": null,
+                "collection_form_position": 29,
+                "same_form": false,
+                "container_relationship": {
+                  "notice_in_collection_container": false
+                },
+                "semantic_relationship": {
+                  "associated": false
+                }
+              },
+              "relationship": "before",
+              "timing_verified": true,
+              "associated_with_collection_point": false
+            },
+            "notice_candidates": [
+              {
+                "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+                "candidate_type": "privacy_notice",
+                "source": "notice_selector",
+                "selector": "#privacy-notice",
+                "visible": true,
+                "tag_name": "SECTION",
+                "element_id": "privacy-notice",
+                "class_name": "notice",
+                "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+                "notice_url_source": "descendant_href",
+                "is_consent_control": false,
+                "language_score": 6,
+                "consent_language": false,
+                "collection_language": true,
+                "purpose_language": true,
+                "candidate_score": 160,
+                "timing": {
+                  "relationship": "before",
+                  "timing_verified": true,
+                  "reason": "Notice candidate appears before the collection field in DOM order."
+                },
+                "notice_dom_index": 18,
+                "collection_dom_index": 31,
+                "timing_verified": true
+              }
+            ]
+          },
+          {
+            "field": {
+              "name": "email",
+              "id": "email",
+              "label": "Email Address",
+              "type": "email",
+              "selector": null
+            },
+            "category": "email",
+            "status": "partial",
+            "notices_found": 1,
+            "timing": {
+              "checked": true,
+              "visible": true,
+              "timing": "before_or_at_collection",
+              "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "timing_method": "direct_dom_order",
+              "confidence": 0.9,
+              "notice_selector": "#privacy-notice",
+              "collection_selector": "[name=\"email\"]",
+              "evidence": {
+                "notice_dom_position": 18,
+                "collection_dom_position": 33,
+                "notice_form_position": null,
+                "collection_form_position": 29,
+                "same_form": false,
+                "container_relationship": {
+                  "notice_in_collection_container": false
+                },
+                "semantic_relationship": {
+                  "associated": false
+                }
+              },
+              "relationship": "before",
+              "timing_verified": true,
+              "associated_with_collection_point": false
+            },
+            "notice_candidates": [
+              {
+                "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+                "candidate_type": "privacy_notice",
+                "source": "notice_selector",
+                "selector": "#privacy-notice",
+                "visible": true,
+                "tag_name": "SECTION",
+                "element_id": "privacy-notice",
+                "class_name": "notice",
+                "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+                "notice_url_source": "descendant_href",
+                "is_consent_control": false,
+                "language_score": 6,
+                "consent_language": false,
+                "collection_language": true,
+                "purpose_language": true,
+                "candidate_score": 160,
+                "timing": {
+                  "relationship": "before",
+                  "timing_verified": true,
+                  "reason": "Notice candidate appears before the collection field in DOM order."
+                },
+                "notice_dom_index": 18,
+                "collection_dom_index": 33,
+                "timing_verified": true
+              }
+            ]
+          },
+          {
+            "field": {
+              "name": "phone",
+              "id": "phone",
+              "label": "Phone Number",
+              "type": "tel",
+              "selector": null
+            },
+            "category": "phone",
+            "status": "partial",
+            "notices_found": 1,
+            "timing": {
+              "checked": true,
+              "visible": true,
+              "timing": "before_or_at_collection",
+              "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "timing_method": "direct_dom_order",
+              "confidence": 0.9,
+              "notice_selector": "#privacy-notice",
+              "collection_selector": "[name=\"phone\"]",
+              "evidence": {
+                "notice_dom_position": 18,
+                "collection_dom_position": 35,
+                "notice_form_position": null,
+                "collection_form_position": 29,
+                "same_form": false,
+                "container_relationship": {
+                  "notice_in_collection_container": false
+                },
+                "semantic_relationship": {
+                  "associated": false
+                }
+              },
+              "relationship": "before",
+              "timing_verified": true,
+              "associated_with_collection_point": false
+            },
+            "notice_candidates": [
+              {
+                "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+                "candidate_type": "privacy_notice",
+                "source": "notice_selector",
+                "selector": "#privacy-notice",
+                "visible": true,
+                "tag_name": "SECTION",
+                "element_id": "privacy-notice",
+                "class_name": "notice",
+                "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+                "notice_url_source": "descendant_href",
+                "is_consent_control": false,
+                "language_score": 6,
+                "consent_language": false,
+                "collection_language": true,
+                "purpose_language": true,
+                "candidate_score": 160,
+                "timing": {
+                  "relationship": "before",
+                  "timing_verified": true,
+                  "reason": "Notice candidate appears before the collection field in DOM order."
+                },
+                "notice_dom_index": 18,
+                "collection_dom_index": 35,
+                "timing_verified": true
+              }
+            ]
+          },
+          {
+            "field": {
+              "name": "region",
+              "id": "region",
+              "label": "Region",
+              "type": "select",
+              "selector": null
+            },
+            "category": "state",
+            "status": "partial",
+            "notices_found": 1,
+            "timing": {
+              "checked": true,
+              "visible": true,
+              "timing": "before_or_at_collection",
+              "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "timing_method": "direct_dom_order",
+              "confidence": 0.9,
+              "notice_selector": "#privacy-notice",
+              "collection_selector": "[name=\"region\"]",
+              "evidence": {
+                "notice_dom_position": 18,
+                "collection_dom_position": 37,
+                "notice_form_position": null,
+                "collection_form_position": 29,
+                "same_form": false,
+                "container_relationship": {
+                  "notice_in_collection_container": false
+                },
+                "semantic_relationship": {
+                  "associated": false
+                }
+              },
+              "relationship": "before",
+              "timing_verified": true,
+              "associated_with_collection_point": false
+            },
+            "notice_candidates": [
+              {
+                "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+                "candidate_type": "privacy_notice",
+                "source": "notice_selector",
+                "selector": "#privacy-notice",
+                "visible": true,
+                "tag_name": "SECTION",
+                "element_id": "privacy-notice",
+                "class_name": "notice",
+                "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+                "notice_url_source": "descendant_href",
+                "is_consent_control": false,
+                "language_score": 6,
+                "consent_language": false,
+                "collection_language": true,
+                "purpose_language": true,
+                "candidate_score": 160,
+                "timing": {
+                  "relationship": "before",
+                  "timing_verified": true,
+                  "reason": "Notice candidate appears before the collection field in DOM order."
+                },
+                "notice_dom_index": 18,
+                "collection_dom_index": 37,
+                "timing_verified": true
+              }
+            ]
+          },
+          {
+            "field": {
+              "name": "message",
+              "id": "message",
+              "label": "Your Message",
+              "type": "textarea",
+              "selector": null
+            },
+            "category": "free_text",
+            "status": "partial",
+            "notices_found": 1,
+            "timing": {
+              "checked": true,
+              "visible": true,
+              "timing": "before_or_at_collection",
+              "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+              "timing_method": "direct_dom_order",
+              "confidence": 0.9,
+              "notice_selector": "#privacy-notice",
+              "collection_selector": "[name=\"message\"]",
+              "evidence": {
+                "notice_dom_position": 18,
+                "collection_dom_position": 43,
+                "notice_form_position": null,
+                "collection_form_position": 29,
+                "same_form": false,
+                "container_relationship": {
+                  "notice_in_collection_container": false
+                },
+                "semantic_relationship": {
+                  "associated": false
+                }
+              },
+              "relationship": "before",
+              "timing_verified": true,
+              "associated_with_collection_point": false
+            },
+            "notice_candidates": [
+              {
+                "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+                "candidate_type": "privacy_notice",
+                "source": "notice_selector",
+                "selector": "#privacy-notice",
+                "visible": true,
+                "tag_name": "SECTION",
+                "element_id": "privacy-notice",
+                "class_name": "notice",
+                "notice_url": "http://10.240.10.11:3003/#privacy-policy",
+                "notice_url_source": "descendant_href",
+                "is_consent_control": false,
+                "language_score": 6,
+                "consent_language": false,
+                "collection_language": true,
+                "purpose_language": true,
+                "candidate_score": 160,
+                "timing": {
+                  "relationship": "before",
+                  "timing_verified": true,
+                  "reason": "Notice candidate appears before the collection field in DOM order."
+                },
+                "notice_dom_index": 18,
+                "collection_dom_index": 43,
+                "timing_verified": true
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "step_1_reference": {
+      "step_id": "STEP-01",
+      "title": "Identify Personal Data Collection Points",
+      "personal_data_collection_points": 5,
+      "personal_data_categories": {
+        "name": 1,
+        "email": 1,
+        "phone": 1,
+        "state": 1,
+        "free_text": 1
+      },
+      "collection_points_consumed": 5
+    },
+    "execution": {
+      "executor": "Step2Executor",
+      "collector": "Step2Collector",
+      "timing_checker": "TimingChecker",
+      "relevance_checker": "RelevanceChecker",
+      "evidence_builder": "EvidenceBuilder",
+      "validator": "Step02Validator",
+      "result_builder": "Step2ResultBuilder",
+      "crawler_reused": true,
+      "step_1_output_consumed": true
+    }
+  },
+  "user_ui_step2": {
+    "step_id": "STEP-02",
+    "title": "Verify Notice Before or at Personal-Data Collection",
+    "status": "partial",
+    "summary": {
+      "total_collection_points": 5,
+      "collection_points_with_sufficient_evidence": 0,
+      "collection_points_with_partial_evidence": 5,
+      "collection_points_with_insufficient_evidence": 0,
+      "collection_points_without_notice": 0,
+      "collection_points_with_failed_timing": 0,
+      "notices_found": 5
+    },
+    "collection_points": [
+      {
+        "index": 0,
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "collection_point": {
+          "type": "form_field",
+          "category": "name",
+          "field": {
+            "name": "full_name",
+            "label": "Full Name",
+            "type": "text"
+          },
+          "form": {
+            "id": "contact-form"
+          }
+        },
+        "status": "partial",
+        "notice": {
+          "found": true,
+          "type": "privacy_notice",
+          "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+          "url": "http://10.240.10.11:3003/#privacy-policy",
+          "visible": true,
+          "is_consent_control": false
+        },
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before",
+          "verified": true,
+          "associated_with_collection_point": false
+        },
+        "evidence": {
+          "status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose."
+        }
+      },
+      {
+        "index": 1,
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "collection_point": {
+          "type": "form_field",
+          "category": "email",
+          "field": {
+            "name": "email",
+            "label": "Email Address",
+            "type": "email"
+          },
+          "form": {
+            "id": "contact-form"
+          }
+        },
+        "status": "partial",
+        "notice": {
+          "found": true,
+          "type": "privacy_notice",
+          "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+          "url": "http://10.240.10.11:3003/#privacy-policy",
+          "visible": true,
+          "is_consent_control": false
+        },
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before",
+          "verified": true,
+          "associated_with_collection_point": false
+        },
+        "evidence": {
+          "status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose."
+        }
+      },
+      {
+        "index": 2,
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "collection_point": {
+          "type": "form_field",
+          "category": "phone",
+          "field": {
+            "name": "phone",
+            "label": "Phone Number",
+            "type": "tel"
+          },
+          "form": {
+            "id": "contact-form"
+          }
+        },
+        "status": "partial",
+        "notice": {
+          "found": true,
+          "type": "privacy_notice",
+          "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+          "url": "http://10.240.10.11:3003/#privacy-policy",
+          "visible": true,
+          "is_consent_control": false
+        },
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before",
+          "verified": true,
+          "associated_with_collection_point": false
+        },
+        "evidence": {
+          "status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose."
+        }
+      },
+      {
+        "index": 3,
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "collection_point": {
+          "type": "form_field",
+          "category": "state",
+          "field": {
+            "name": "region",
+            "label": "Region",
+            "type": "select"
+          },
+          "form": {
+            "id": "contact-form"
+          }
+        },
+        "status": "partial",
+        "notice": {
+          "found": true,
+          "type": "privacy_notice",
+          "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+          "url": "http://10.240.10.11:3003/#privacy-policy",
+          "visible": true,
+          "is_consent_control": false
+        },
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before",
+          "verified": true,
+          "associated_with_collection_point": false
+        },
+        "evidence": {
+          "status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose."
+        }
+      },
+      {
+        "index": 4,
+        "page": {
+          "url": "http://10.240.10.11:3003/",
+          "title": "DPACOMPASS Consent Management Test Site"
+        },
+        "collection_point": {
+          "type": "form_field",
+          "category": "free_text",
+          "field": {
+            "name": "message",
+            "label": "Your Message",
+            "type": "textarea"
+          },
+          "form": {
+            "id": "contact-form"
+          }
+        },
+        "status": "partial",
+        "notice": {
+          "found": true,
+          "type": "privacy_notice",
+          "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+          "url": "http://10.240.10.11:3003/#privacy-policy",
+          "visible": true,
+          "is_consent_control": false
+        },
+        "timing": {
+          "checked": true,
+          "visible": true,
+          "timing": "before",
+          "verified": true,
+          "associated_with_collection_point": false
+        },
+        "evidence": {
+          "status": "partial",
+          "summary": "Partial evidence was identified: the notice was visible, timing was identified as 'before_or_at_collection', data relevance was identified, Step 1 did not provide an explicit purpose."
+        }
+      }
+    ]
+  },
+  "step_04": {
+    "step_04": {
+      "step_id": "STEP-04",
+      "title": "Capture Visual Evidence for Forms and Notices",
+      "status": "COMPLETED",
+      "summary": {
+        "total_forms": 1,
+        "total_collection_points": 5,
+        "completed_forms": 1,
+        "partial_forms": 0,
+        "failed_forms": 0
+      },
+      "forms": [
+        {
+          "form_index": 1,
+          "step_02_reference": {
+            "form_key": "contact-form",
+            "collection_point_indices": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "collection_points_count": 5,
+          "form": {
+            "id": "contact-form",
+            "name": null,
+            "action": "http://10.240.10.11:3003/submit-contact",
+            "method": "POST"
+          },
+          "page_url": "http://10.240.10.11:3003/",
+          "evidence": {
+            "form_screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_04\\form1\\form.png",
+            "notice_screenshots": [
+              "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_04\\form1\\notice1.png"
+            ]
+          },
+          "status": "COMPLETED",
+          "errors": []
+        }
+      ],
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    }
+  },
+  "user_ui_step4": {
+    "step_04": {
+      "step_id": "STEP-04",
+      "title": "Capture Visual Evidence for Forms and Notices",
+      "status": "COMPLETED",
+      "summary": {
+        "total_forms": 1,
+        "total_collection_points": 5,
+        "completed_forms": 1,
+        "partial_forms": 0,
+        "failed_forms": 0
+      },
+      "forms": [
+        {
+          "form_index": 1,
+          "step_02_reference": {
+            "form_key": "contact-form",
+            "collection_point_indices": [
+              0,
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "collection_points_count": 5,
+          "form": {
+            "id": "contact-form",
+            "name": null,
+            "action": "http://10.240.10.11:3003/submit-contact",
+            "method": "POST"
+          },
+          "page_url": "http://10.240.10.11:3003/",
+          "evidence": {
+            "form_screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_04\\form1\\form.png",
+            "notice_screenshots": [
+              "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_04\\form1\\notice1.png"
+            ]
+          },
+          "status": "COMPLETED",
+          "errors": []
+        }
+      ],
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    }
+  },
+  "step_05": {
+    "step": "STEP-05",
+    "title": "Identify Consent-Dependent Processing",
+    "generated_at": "2026-09-07T11:27:25.082305+00:00",
+    "status": "PASS",
+    "summary": {
+      "total_processing_activities": 9,
+      "consent_dependent": 9,
+      "necessary_service_processing": 0,
+      "uncertain": 0,
+      "passed": 9,
+      "failed": 0,
+      "review_required": 0
+    },
+    "processing_activities": [
+      {
+        "index": 1,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "analytics",
+        "purpose": "Example Customer Portal\n\nThis page contains a complete test consent-management experience for DPACOMPASS automated auditing.\n\nCookie & Privacy Preferences\n\nWe use cookies and similar technologies for analytics, security, performance and personalized services.\n\nYou can manage your cookie preferences at any time. Read our Cookie Policy and Privacy Policy .\n\nAccept All Cookies Manage Cookie Preferences\nPrivacy Notice\n\nWe collect and process your personal dat",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing1\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 2,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "tracking",
+        "purpose": "elow.\n\nFull Name\nEmail Address\nPhone Number\nRegion\nSelect your region\nIndia\nAsia\nEurope\nYour Message\n I consent to the collection and processing of my personal data as described in the Privacy Notice and Privacy Policy .\nSubmit Request\nAnalytics and Tracking\n\nWith your permission, we may use analytics and tracking technologies to understand how visitors use this website and improve our services.\n\nThese technologies may collect usage data and information about your interactions with this website.\n\nLearn",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing2\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 3,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "personalization",
+        "purpose": "Example Customer Portal\n\nThis page contains a complete test consent-management experience for DPACOMPASS automated auditing.\n\nCookie & Privacy Preferences\n\nWe use cookies and similar technologies for analytics, security, performance and personalized services.\n\nYou can manage your cookie preferences at any time. Read our Cookie Policy and Privacy Policy .\n\nAccept All Cookies Manage Cookie Preferences\nPrivacy Notice\n\nWe collect and process your personal data to provide customer support and respon",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing3\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 4,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "newsletter",
+        "purpose": "\n\n            \n\n            Receive newsletters and product updates\n\n        ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing4\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 5,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "marketing",
+        "purpose": "\n\n            \n\n            Receive marketing and promotional communications\n\n        ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing5\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 6,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "personalization",
+        "purpose": "\n\n            \n\n            Allow personalization of content and recommendations\n\n        ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing6\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 7,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "analytics",
+        "purpose": "\n\n                \n                    Analytics\n                \n\n            ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing7\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 8,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "marketing",
+        "purpose": "\n\n                \n                    Marketing\n                \n\n            ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing8\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 9,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "personalization",
+        "purpose": "\n\n                \n                    Personalization\n                \n\n            ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing9\\consent_prompt.png"
+        }
+      }
+    ],
+    "validation": {
+      "valid": false,
+      "errors": [
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        }
+      ],
+      "warnings": []
+    }
+  },
+  "user_ui_step5": {
+    "step": "STEP-05",
+    "title": "Identify Consent-Dependent Processing",
+    "generated_at": "2026-09-07T11:27:25.082305+00:00",
+    "status": "PASS",
+    "summary": {
+      "total_processing_activities": 9,
+      "consent_dependent": 9,
+      "necessary_service_processing": 0,
+      "uncertain": 0,
+      "passed": 9,
+      "failed": 0,
+      "review_required": 0
+    },
+    "processing_activities": [
+      {
+        "index": 1,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "analytics",
+        "purpose": "Example Customer Portal\n\nThis page contains a complete test consent-management experience for DPACOMPASS automated auditing.\n\nCookie & Privacy Preferences\n\nWe use cookies and similar technologies for analytics, security, performance and personalized services.\n\nYou can manage your cookie preferences at any time. Read our Cookie Policy and Privacy Policy .\n\nAccept All Cookies Manage Cookie Preferences\nPrivacy Notice\n\nWe collect and process your personal dat",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing1\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 2,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "tracking",
+        "purpose": "elow.\n\nFull Name\nEmail Address\nPhone Number\nRegion\nSelect your region\nIndia\nAsia\nEurope\nYour Message\n I consent to the collection and processing of my personal data as described in the Privacy Notice and Privacy Policy .\nSubmit Request\nAnalytics and Tracking\n\nWith your permission, we may use analytics and tracking technologies to understand how visitors use this website and improve our services.\n\nThese technologies may collect usage data and information about your interactions with this website.\n\nLearn",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing2\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 3,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "personalization",
+        "purpose": "Example Customer Portal\n\nThis page contains a complete test consent-management experience for DPACOMPASS automated auditing.\n\nCookie & Privacy Preferences\n\nWe use cookies and similar technologies for analytics, security, performance and personalized services.\n\nYou can manage your cookie preferences at any time. Read our Cookie Policy and Privacy Policy .\n\nAccept All Cookies Manage Cookie Preferences\nPrivacy Notice\n\nWe collect and process your personal data to provide customer support and respon",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing3\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 4,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "newsletter",
+        "purpose": "\n\n            \n\n            Receive newsletters and product updates\n\n        ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing4\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 5,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "marketing",
+        "purpose": "\n\n            \n\n            Receive marketing and promotional communications\n\n        ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing5\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 6,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "personalization",
+        "purpose": "\n\n            \n\n            Allow personalization of content and recommendations\n\n        ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing6\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 7,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "analytics",
+        "purpose": "\n\n                \n                    Analytics\n                \n\n            ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing7\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 8,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "marketing",
+        "purpose": "\n\n                \n                    Marketing\n                \n\n            ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing8\\consent_prompt.png"
+        }
+      },
+      {
+        "index": 9,
+        "page_url": "http://10.240.10.11:3003/",
+        "type": "personalization",
+        "purpose": "\n\n                \n                    Personalization\n                \n\n            ",
+        "classification": "consent_dependent",
+        "consent_requested": true,
+        "optional": true,
+        "necessary": false,
+        "result": "PASS",
+        "reason": "The processing appears optional and a consent mechanism is present.",
+        "failure_reason": null,
+        "collection_points": [
+          {
+            "name": "full_name",
+            "type": "text",
+            "category": "name",
+            "confidence": 0.98
+          },
+          {
+            "name": "email",
+            "type": "email",
+            "category": "email",
+            "confidence": 0.99
+          },
+          {
+            "name": "phone",
+            "type": "tel",
+            "category": "phone",
+            "confidence": 0.99
+          },
+          {
+            "name": "region",
+            "type": "select",
+            "category": "state",
+            "confidence": 0.9
+          },
+          {
+            "name": "message",
+            "type": "textarea",
+            "category": "free_text",
+            "confidence": 0.75
+          }
+        ],
+        "notice": {
+          "status": "partial",
+          "timing": {
+            "checked": true,
+            "visible": true,
+            "timing": "before_or_at_collection",
+            "timing_reason": "The visible notice occurs before or at the Step-1 collection point in the rendered DOM.",
+            "timing_method": "direct_dom_order",
+            "confidence": 0.9,
+            "notice_selector": "#privacy-notice",
+            "collection_selector": "[name=\"full_name\"]",
+            "evidence": {
+              "notice_dom_position": 18,
+              "collection_dom_position": 31,
+              "notice_form_position": null,
+              "collection_form_position": 29,
+              "same_form": false,
+              "container_relationship": {
+                "notice_in_collection_container": false
+              },
+              "semantic_relationship": {
+                "associated": false
+              }
+            },
+            "relationship": "before",
+            "timing_verified": true,
+            "associated_with_collection_point": false
+          },
+          "notices": [
+            {
+              "text": "privacy notice we collect and process your personal data to provide customer support and respond to your request. the personal information we collect may include your name, email address, phone number and message. we will use your information only for the purposes described in this privacy notice and applicable data protection policy. please read our privacy policy and data protection policy before submitting your information.",
+              "source": "notice_selector"
+            }
+          ]
+        },
+        "evidence": {
+          "status": "CAPTURED",
+          "capture_type": "dialog",
+          "screenshot": "audit_results\\http_10.240.10.11_3003__20260907T112700Z\\evidence\\step_04\\step_05\\processing9\\consent_prompt.png"
+        }
+      }
+    ],
+    "validation": {
+      "valid": false,
+      "errors": [
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 1,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 2,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 3,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 4,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 5,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 6,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 7,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 8,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        },
+        {
+          "index": 9,
+          "error": "Step-01 reference does not contain collection_point_index."
+        }
+      ],
+      "warnings": []
+    }
+  },
+  "step_07": {
+    "step": "STEP-07",
+    "title": "Optional Consent Not Pre-selected",
+    "status": "FAIL",
+    "summary": {
+      "checked": 2,
+      "unchecked": 4,
+      "review": 0
+    },
+    "controls": [
+      {
+        "index": 4,
+        "label": "Receive newsletters and product updates",
+        "checked": false,
+        "result": "PASS"
+      },
+      {
+        "index": 5,
+        "label": "Receive marketing and promotional communications",
+        "checked": true,
+        "result": "FAIL"
+      },
+      {
+        "index": 6,
+        "label": "Allow personalization of content and recommendations",
+        "checked": false,
+        "result": "PASS"
+      },
+      {
+        "index": 7,
+        "label": "Analytics",
+        "checked": false,
+        "result": "PASS"
+      },
+      {
+        "index": 8,
+        "label": "Marketing",
+        "checked": true,
+        "result": "FAIL"
+      },
+      {
+        "index": 9,
+        "label": "Personalization",
+        "checked": false,
+        "result": "PASS"
+      }
+    ]
+  },
+  "user_ui_step7": {
+    "step": "STEP-07",
+    "title": "Optional Consent Not Pre-selected",
+    "status": "FAIL",
+    "summary": {
+      "checked": 2,
+      "unchecked": 4,
+      "review": 0
+    },
+    "controls": [
+      {
+        "index": 4,
+        "label": "Receive newsletters and product updates",
+        "checked": false,
+        "result": "PASS"
+      },
+      {
+        "index": 5,
+        "label": "Receive marketing and promotional communications",
+        "checked": true,
+        "result": "FAIL"
+      },
+      {
+        "index": 6,
+        "label": "Allow personalization of content and recommendations",
+        "checked": false,
+        "result": "PASS"
+      },
+      {
+        "index": 7,
+        "label": "Analytics",
+        "checked": false,
+        "result": "PASS"
+      },
+      {
+        "index": 8,
+        "label": "Marketing",
+        "checked": true,
+        "result": "FAIL"
+      },
+      {
+        "index": 9,
+        "label": "Personalization",
+        "checked": false,
+        "result": "PASS"
+      }
+    ]
+  },
+  "step_11": {
+    "step": "STEP-11",
+    "title": "Manage Preferences",
+    "status": "PASS",
+    "summary": {
+      "categories": 3,
+      "known_states": 3,
+      "unknown_states": 0
+    },
+    "interface_found": true,
+    "categories": [
+      {
+        "index": 0,
+        "label": "Analytics",
+        "selected": false,
+        "changeable": true,
+        "result": "PASS"
+      },
+      {
+        "index": 1,
+        "label": "Marketing",
+        "selected": true,
+        "changeable": true,
+        "result": "PASS"
+      },
+      {
+        "index": 2,
+        "label": "Personalization",
+        "selected": false,
+        "changeable": true,
+        "result": "PASS"
+      }
+    ],
+    "evidence": {
+      "evidence": [
+        {
+          "page_url": "http://10.240.10.11:3003/",
+          "manage_preferences": "audit_results\\step_11\\manage_preferences.png",
+          "categories": [
+            {
+              "category": "analytics",
+              "screenshot": "audit_results\\step_11\\preference_01_analytics.png"
+            },
+            {
+              "category": "marketing",
+              "screenshot": "audit_results\\step_11\\preference_02_marketing.png"
+            },
+            {
+              "category": "personalization",
+              "screenshot": "audit_results\\step_11\\preference_03_personalization.png"
+            }
+          ]
+        }
+      ],
+      "directory": "audit_results\\step_11"
+    }
+  },
+  "user_ui_step11": {
+    "step": "STEP-11",
+    "title": "Manage Preferences",
+    "status": "PASS",
+    "summary": {
+      "categories": 3,
+      "known_states": 3,
+      "unknown_states": 0
+    },
+    "interface_found": true,
+    "categories": [
+      {
+        "index": 0,
+        "label": "Analytics",
+        "selected": false,
+        "changeable": true,
+        "result": "PASS"
+      },
+      {
+        "index": 1,
+        "label": "Marketing",
+        "selected": true,
+        "changeable": true,
+        "result": "PASS"
+      },
+      {
+        "index": 2,
+        "label": "Personalization",
+        "selected": false,
+        "changeable": true,
+        "result": "PASS"
+      }
+    ],
+    "evidence": {
+      "evidence": [
+        {
+          "page_url": "http://10.240.10.11:3003/",
+          "manage_preferences": "audit_results\\step_11\\manage_preferences.png",
+          "categories": [
+            {
+              "category": "analytics",
+              "screenshot": "audit_results\\step_11\\preference_01_analytics.png"
+            },
+            {
+              "category": "marketing",
+              "screenshot": "audit_results\\step_11\\preference_02_marketing.png"
+            },
+            {
+              "category": "personalization",
+              "screenshot": "audit_results\\step_11\\preference_03_personalization.png"
+            }
+          ]
+        }
+      ],
+      "directory": "audit_results\\step_11"
+    }
+  }
+}

@@ -1,0 +1,465 @@
+{
+  "audit": {
+    "url": "http://10.240.10.11:3000/",
+    "generated_at": "2026-09-08T06:53:59.035444+00:00",
+    "steps_executed": [
+      "STEP-01",
+      "STEP-02",
+      "STEP-04",
+      "STEP-05",
+      "STEP-07",
+      "STEP-11"
+    ]
+  },
+  "pages": [
+    {
+      "url": "http://10.240.10.11:3000/dashboard",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 0,
+      "links": 7,
+      "forms": 1,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/login",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "url": "http://10.240.10.11:3000/dashboard",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 1,
+      "links": 7,
+      "forms": 1,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/dashboard",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "url": "http://10.240.10.11:3000/applications_for_applicant",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 1,
+      "links": 4,
+      "forms": 1,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/applications_for_applicant",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "url": "http://10.240.10.11:3000/compliance",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 1,
+      "links": 3,
+      "forms": 1,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/compliance",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "url": "http://10.240.10.11:3000/applications/new",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 1,
+      "links": 0,
+      "forms": 0,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/applications/new",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "url": "http://10.240.10.11:3000/applications",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 1,
+      "links": 1,
+      "forms": 0,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/applications",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "url": "http://10.240.10.11:3000/public/labs",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 1,
+      "links": 0,
+      "forms": 0,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/public/labs",
+          "status_code": 200
+        }
+      ]
+    },
+    {
+      "url": "http://10.240.10.11:3000/profile",
+      "title": "Portal for Electronic Evidence Examiner| MeitY",
+      "status": 200,
+      "depth": 1,
+      "links": 3,
+      "forms": 1,
+      "scripts": 1,
+      "images": 0,
+      "cookies": 1,
+      "journey_history": [
+        {
+          "action": "navigate",
+          "from_url": "about:blank",
+          "to_url": "http://10.240.10.11:3000/profile",
+          "status_code": 200
+        }
+      ]
+    }
+  ],
+  "step_01": {
+    "step_id": "STEP-01",
+    "title": "Identify Personal Data Collection Points",
+    "status": "PASS",
+    "result_basis": "Pass when all visible and technically observable personal-data collection points are listed before consent testing begins.",
+    "summary": {
+      "pages_with_personal_data_collection": 0,
+      "forms_with_personal_data_collection": 0,
+      "scripts_with_personal_data_collection": 0,
+      "cookies_with_personal_data_collection": 0,
+      "storage_with_personal_data_collection": 0,
+      "widgets_with_personal_data_collection": 0,
+      "tracking_collection_points": 0,
+      "user_journey_collection_points": 0,
+      "personal_data_collection_points": 0,
+      "personal_data_categories": {}
+    },
+    "results": [],
+    "evidence": {},
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "user_ui_step1": {
+    "step_id": "STEP-01",
+    "title": "Identify Personal Data Collection Points",
+    "summary": {
+      "pages_with_personal_data_collection": 0,
+      "personal_data_collection_points": 0,
+      "personal_data_categories": {}
+    },
+    "collection_points": []
+  },
+  "step_02": {
+    "step_id": "STEP-02",
+    "title": "Verify Notice Before or at Personal-Data Collection",
+    "status": "PASS",
+    "result_basis": "No personal-data collection points were identified by STEP-01; therefore there was nothing for STEP-02 to verify.",
+    "summary": {
+      "total_collection_points": 0,
+      "collection_points_with_sufficient_evidence": 0,
+      "collection_points_with_partial_evidence": 0,
+      "collection_points_with_insufficient_evidence": 0,
+      "collection_points_without_notice": 0,
+      "collection_points_with_errors": 0,
+      "collection_points_with_failed_timing": 0,
+      "notices_found": 0
+    },
+    "results": [],
+    "evidence": {},
+    "validation": {
+      "valid": null,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "user_ui_step2": {
+    "step_id": "STEP-02",
+    "title": "Verify Notice Before or at Personal-Data Collection",
+    "status": "PASS",
+    "summary": {
+      "total_collection_points": 0,
+      "collection_points_with_sufficient_evidence": 0,
+      "collection_points_with_partial_evidence": 0,
+      "collection_points_with_insufficient_evidence": 0,
+      "collection_points_without_notice": 0,
+      "collection_points_with_failed_timing": 0,
+      "notices_found": 0
+    },
+    "collection_points": []
+  },
+  "step_04": {
+    "step_id": "STEP-04",
+    "title": "Capture Visual Evidence for Forms and Notices",
+    "status": "NO_FORMS",
+    "result_basis": "Pass when required visual evidence for identified forms and notices is successfully captured.",
+    "summary": {
+      "total_forms": 0,
+      "total_collection_points": 0,
+      "completed_forms": 0,
+      "partial_forms": 0,
+      "failed_forms": 0
+    },
+    "results": [],
+    "evidence": {
+      "forms": []
+    },
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "user_ui_step4": {
+    "step_id": "STEP-04",
+    "title": "Capture Visual Evidence for Forms and Notices",
+    "status": "NO_FORMS",
+    "result_basis": "Pass when required visual evidence for identified forms and notices is successfully captured.",
+    "summary": {
+      "total_forms": 0,
+      "total_collection_points": 0,
+      "completed_forms": 0,
+      "partial_forms": 0,
+      "failed_forms": 0
+    },
+    "results": [],
+    "evidence": {
+      "forms": []
+    },
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "step_05": {
+    "step_id": "STEP-05",
+    "title": "Identify Consent-Dependent Processing",
+    "status": "REVIEW",
+    "result_basis": "Identify processing activities that depend on user consent and preserve the supporting evidence.",
+    "summary": {
+      "total_processing_activities": 2,
+      "consent_dependent": 0,
+      "necessary_service_processing": 0,
+      "uncertain": 2,
+      "passed": 0,
+      "failed": 0,
+      "review_required": 2
+    },
+    "results": [
+      {
+        "index": 1,
+        "page_url": "http://10.240.10.11:3000/compliance",
+        "type": "tracking",
+        "purpose": "Government of India|Section 79A Certification System\n79A Portal\n\nMeitY Certification\n\nDashboard\nApplications\nCompliance\n\nAarav Sharma\n\nAPPLICANT_LAB\n\nLanguage\nEnglish\nहिन्दी\nGIGW3 Light\nCompliance Dashboard\n\nISO Standards compliance tracking\n\nISO/IEC 17025:2017\n\n134 / 145 requirements\n\nCompliance Score\n92%\nISO/IEC 27037:2012\n\n69 / 89 requirements\n\nCompliance Score\n78%\nISO/IEC 27001:2022\n\n0 / 114 requirements\n\nCompliance Score\n0%\nCompliance Requirements\n\nDetailed compliance requirements",
+        "classification": "uncertain",
+        "consent_requested": false,
+        "optional": true,
+        "necessary": false,
+        "result": "REVIEW",
+        "reason": "The processing appears optional, but no explicit consent mechanism was observed.",
+        "failure_reason": null,
+        "collection_points": []
+      },
+      {
+        "index": 2,
+        "page_url": "http://10.240.10.11:3000/profile",
+        "type": "profiling",
+        "purpose": "Government of India|Section 79A Certification System\n79A Portal\n\nMeitY Certification\n\nDashboard\nApplications\nCompliance\n\nAarav Sharma\n\nAPPLICANT_LAB\n\nLanguage\nEnglish\nहिन्दी\nGIGW3 Light\nProfile Settings\n\nManage your account and security settings\n\nAccount Information\nName\nAarav Sharma\nEmail\naarav.sharma@cdac.in\nRole\nAPPLICANT LAB\nClearance Level\nLevel 1\nSecurity Settings\n\nTwo-Factor Authentication\n\nAdd an extra layer of security\n\nEnable MFA",
+        "classification": "uncertain",
+        "consent_requested": false,
+        "optional": true,
+        "necessary": false,
+        "result": "REVIEW",
+        "reason": "The processing appears optional, but no explicit consent mechanism was observed.",
+        "failure_reason": null,
+        "collection_points": []
+      }
+    ],
+    "evidence": {},
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "user_ui_step5": {
+    "step_id": "STEP-05",
+    "title": "Identify Consent-Dependent Processing",
+    "status": "REVIEW",
+    "result_basis": "Identify processing activities that depend on user consent and preserve the supporting evidence.",
+    "summary": {
+      "total_processing_activities": 2,
+      "consent_dependent": 0,
+      "necessary_service_processing": 0,
+      "uncertain": 2,
+      "passed": 0,
+      "failed": 0,
+      "review_required": 2
+    },
+    "results": [
+      {
+        "index": 1,
+        "page_url": "http://10.240.10.11:3000/compliance",
+        "type": "tracking",
+        "purpose": "Government of India|Section 79A Certification System\n79A Portal\n\nMeitY Certification\n\nDashboard\nApplications\nCompliance\n\nAarav Sharma\n\nAPPLICANT_LAB\n\nLanguage\nEnglish\nहिन्दी\nGIGW3 Light\nCompliance Dashboard\n\nISO Standards compliance tracking\n\nISO/IEC 17025:2017\n\n134 / 145 requirements\n\nCompliance Score\n92%\nISO/IEC 27037:2012\n\n69 / 89 requirements\n\nCompliance Score\n78%\nISO/IEC 27001:2022\n\n0 / 114 requirements\n\nCompliance Score\n0%\nCompliance Requirements\n\nDetailed compliance requirements",
+        "classification": "uncertain",
+        "consent_requested": false,
+        "optional": true,
+        "necessary": false,
+        "result": "REVIEW",
+        "reason": "The processing appears optional, but no explicit consent mechanism was observed.",
+        "failure_reason": null,
+        "collection_points": []
+      },
+      {
+        "index": 2,
+        "page_url": "http://10.240.10.11:3000/profile",
+        "type": "profiling",
+        "purpose": "Government of India|Section 79A Certification System\n79A Portal\n\nMeitY Certification\n\nDashboard\nApplications\nCompliance\n\nAarav Sharma\n\nAPPLICANT_LAB\n\nLanguage\nEnglish\nहिन्दी\nGIGW3 Light\nProfile Settings\n\nManage your account and security settings\n\nAccount Information\nName\nAarav Sharma\nEmail\naarav.sharma@cdac.in\nRole\nAPPLICANT LAB\nClearance Level\nLevel 1\nSecurity Settings\n\nTwo-Factor Authentication\n\nAdd an extra layer of security\n\nEnable MFA",
+        "classification": "uncertain",
+        "consent_requested": false,
+        "optional": true,
+        "necessary": false,
+        "result": "REVIEW",
+        "reason": "The processing appears optional, but no explicit consent mechanism was observed.",
+        "failure_reason": null,
+        "collection_points": []
+      }
+    ],
+    "evidence": {},
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "step_07": {
+    "step_id": "STEP-07",
+    "title": "Optional Consent Not Pre-selected",
+    "status": "REVIEW",
+    "result_basis": "Optional consent controls must not be pre-selected.",
+    "summary": {
+      "checked": 0,
+      "unchecked": 0,
+      "review": 0
+    },
+    "results": [],
+    "evidence": {},
+    "validation": {
+      "valid": null,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "user_ui_step7": {
+    "step_id": "STEP-07",
+    "title": "Optional Consent Not Pre-selected",
+    "status": "REVIEW",
+    "result_basis": "Optional consent controls must not be pre-selected.",
+    "summary": {
+      "checked": 0,
+      "unchecked": 0,
+      "review": 0
+    },
+    "results": [],
+    "evidence": {},
+    "validation": {
+      "valid": null,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "step_11": {
+    "step_id": "STEP-11",
+    "title": "Manage Preferences",
+    "status": "FAIL",
+    "result_basis": "Identify whether available preference categories can be reviewed and changed by the user.",
+    "summary": {
+      "categories": 0,
+      "known_states": 0,
+      "unknown_states": 0
+    },
+    "results": [],
+    "evidence": {
+      "evidence": [],
+      "directory": "audit_results\\step_11"
+    },
+    "validation": {
+      "valid": null,
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "user_ui_step11": {
+    "step_id": "STEP-11",
+    "title": "Manage Preferences",
+    "status": "FAIL",
+    "result_basis": "Identify whether available preference categories can be reviewed and changed by the user.",
+    "summary": {
+      "categories": 0,
+      "known_states": 0,
+      "unknown_states": 0
+    },
+    "results": [],
+    "evidence": {
+      "evidence": [],
+      "directory": "audit_results\\step_11"
+    },
+    "validation": {
+      "valid": null,
+      "errors": [],
+      "warnings": []
+    }
+  }
+}
