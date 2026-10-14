@@ -432,7 +432,7 @@ export default function CompletedReports({ onBack }) {
                     </div>
                 )}
                 {/* INFORMATION BANNER */}
-                <section className="rounded-xl border border-indigo-500/20 bg-linear-to-r from-indigo-500/[0.09] to-transparent p-4 sm:p-5">
+                <section className="rounded-xl border border-indigo-500/20 bg-linear-to-r from-indigo-500/9 to-transparent p-4 sm:p-5">
                     <div className="flex items-start gap-3">
                         <div className="mt-0.5 rounded-lg bg-indigo-500/10 p-2 text-indigo-400">
                             <Sparkles size={19} />

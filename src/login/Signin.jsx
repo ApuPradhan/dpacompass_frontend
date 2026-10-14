@@ -311,7 +311,7 @@ const Signin = () => {
                     <div className="grid grid-cols-2 gap-3">
 
                         {/* CAPTCHA IMAGE */}
-                        <div className="flex items-center justify-between border border-gray-600 rounded-lg px-3 py-2 bg-white min-h-[48px]">
+                        <div className="flex items-center justify-between border border-gray-600 rounded-lg px-3 py-2 bg-white min-h-12">
 
                             {captchaLoading ? (
 
@@ -324,7 +324,7 @@ const Signin = () => {
                                 <img
                                     src={captchaImage}
                                     alt="CAPTCHA"
-                                    className="h-10 w-[160px] object-contain"
+                                    className="h-10 w-40 object-contain"
                                 />
 
                             ) : (
