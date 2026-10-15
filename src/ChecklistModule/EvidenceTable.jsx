@@ -10,6 +10,8 @@ import {
 import CreateEvidence from "./CreateEvidence";
 import EditEvidence from "./EditEvidence";
 import ViewEvidence from "./ViewEvidence";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const EvidenceTable = () => {
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -34,8 +36,8 @@ const EvidenceTable = () => {
     const fetchEvidence = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${BASE_URL}/api/checklists/evidence/`, {
-                headers: authHeaders
+            const res = await fetchWithAuth(`/api/checklists/evidence/`, {
+                method: "GET",
             });
             const data = await res.json();
             setEvidences(data.data || []);
@@ -55,10 +57,16 @@ const EvidenceTable = () => {
         if (!selected) return;
 
         try {
-            await fetch(`${BASE_URL}/api/checklists/evidence/${selected.id}/`, {
-                method: "DELETE",
-                headers: authHeaders
-            });
+            const res = await fetchWithAuth(
+                `/api/checklists/evidence/${selected.id}/`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Failed to delete evidence");
+            }
 
             setShowDelete(false);
             setSelected(null);
@@ -69,7 +77,7 @@ const EvidenceTable = () => {
     };
 
     return (
-        <div className="p-6 min-h-screen bg-gradient-to-br from-[#0b0f2a] to-[#020617] text-white">
+        <div className="p-6 min-h-screen bg-linear-to-br from-[#0b0f2a] to-[#020617] text-white">
 
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
@@ -131,8 +139,8 @@ const EvidenceTable = () => {
                                     <td className="p-3">
                                         <span
                                             className={`px-2 py-1 text-xs rounded-full ${e.is_active
-                                                    ? "bg-green-500/20 text-green-400"
-                                                    : "bg-yellow-500/20 text-yellow-400"
+                                                ? "bg-green-500/20 text-green-400"
+                                                : "bg-yellow-500/20 text-yellow-400"
                                                 }`}
                                         >
                                             {e.is_active ? "Published" : "Draft"}

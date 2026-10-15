@@ -31,6 +31,8 @@ import RemediationSigin from './Remediation/RemediationSigin';
 import ViewChecklist from './ChecklistModule/ViewChecklist'
 import DataBreachScanner from './AuditorDashboard/DataBreachScanner';
 
+import SessionExpiredScreen from './utilities/SessionExpiredScreen';
+
 
 
 //  -------------------- NOTIFICATION IMPORTS ----------------- */ 
@@ -76,6 +78,7 @@ import BulkUpload from './ChecklistModule/BullkUpload';
 import ConsentAutoAudit from './ConsentScannerModule/Consent2.0/components/ConsentAutoAudit';
 import LearnDPDP from './AuditeeDashboard/LearnDPDP';
 import CompletedAudits from './AuditorDashboard/CompletedAudits';
+
 /* ------------------ ROLE BASED REDIRECT ------------------ */
 const getDashboardRoute = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -335,7 +338,7 @@ function App() {
 
           {/* ---------------- auditee ---------------- */}
           <Route path="/learndpdp" element={
-            <ProtectedRoute allowedRoles={[2,3]}>
+            <ProtectedRoute allowedRoles={[2, 3]}>
               <LearnDPDP />
             </ProtectedRoute>
           } />
@@ -512,6 +515,7 @@ function App() {
           />
 
         </Routes>
+        <SessionExpiredScreen />
       </Router>
     </>
 

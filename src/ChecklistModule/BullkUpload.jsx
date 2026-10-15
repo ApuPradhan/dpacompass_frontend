@@ -348,20 +348,7 @@ const BulkUpload = () => {
 
         body: formData,
 
-        /*
-         * Do NOT manually set Content-Type.
-         * The browser automatically sets:
-         *
-         * multipart/form-data; boundary=...
-         */
-
         headers: {
-          // Add authorization if required by your backend.
-          //
-          // Example:
-          //
-          // Authorization:
-          //   `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
 

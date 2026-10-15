@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -28,13 +30,12 @@ export default function CreateChecklist() {
             //     }
             // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/applications/types/`,
+            const res = await fetchWithAuth(
+                `/api/applications/types/`,
                 {
-                    method: 'GET',
+                    method: "GET",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
@@ -88,13 +89,12 @@ export default function CreateChecklist() {
             //     }
             // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/checklists/create/`,
+            const res = await fetchWithAuth(
+                `/api/checklists/create/`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(formData),
                 }

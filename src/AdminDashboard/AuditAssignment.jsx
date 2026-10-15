@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import Loader from "../utilities/Loader";
 import AuditAssignmentModal from "./AuditAssignmentModal";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
 
 export default function AuditAssignment() {
@@ -23,27 +24,25 @@ export default function AuditAssignment() {
     const [successMsg, setSuccessMsg] = useState("");
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+
     const removeAudit = (id) => {
         setAudits((prev) => prev.filter((a) => a.id !== id));
     };
     const fetchAudits = async () => {
         try {
-            const token = localStorage.getItem("access");
 
-            // const response = await fetch(`${BASE_URL}/api/applications/applications/approved`, {
-            //     method: "GET",
-            //     credentials: "include",
-            // });
-            const response = await fetch(`${BASE_URL}/api/applications/applications/approved`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response = await fetchWithAuth(
+                `/api/applications/applications/approved`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
             const data = await response.json();
             // console.log(data);
-            
+
             if (response.ok) {
                 setAudits(data);
             } else {
@@ -63,7 +62,6 @@ export default function AuditAssignment() {
     };
     const fetchUserById = async (userId) => {
         try {
-            const token = localStorage.getItem("access");
 
             // const res = await fetch(
             //     `${BASE_URL}/api/auth/admin/user/${userId}/`,
@@ -72,12 +70,11 @@ export default function AuditAssignment() {
             //     }
             // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/auth/admin/user/${userId}/`,
+            const res = await fetchWithAuth(
+                `/api/auth/admin/user/${userId}/`,
                 {
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
@@ -92,7 +89,7 @@ export default function AuditAssignment() {
     };
     useEffect(() => {
         // console.log("Entered Audit Assignment");
-        
+
         fetchAudits();
     }, []);
     useEffect(() => {
@@ -140,10 +137,10 @@ export default function AuditAssignment() {
         description: a.description,
         created_at: a.created_at,
         status: a.status,
-        application_id : a.id
+        application_id: a.id
     }));
     // console.log("formatted audits",formattedAudits);
-    
+
     return (
         <div className="min-h-screen bg-linear-to-br from-[#0f172a] to-[#1e293b] text-white p-6">
             <div className="mb-10 flex items-center gap-2 text-xl text-indigo-400 cursor-pointer hover:text-indigo-300"

@@ -45,14 +45,20 @@ const EditEvidence = ({ evidence, onClose, onSuccess }) => {
         };
 
         try {
-            await fetch(`${BASE_URL}/api/checklists/evidence/${evidence.id}/`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
+            const res = await fetchWithAuth(
+                `/api/checklists/evidence/${evidence.id}/`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Failed to update evidence");
+            }
 
             onSuccess();
             onClose();
@@ -68,7 +74,7 @@ const EditEvidence = ({ evidence, onClose, onSuccess }) => {
     return (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
 
-            <div className="bg-[#0f172a] border border-gray-700 rounded-xl w-[460px] p-6 shadow-xl animate-scaleIn text-white">
+            <div className="bg-[#0f172a] border border-gray-700 rounded-xl w-115 p-6 shadow-xl animate-scaleIn text-white">
 
                 {/* HEADER */}
                 <div className="flex flex-col items-center text-center mb-5">

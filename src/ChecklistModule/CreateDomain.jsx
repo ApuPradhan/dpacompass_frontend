@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FiLoader, FiPlus } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
 
 const CreateDomain = ({ onClose, onSuccess }) => {
@@ -21,14 +22,16 @@ const CreateDomain = ({ onClose, onSuccess }) => {
         setLoading(true);
 
         try {
-            const res = await fetch(`${BASE_URL}/api/checklists/domains/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify(form)
-            });
+            const res = await fetchWithAuth(
+                `/api/checklists/domains/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(form),
+                }
+            );
 
             if (res.ok) {
                 toast.success("Domain created successfully");

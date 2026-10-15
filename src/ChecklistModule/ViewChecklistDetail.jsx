@@ -8,7 +8,9 @@ import {
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import MetaCard from "./MetaCard";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 export default function ViewChecklistDetail() {
   const { id } = useParams();
@@ -20,12 +22,10 @@ export default function ViewChecklistDetail() {
 
   const fetchChecklist = async () => {
     try {
-      const res = await fetch(
-        `${BASE_URL}/api/checklists/checklists/${id}/`,
+      const res = await fetchWithAuth(
+        `/api/checklists/checklists/${id}/`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          method: "GET",
         }
       );
 

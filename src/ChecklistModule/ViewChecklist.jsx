@@ -8,6 +8,8 @@ import {
 } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const ViewChecklist = () => {
     const BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -27,8 +29,8 @@ const ViewChecklist = () => {
 
     const fetchApplicationTypes = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/applications/types/`, {
-                headers: authHeaders,
+            const res = await fetchWithAuth(`/api/applications/types/`, {
+                method: "GET",
             });
             const data = await res.json();
             setApplicationTypes(data.data || []);
@@ -39,8 +41,8 @@ const ViewChecklist = () => {
 
     const fetchChecklist = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/checklists/items/`, {
-                headers: authHeaders,
+            const res = await fetchWithAuth(`/api/checklists/items/`, {
+                method: "GET",
             });
             const data = await res.json();
             setChecklists(data.data || []);
@@ -51,8 +53,8 @@ const ViewChecklist = () => {
 
     const fetchDomains = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/checklists/domains/`, {
-                headers: authHeaders,
+            const res = await fetchWithAuth(`/api/checklists/domains/`, {
+                method: "GET",
             });
             const data = await res.json();
             setDomains(data.data || []);
@@ -70,23 +72,36 @@ const ViewChecklist = () => {
     // ================= ACTIONS =================
     const handlePublish = async (id) => {
         try {
-            await fetch(`${BASE_URL}/api/checklists/items/${id}/publish/`, {
-                method: "POST",
-                headers: authHeaders,
-            });
+            const res = await fetchWithAuth(
+                `/api/checklists/items/${id}/publish/`,
+                {
+                    method: "POST",
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Publish failed");
+            }
+
             toast.success("Checklist published");
             fetchChecklist();
         } catch {
             toast.error("Publish failed");
         }
     };
-
     const handleDelete = async (id) => {
         try {
-            await fetch(`${BASE_URL}/api/checklists/items/${id}/`, {
-                method: "DELETE",
-                headers: authHeaders,
-            });
+            const res = await fetchWithAuth(
+                `/api/checklists/items/${id}/`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Delete failed");
+            }
+
             toast.success("Checklist deleted");
             fetchChecklist();
         } catch {

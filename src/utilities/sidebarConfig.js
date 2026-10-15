@@ -53,14 +53,14 @@ export const sidebarConfig = {
             ],
         },
 
-        {
-            label: "Generate Report",
-            icon: FiBarChart2,
-        },
-        {
-            label: "Learn DPDP",
-            icon: FiBookOpen,
-        }
+        // {
+        //     label: "Generate Report",
+        //     icon: FiBarChart2,
+        // },
+        // {
+        //     label: "Learn DPDP",
+        //     icon: FiBookOpen,
+        // }
     ],
 
     auditor: [
