@@ -22,7 +22,6 @@ export default function AuditAssignment() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [successMsg, setSuccessMsg] = useState("");
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 
     const removeAudit = (id) => {

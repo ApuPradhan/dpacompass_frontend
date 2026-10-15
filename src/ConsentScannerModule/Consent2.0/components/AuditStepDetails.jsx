@@ -1,11 +1,11 @@
 import React from "react";
 
-import Step01View from "./steps/Step01View";
-import Step02View from "./steps/Step02View";
-import Step04View from "./steps/Step04View";
-import Step05View from "./steps/Step05View";
-import Step07View from "./steps/Step07View";
-import Step11View from "./steps/Step11View";
+import Step01View from "./steps/Step01view";
+import Step02View from "./steps/Step02view";
+import Step04View from "./steps/Step04view";
+import Step05View from './steps/Step05view'
+import Step07View from "./steps/Step07view";
+import Step11View from "./steps/Step11view";
 import Step13View from "./steps/Step13view";
 
 /* =========================================================

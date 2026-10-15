@@ -153,11 +153,11 @@ If the frontend uses a Vite environment variable for the Django backend, configu
 
 Example:
 
-    VITE_API_BASE_URL=http://SERVER_IP:8000
+    API_BASE_URL=http://SERVER_IP:8000
 
 Then the frontend can access it through:
 
-    import.meta.env.VITE_API_BASE_URL
+    import.meta.env.API_BASE_URL
 
 IMPORTANT:
 

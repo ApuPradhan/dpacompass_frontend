@@ -5,13 +5,11 @@ import { FiEye, FiPlay, FiArrowLeft } from "react-icons/fi";
 import Loader from "../utilities/Loader";
 import AuditViewModal from "../AuditorDashboard/AuditViewModal";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function NewAssignedAudit() {
     const navigate = useNavigate();
-    const token = localStorage.getItem("access");
-
     const [audits, setAudits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -23,16 +21,12 @@ export default function NewAssignedAudit() {
         try {
             setStartingAuditId(row.id);
 
-            const res = await fetch(
-                `${BASE_URL}/api/audits/start/${row.id}/`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth(`/api/audits/start/${row.id}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
             const data = await res.json();
 
@@ -54,14 +48,16 @@ export default function NewAssignedAudit() {
             const jobs = [];
 
             for (let scanner of scanConfigs) {
-                const res = await fetch(`${BASE_URL}/api/scanner/webscan/`, {
+                const res = await fetchWithAuth("/api/scanner/webscan/", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                     body: JSON.stringify({
                         scanner_key: scanner,
                         target: row.url,
-                        audit_id: row.id
-                    })
+                        audit_id: row.id,
+                    }),
                 });
 
                 const data = await res.json();
@@ -73,13 +69,15 @@ export default function NewAssignedAudit() {
                 });
             }
 
-            const consentRes = await fetch(`${BASE_URL}/api/consent/scan/`, {
+            const consentRes = await fetchWithAuth("/api/consent/scan/", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({
                     url: row.url,
-                    audit_id: row.id
-                })
+                    audit_id: row.id,
+                }),
             });
 
             const consentData = await consentRes.json();
@@ -107,15 +105,7 @@ export default function NewAssignedAudit() {
     // ---------------- FETCH ----------------
     const fetchAssignedAudits = async () => {
         try {
-            const res = await fetch(
-                `${BASE_URL}/api/audits/assigned/`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth("/api/audits/assigned/");
 
             const data = await res.json();
 
@@ -129,12 +119,8 @@ export default function NewAssignedAudit() {
             // ---------------- APPLICATION FETCH ----------------
             const appResponses = await Promise.all(
                 applicationIds.map(id =>
-                    fetch(`${BASE_URL}/api/applications/applications/${id}/`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }).then(res => res.json())
+                    fetchWithAuth(`/api/applications/applications/${id}/`)
+                        .then(res => res.json())
                 )
             );
 
@@ -168,12 +154,8 @@ export default function NewAssignedAudit() {
             // ---------------- NEW CHECKLIST API ----------------
             const checklistResponses = await Promise.all(
                 applicationIds.map(id =>
-                    fetch(`${BASE_URL}/api/checklists/application/${id}/`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }).then(res => res.json())
+                    fetchWithAuth(`/api/checklists/application/${id}/`)
+                        .then(res => res.json())
                 )
             );
 

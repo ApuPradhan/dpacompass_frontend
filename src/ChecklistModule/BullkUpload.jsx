@@ -10,9 +10,10 @@ import {
   Loader2,
 } from "lucide-react";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { API_BASE_URL } from "../config";
 
-const BULK_UPLOAD_URL = `${BASE_URL}/api/checklists/checklist/bulk-upload/`;
+
+const BULK_UPLOAD_URL = `${API_BASE_URL}/api/checklists/checklist/bulk-upload/`;
 
 const REQUIRED_COLUMNS = [
   "domain",

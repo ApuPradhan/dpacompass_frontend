@@ -6,8 +6,10 @@ import { toast } from "react-toastify";
 import DynamicAuditTable from "../AdminDashboard/DynamicAuditTable";
 import Loader from "../utilities/Loader";
 import AuditViewModal from "./AuditViewModal";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
 
 export default function PendingAssignments() {
     const navigate = useNavigate();
@@ -27,12 +29,7 @@ export default function PendingAssignments() {
 
     const fetchPendingAssignments = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/audits/assignments/pending/`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-            });
+            const res = await fetchWithAuth("/api/audits/assignments/pending/");
 
             const data = await res.json();
 
@@ -45,12 +42,8 @@ export default function PendingAssignments() {
 
             const appResponses = await Promise.all(
                 applicationIds.map(id =>
-                    fetch(`${BASE_URL}/api/applications/applications/${id}/`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }).then(res => res.json())
+                    fetchWithAuth(`/api/applications/applications/${id}/`)
+                        .then(res => res.json())
                 )
             );
 
@@ -61,12 +54,8 @@ export default function PendingAssignments() {
 
             const checklistResponses = await Promise.all(
                 applicationIds.map(id =>
-                    fetch(`${BASE_URL}/api/checklists/application/${id}/`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }).then(res => res.json())
+                    fetchWithAuth(`/api/checklists/application/${id}/`)
+                        .then(res => res.json())
                 )
             );
 
@@ -96,12 +85,11 @@ export default function PendingAssignments() {
         try {
             setAcceptingId(auditId);
 
-            const res = await fetch(
-                `${BASE_URL}/api/audits/assignments/${auditId}/accept/`,
+            const res = await fetchWithAuth(
+                `/api/audits/assignments/${auditId}/accept/`,
                 {
                     method: "POST",
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 }
@@ -138,12 +126,11 @@ export default function PendingAssignments() {
         try {
             setRejectingId(auditToReject);
 
-            const res = await fetch(
-                `${BASE_URL}/api/audits/assignments/${auditToReject}/reject/`,
+            const res = await fetchWithAuth(
+                `/api/audits/assignments/${auditToReject}/reject/`,
                 {
                     method: "POST",
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
@@ -193,10 +180,10 @@ export default function PendingAssignments() {
             render: value => (
                 <span
                     className={`px-3 py-1 text-xs rounded-full border ${value === "assigned"
-                            ? "text-yellow-400 bg-yellow-500/20 border-yellow-500/30"
-                            : value === "accepted"
-                                ? "text-green-400 bg-green-500/20 border-green-500/30"
-                                : "text-red-400 bg-red-500/20 border-red-500/30"
+                        ? "text-yellow-400 bg-yellow-500/20 border-yellow-500/30"
+                        : value === "accepted"
+                            ? "text-green-400 bg-green-500/20 border-green-500/30"
+                            : "text-red-400 bg-red-500/20 border-red-500/30"
                         }`}
                 >
                     {value}

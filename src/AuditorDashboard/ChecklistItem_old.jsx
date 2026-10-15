@@ -6,8 +6,8 @@ import {
     FiLoader
 } from "react-icons/fi";
 import ScanResultViewer from "../utilities/ScanResultsViewer";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function ChecklistItem({ item, index, url, auditId }) {
 
@@ -62,7 +62,7 @@ export default function ChecklistItem({ item, index, url, auditId }) {
     const pollScan = (jobId) => {
         const interval = setInterval(async () => {
             try {
-                const res = await fetch(`${BASE_URL}/api/scanner/webscan/${jobId}`);
+                const res = await fetchWithAuth(`/api/scanner/webscan/${jobId}`);
                 const data = await res.json();
 
                 const stored = JSON.parse(localStorage.getItem(`audit_${auditId}_jobs`) || "[]");

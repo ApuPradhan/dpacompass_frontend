@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { parse, isValid } from "date-fns";
 import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 export default function AssignAuditorModal({ audit, onClose, onAssign }) {
     const [auditors, setAuditors] = useState([]);

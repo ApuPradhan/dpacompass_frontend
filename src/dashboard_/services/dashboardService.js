@@ -1,3 +1,4 @@
+import { SOCKET_BASE_URL } from "../../config";
 class DashboardService {
     constructor() {
         this.socket = null;
@@ -46,11 +47,8 @@ class DashboardService {
             return;
         }
 
-        const BASE_URL =
-            import.meta.env.VITE_SOCKET_BASE_URL;
-
         const url =
-            `${BASE_URL}/ws/dashboard/?token=${token}`;
+            `${SOCKET_BASE_URL}/ws/dashboard/?token=${encodeURIComponent(token)}`;
 
         // console.log(
         //     "Connecting dashboard WebSocket:",

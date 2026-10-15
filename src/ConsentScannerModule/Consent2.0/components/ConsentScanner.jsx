@@ -6,17 +6,15 @@ import {
     Play,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { fetchWithAuth } from "../../../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
-const CONSENT_API_BASE_URL =
-    import.meta.env.VITE_CONSENT_API_BASE_URL || "";
 
-// IMPORTANT:
-// Put your actual scanner POST path here.
-// Example:
-// VITE_CONSENT_RUN_ENDPOINT=/api/audits/consent/run/
-const CONSENT_RUN_ENDPOINT =
-    import.meta.env.VITE_CONSENT_RUN_ENDPOINT || "";
+// const BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+// const CONSENT_API_BASE_URL =
+//     import.meta.env.VITE_CONSENT_API_BASE_URL || "";
+
+// const CONSENT_RUN_ENDPOINT =
+//     import.meta.env.VITE_CONSENT_RUN_ENDPOINT || "";
 
 const ConsentScanner = () => {
     const navigate = useNavigate();
@@ -60,13 +58,8 @@ const ConsentScanner = () => {
     // ============================================================
 
     const fetchConsentStatus = async () => {
-        const response = await fetch(
-            `${BASE_URL}/api/audits/assigned/consent-status/`,
-            {
-                method: "GET",
-                credentials: "include",
-                headers: getHeaders(),
-            }
+        const response = await fetchWithAuth(
+            "/api/audits/assigned/consent-status/"
         );
 
         if (!response.ok) {
@@ -91,15 +84,7 @@ const ConsentScanner = () => {
     // ============================================================
 
     const fetchScannedApplications = async () => {
-        const response = await fetch(
-            `${BASE_URL}/api/audits/consent/scanned/`,
-            {
-                method: "GET",
-                credentials: "include",
-                headers: getHeaders(),
-            }
-        );
-
+        const response = await fetchWithAuth("/api/audits/consent/scanned/");
         if (!response.ok) {
             throw new Error(
                 `Consent scanned API returned ${response.status}`

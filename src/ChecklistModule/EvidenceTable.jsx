@@ -14,7 +14,6 @@ import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
 
 const EvidenceTable = () => {
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const token = localStorage.getItem("access");
 
     const [evidences, setEvidences] = useState([]);

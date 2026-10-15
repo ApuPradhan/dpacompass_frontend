@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const inputClass =
     "w-full px-3 py-2 rounded-lg bg-[#1e293b] border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm";
 
 const ChecklistModule = () => {
     const navigate = useNavigate();
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
     const token = localStorage.getItem("access");
 
     const [applicationTypes, setApplicationTypes] = useState([]);
@@ -53,25 +55,19 @@ const ChecklistModule = () => {
     }, []);
 
     const fetchApplicationTypes = async () => {
-        const res = await fetch(`${BASE_URL}/api/applications/types/`, {
-            headers: authHeaders,
-        });
+        const res = await fetchWithAuth("/api/applications/types/");
         const data = await res.json();
         setApplicationTypes(data.data || []);
     };
 
     const fetchDomains = async () => {
-        const res = await fetch(`${BASE_URL}/api/checklists/domains/`, {
-            headers: authHeaders,
-        });
+        const res = await fetchWithAuth("/api/checklists/domains/");
         const data = await res.json();
         setDomains(data.data || []);
     };
 
     const fetchEvidences = async () => {
-        const res = await fetch(`${BASE_URL}/api/checklists/evidence/`, {
-            headers: authHeaders,
-        });
+        const res = await fetchWithAuth("/api/checklists/evidence/");
         const data = await res.json();
         setEvidences(data.data || []);
     };
@@ -146,9 +142,11 @@ const ChecklistModule = () => {
         setLoading(true);
 
         try {
-            const res = await fetch(`${BASE_URL}/api/checklists/items/`, {
+            const res = await fetchWithAuth("/api/checklists/items/", {
                 method: "POST",
-                headers: authHeaders,
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify(payload),
             });
 

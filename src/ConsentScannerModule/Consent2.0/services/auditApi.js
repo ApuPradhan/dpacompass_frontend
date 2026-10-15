@@ -1,8 +1,9 @@
 const API_BASE_URL = import.meta.env.VITE_CONSENT_API_BASE_URL;
+import { CONSENT_API_BASE_URL } from "../../../config";
 
-if (!API_BASE_URL) {
+if (!CONSENT_API_BASE_URL) {
     throw new Error(
-        "VITE_API_BASE_URL is not configured. Please check your .env file."
+        "API_BASE_URL is not configured. Please check your .env file."
     );
 }
 
@@ -37,10 +38,10 @@ export const startAudit = async ({
     if (!url?.trim()) {
         throw new Error("Audit URL is required.");
     }
-    console.log(url,username, password);
+    // console.log(url,username, password);
     
     const response = await fetch(
-        `${API_BASE_URL}/api/audits/test-crawl/`,
+        `${CONSENT_API_BASE_URL}/api/audits/test-crawl/`,
         {
             method: "POST",
             headers: {
@@ -101,7 +102,7 @@ export const getAuditStatus = async (auditId) => {
     }
 
     const response = await fetch(
-        `${API_BASE_URL}/api/audits/${auditId}/status/`,
+        `${CONSENT_API_BASE_URL}/api/audits/${auditId}/status/`,
         {
             method: "GET",
             headers: {
@@ -142,7 +143,7 @@ export const getConsentAuditResult = async (
     }
 
     const response = await fetch(
-        `${API_BASE_URL}/api/audits/consent/result/${encodeURIComponent(publicAuditId)}/`,
+        `${CONSENT_API_BASE_URL}/api/audits/consent/result/${encodeURIComponent(publicAuditId)}/`,
         {
             method: "GET",
             credentials: "include",

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import DynamicAuditTable from "../AdminDashboard/DynamicAuditTable";
 import { FiArrowLeft, FiEye } from "react-icons/fi";
 import Loader from "../utilities/Loader";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function OngoingAudits() {
     const navigate = useNavigate();
@@ -29,14 +29,7 @@ export default function OngoingAudits() {
     // =========================
     const fetchOngoingAudits = async () => {
         try {
-            const res = await fetch(
-                `${BASE_URL}/api/audits/inprogress`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth("/api/audits/inprogress");
 
             const data = await res.json();
 

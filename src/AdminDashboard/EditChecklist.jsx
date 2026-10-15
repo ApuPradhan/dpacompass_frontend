@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
 export default function EditChecklist() {
 
@@ -30,15 +29,7 @@ export default function EditChecklist() {
             //     }
             // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/applications/types/`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth("/api/applications/types/");
 
             const data = await res.json();
 
@@ -61,15 +52,7 @@ export default function EditChecklist() {
             //     }
             // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/checklists/checklists/${id}/`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth(`/api/checklists/checklists/${id}/`);
             const data = await res.json();
 
             if (res.ok) {
@@ -124,22 +107,13 @@ export default function EditChecklist() {
         setUpdating(true);
 
         try {
-            // const res = await fetch(
-            //     `${BASE_URL}/api/checklists/checklists/update/${id}/`,
-            //     {
-            //         method: "PUT",
-            //         credentials: "include",
-            //         body: JSON.stringify(formData),
-            //     }
-            // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/checklists/checklists/update/${id}/`,
+            const res = await fetchWithAuth(
+                `/api/checklists/checklists/update/${id}/`,
                 {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(formData),
                 }

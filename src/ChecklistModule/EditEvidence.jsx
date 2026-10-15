@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { FiLoader, FiEdit } from "react-icons/fi";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
 const EditEvidence = ({ evidence, onClose, onSuccess }) => {
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const token = localStorage.getItem("access");
 
     const [loading, setLoading] = useState(false);
     const [type, setType] = useState("manual");

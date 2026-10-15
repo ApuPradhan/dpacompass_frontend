@@ -12,7 +12,6 @@ import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
 
 const ViewChecklist = () => {
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const token = localStorage.getItem("access");
     const navigate = useNavigate();
 

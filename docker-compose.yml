@@ -1,12 +1,15 @@
+
 services:
-  dpacompass-frontend:
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
-
+    image: dpacompass-frontend:1.0
     container_name: dpacompass-frontend
-
     ports:
       - "3000:80"
-
+    environment:
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:8001}
+      SOCKET_BASE_URL: ${SOCKET_BASE_URL:-ws://localhost:8001}
+      CONSENT_API_BASE_URL: ${CONSENT_API_BASE_URL:-http://localhost:8000}
     restart: unless-stopped

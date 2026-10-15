@@ -9,9 +9,10 @@ import {
 import CreateDomain from "./CreateDomain";
 import EditDomain from "./EditDomain";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const DomainTable = () => {
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
     const token = localStorage.getItem("access");
 
     const [domains, setDomains] = useState([]);
@@ -23,10 +24,6 @@ const DomainTable = () => {
     const [showDelete, setShowDelete] = useState(false);
     const [showCreate, setShowCreate] = useState(false);
 
-    const authHeaders = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-    };
 
     // ================= FETCH =================
     const fetchDomains = async () => {
@@ -34,9 +31,7 @@ const DomainTable = () => {
 
         setLoading(true);
         try {
-            const res = await fetch(`${BASE_URL}/api/checklists/domains/`, {
-                headers: authHeaders
-            });
+            const res = await fetchWithAuth("/api/checklists/domains/");
             const data = await res.json();
             setDomains(data.data || []);
         } catch (err) {
@@ -52,10 +47,12 @@ const DomainTable = () => {
     // ================= DELETE =================
     const handleDelete = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/checklists/domains/${selected.id}/`, {
-                method: "DELETE",
-                headers: authHeaders
-            });
+            const res = await fetchWithAuth(
+                `/api/checklists/domains/${selected.id}/`,
+                {
+                    method: "DELETE",
+                }
+            );
 
             if (res.ok) {
                 toast.success("Domain deleted successfully");

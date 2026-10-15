@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Input from "./Input";
 import Textarea from "./TextArea";
 import Select from "./Select";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function EditApplication() {
 
@@ -39,13 +39,7 @@ export default function EditApplication() {
             //     }
             // );
 
-            const res = await fetch(`${BASE_URL}/api/applications/applications/${id}/`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const res = await fetchWithAuth(`/api/applications/applications/${id}/`);
 
 
             const data = await res.json();
@@ -83,15 +77,7 @@ export default function EditApplication() {
             //     }
             // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/applications/types/`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth("/api/applications/types/");
             const data = await res.json();
             setApplicationTypes(data.data);
 
@@ -127,11 +113,13 @@ export default function EditApplication() {
                 data_categories: formData.dataCategories,
             };
 
-            const res = await fetch(
-                `${BASE_URL}/api/applications/applications/${id}/update/`,
+            const res = await fetchWithAuth(
+                `/api/applications/applications/${id}/update/`,
                 {
                     method: "PATCH",
-                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                     body: JSON.stringify(payload),
                 }
             );

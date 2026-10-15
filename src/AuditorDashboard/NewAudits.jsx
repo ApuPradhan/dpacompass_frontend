@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import Loader from "../utilities/Loader";
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const cardClass =
   "bg-[#0f172a]/80 border border-gray-700 rounded-xl backdrop-blur-lg";
@@ -29,15 +30,7 @@ export default function NewAudits() {
       //   }
       // );
 
-      const res = await fetch(
-        `${BASE_URL}/api/applications/assigned/`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetchWithAuth("/api/applications/assigned/");
 
       const data = await res.json();
 

@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+import { API_BASE_URL } from "../config";
 
 export const SESSION_EXPIRED_EVENT = "auth:session-expired";
 
@@ -13,19 +14,17 @@ export const expireSession = () => {
 };
 
 export const fetchWithAuth = async (url, options = {}) => {
-  let access = localStorage.getItem("access");
+  const access = localStorage.getItem("access");
   const refresh = localStorage.getItem("refresh");
 
-  // If no access token exists, end the authenticated session.
   if (!access) {
     expireSession();
     throw new Error("Session expired. Please sign in again.");
   }
 
   const makeRequest = async (token) => {
-    return fetch(`${BASE_URL}${url}`, {
+    return fetch(`${API_BASE_URL}${url}`, {
       ...options,
-      // Used by the global interceptor in Step 2.
       __skipGlobalAuthCheck: true,
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +36,6 @@ export const fetchWithAuth = async (url, options = {}) => {
 
   let response = await makeRequest(access);
 
-  // Access token may have expired.
   if (response.status === 401) {
     if (!refresh) {
       expireSession();
@@ -46,7 +44,7 @@ export const fetchWithAuth = async (url, options = {}) => {
 
     try {
       const refreshRes = await fetch(
-        `${BASE_URL}/api/auth/refresh/`,
+        `${API_BASE_URL}/api/auth/refresh/`,
         {
           method: "POST",
           __skipGlobalAuthCheck: true,
@@ -62,7 +60,6 @@ export const fetchWithAuth = async (url, options = {}) => {
       if (refreshRes.ok && data.access) {
         localStorage.setItem("access", data.access);
 
-        // Retry the original request once.
         response = await makeRequest(data.access);
 
         if (response.status === 401) {

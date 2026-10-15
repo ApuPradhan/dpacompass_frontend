@@ -5,13 +5,12 @@ import { FiEye, FiArrowLeft } from "react-icons/fi";
 import Loader from "../utilities/Loader";
 import AuditViewModal from "./AuditViewModal";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 export default function DataBreachScanner_old() {
     const navigate = useNavigate();
-    const token = localStorage.getItem("access");
-
     const [audits, setAudits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -21,25 +20,6 @@ export default function DataBreachScanner_old() {
 
     // ---------------- UTILS ----------------
 
-    // const extractScanners = (domains) => {
-    //     const scanners = [];
-
-    //     domains?.forEach(domain => {
-    //         domain.checklists?.forEach(chk => {
-    //             chk.evidence?.forEach(ev => {
-    //                 if (
-    //                     ev.field_type === "scanner_result" &&
-    //                     ev.collection_type === "automated" &&
-    //                     ev.scanner?.scanner_key
-    //                 ) {
-    //                     scanners.push(ev.scanner.scanner_key); // ✅ FINAL FIX
-    //                 }
-    //             });
-    //         });
-    //     });
-    //     return [...new Set(scanners)];
-    // };
-
     // ---------------- START AUDIT ----------------
     const handleStartAudit = async (row) => {
         try {
@@ -47,16 +27,12 @@ export default function DataBreachScanner_old() {
             setGlobalLoading(true);
 
             // 1. START AUDIT
-            const res = await fetch(
-                `${BASE_URL}/api/audits/start/${row.id}/`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth(`/api/audits/start/${row.id}/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
 
             const data = await res.json();
 
@@ -80,7 +56,7 @@ export default function DataBreachScanner_old() {
             // 3. SEQUENTIAL SCANNER EXECUTION
             for (let scanner of scanners) {
                 try {
-                    await fetch(`${BASE_URL}/api/scanner/webscan/`, {
+                    await fetchWithAuth("/api/scanner/webscan/", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -112,15 +88,10 @@ export default function DataBreachScanner_old() {
     // ---------------- FETCH ----------------
     const fetchAssignedAudits = async () => {
         try {
-            const res = await fetch(`${BASE_URL}/api/audits/assigned/`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const res = await fetchWithAuth("/api/audits/assigned/");
 
             const data = await res.json();
-            console.log(data);
+            // console.log(data);
 
             if (!res.ok) {
                 setError("Failed to fetch assigned audits");
@@ -138,12 +109,8 @@ export default function DataBreachScanner_old() {
             // =========================
             const appResponses = await Promise.all(
                 applicationIds.map(id =>
-                    fetch(`${BASE_URL}/api/applications/applications/${id}/`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }).then(res => res.json())
+                    fetchWithAuth(`/api/applications/applications/${id}/`)
+                        .then(res => res.json())
                 )
             );
 
@@ -161,12 +128,8 @@ export default function DataBreachScanner_old() {
             // =========================
             const checklistResponses = await Promise.all(
                 applicationIds.map(id =>
-                    fetch(`${BASE_URL}/api/checklists/application/${id}/`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }).then(res => res.json())
+                    fetchWithAuth(`/api/checklists/application/${id}/`)
+                        .then(res => res.json())
                 )
             );
 

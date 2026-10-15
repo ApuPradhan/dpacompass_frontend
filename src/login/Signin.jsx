@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import dpacompassBg from "../assets/background_landingpage.jpeg";
+import { API_BASE_URL } from "../config";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const inputClass =
     "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-800 placeholder-slate-500 transition focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20";
@@ -31,7 +31,7 @@ const Signin = () => {
             setCaptchaLoading(true);
 
             const response = await fetch(
-                `${BASE_URL}/api/auth/captcha`,
+                `${API_BASE_URL}/api/auth/captcha/`,
                 {
                     method: "GET",
                     headers: { Accept: "application/json" },
@@ -46,7 +46,7 @@ const Signin = () => {
             const data = await response.json();
 
             setCaptchaKey(data.captcha_key);
-            setCaptchaImage(`${BASE_URL}${data.captcha_image}`);
+            setCaptchaImage(`${API_BASE_URL}${data.captcha_image}`);
             setCaptchaInput("");
         } catch (error) {
             console.error("CAPTCHA error:", error);
@@ -86,7 +86,7 @@ const Signin = () => {
             setLoginLoading(true);
 
             const response = await fetch(
-                `${BASE_URL}/api/auth/login/`,
+                `${API_BASE_URL}/api/auth/login/`,
                 {
                     method: "POST",
                     headers: {

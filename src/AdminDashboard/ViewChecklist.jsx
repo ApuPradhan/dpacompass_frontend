@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DynamicAuditTable from "./DynamicAuditTable";
 import { FiPlus, FiEdit, FiTrash2 } from "react-icons/fi";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -16,22 +18,8 @@ export default function ViewChecklist() {
 
     const fetchChecklists = async () => {
         try {
-            // const res = await fetch(
-            //     `${BASE_URL}/api/checklists/checklists`,
-            //     {
-            //         credentials: "include",
-            //     }
-            // );
 
-            const res = await fetch(
-                `${BASE_URL}/api/checklists/checklists`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const res = await fetchWithAuth("/api/checklists/checklists/");
             const data = await res.json();
 
             if (res.ok) {
@@ -58,13 +46,10 @@ export default function ViewChecklist() {
         if (!confirm("Are you sure you want to delete this checklist?")) return;
 
         try {
-            const res = await fetch(
-                `${BASE_URL}/api/checklists/checklists/delete/${id}/`,
+            const res = await fetchWithAuth(
+                `/api/checklists/checklists/delete/${id}/`,
                 {
                     method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
                 }
             );
 

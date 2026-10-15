@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { FiLoader, FiEdit } from "react-icons/fi";
+import { fetchWithAuth } from "../utilities/fetchWithAuth";
+
 
 const EditDomain = ({ domain, onClose, onSuccess }) => {
-    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    const token = localStorage.getItem("access");
 
     const [form, setForm] = useState({
         name: "",
@@ -24,21 +24,32 @@ const EditDomain = ({ domain, onClose, onSuccess }) => {
     const handleUpdate = async () => {
         setLoading(true);
 
-        await fetch(`${BASE_URL}/api/checklists/domains/${domain.id}/`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                ...domain,
-                ...form
-            })
-        });
+        try {
+            const res = await fetchWithAuth(
+                `/api/checklists/domains/${domain.id}/`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        ...domain,
+                        ...form,
+                    }),
+                }
+            );
 
-        onSuccess();
-        onClose();
-        setLoading(false);
+            if (!res.ok) {
+                throw new Error("Failed to update domain");
+            }
+
+            onSuccess();
+            onClose();
+        } catch (error) {
+            console.error("Error updating domain:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

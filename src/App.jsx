@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 
 import Signup from './login/Signup'
-import Signin from './login/signin'
+import Signin from './login/Signin'
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 

@@ -7,7 +7,7 @@ import AuditViewModal from "./AuditViewModal";
 import ScanResultViewer from "../utilities/ScanResultsViewer";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "../utilities/fetchWithAuth";
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 
 export default function DataBreachScanner() {
 
