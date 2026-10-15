@@ -1,0 +1,12 @@
+services:
+  dpacompass-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: dpacompass-frontend
+
+    ports:
+      - "3000:80"
+
+    restart: unless-stopped
