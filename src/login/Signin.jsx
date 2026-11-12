@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FiEye, FiEyeOff, FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -25,6 +25,13 @@ const Signin = () => {
     const [captchaInput, setCaptchaInput] = useState("");
     const [captchaLoading, setCaptchaLoading] = useState(false);
     const [loginLoading, setLoginLoading] = useState(false);
+
+    // Username role-check state: controls the Auditee-only selector.
+    const [usernameCheckLoading, setUsernameCheckLoading] = useState(false);
+    const [isAuditee, setIsAuditee] = useState(false);
+    const [auditOptions, setAuditOptions] = useState([]);
+    const [selectedAuditOption, setSelectedAuditOption] = useState("");
+    const usernameCheckRequest = useRef(0);
 
     const fetchCaptcha = async () => {
         try {
@@ -60,6 +67,89 @@ const Signin = () => {
         fetchCaptcha();
     }, []);
 
+    // Check the username role while the user types.
+    // Debounce requests to avoid calling the API on every keystroke.
+    useEffect(() => {
+        const username = formData.username.trim();
+        const requestId = ++usernameCheckRequest.current;
+
+        if (!username) {
+            setIsAuditee(false);
+            setAuditOptions([]);
+            setSelectedAuditOption("");
+            setUsernameCheckLoading(false);
+            return undefined;
+        }
+
+        const timeoutId = window.setTimeout(async () => {
+            setUsernameCheckLoading(true);
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/auth/username-role-check/`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Accept: "application/json",
+                        },
+                        body: JSON.stringify({ username }),
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        `Username role check failed. HTTP ${response.status}`
+                    );
+                }
+
+                const data = await response.json();
+
+                // Ignore responses for an older username.
+                if (requestId !== usernameCheckRequest.current) return;
+
+                const auditee = data.is_auditee === true;
+                const options = Array.isArray(data.audit_options)
+                    ? data.audit_options.filter(
+                        (option) =>
+                            option &&
+                            typeof option.value === "string" &&
+                            typeof option.label === "string"
+                    )
+                    : [];
+
+                setIsAuditee(auditee);
+                setAuditOptions(auditee ? options : []);
+
+                setSelectedAuditOption((current) => {
+                    if (!auditee || options.length === 0) return "";
+
+                    return options.some((option) => option.value === current)
+                        ? current
+                        : options[0].value;
+                });
+
+                if (!auditee) {
+                    localStorage.removeItem("auditee_audit_option");
+                }
+            } catch (error) {
+                if (requestId !== usernameCheckRequest.current) return;
+
+                console.error("Username role check error:", error);
+                setIsAuditee(false);
+                setAuditOptions([]);
+                setSelectedAuditOption("");
+                localStorage.removeItem("auditee_audit_option");
+            } finally {
+                if (requestId === usernameCheckRequest.current) {
+                    setUsernameCheckLoading(false);
+                }
+            }
+        }, 400);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [formData.username]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -79,6 +169,16 @@ const Signin = () => {
 
         if (!captchaInput.trim()) {
             toast.warn("Please enter the CAPTCHA.");
+            return;
+        }
+
+        if (usernameCheckLoading) {
+            toast.info("Please wait while we verify your username.");
+            return;
+        }
+
+        if (isAuditee && !selectedAuditOption) {
+            toast.warn("Please select an audit type.");
             return;
         }
 
@@ -108,6 +208,17 @@ const Signin = () => {
                 localStorage.setItem("access", data.access);
                 localStorage.setItem("refresh", data.refresh);
                 localStorage.setItem("user", JSON.stringify(data.user));
+
+                // Keep the login request unchanged. Store the selected
+                // Auditee flow locally for use after successful login.
+                if (data.user?.role === 3 && isAuditee && selectedAuditOption) {
+                    localStorage.setItem(
+                        "auditee_mode",
+                        selectedAuditOption
+                    );
+                } else {
+                    localStorage.removeItem("auditee_audit_option");
+                }
 
                 const role = data.user?.role;
 
@@ -204,6 +315,63 @@ const Signin = () => {
                             required
                         />
                     </div>
+
+                    {/* AUDIT OPTION - AUDITEE USERS ONLY */}
+                    {isAuditee && (
+                        <div className="rounded-xl border border-sky-200 bg-sky-50/80 p-4">
+                            <div className="mb-2 flex items-center justify-between gap-3">
+                                <label
+                                    htmlFor="auditee-audit-option"
+                                    className="block text-sm font-semibold text-slate-800"
+                                >
+                                    Audit Type
+                                </label>
+
+                                <span className="rounded-full bg-sky-100 px-2.5 py-1 text-[11px] font-semibold text-sky-700">
+                                    Auditee
+                                </span>
+                            </div>
+
+                            <p className="mb-3 text-xs leading-5 text-slate-600">
+                                Select the type of audit you want to access.
+                            </p>
+
+                            <select
+                                id="auditee-audit-option"
+                                value={selectedAuditOption}
+                                onChange={(event) =>
+                                    setSelectedAuditOption(event.target.value)
+                                }
+                                disabled={
+                                    usernameCheckLoading ||
+                                    auditOptions.length === 0
+                                }
+                                required
+                                className={inputClass}
+                            >
+                                {auditOptions.length === 0 ? (
+                                    <option value="">
+                                        No audit options available
+                                    </option>
+                                ) : (
+                                    auditOptions.map((option) => (
+                                        <option
+                                            key={option.value}
+                                            value={option.value}
+                                        >
+                                            {option.label}
+                                        </option>
+                                    ))
+                                )}
+                            </select>
+                        </div>
+                    )}
+
+                    {usernameCheckLoading && (
+                        <p className="text-xs text-slate-500">
+                            Checking account type...
+                        </p>
+                    )}
 
                     <div>
                         <label

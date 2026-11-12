@@ -312,28 +312,12 @@ export default function RegisterApplication() {
             }
 
             toast.success(
-                "Application created. Redirecting to payment..."
+                "Application created. Redirecting to dashboard.."
             );
 
-            // =========================
-            // PAYMENT
-            // =========================
-
-            navigate("/payment", {
-                state: {
-                    amount: 999,
-                    title:
-                        "Application Registration Fee",
-
-                    metadata: {
-                        applicationId:
-                            applicationId,
-
-                        type:
-                            "application_registration",
-                    },
-                },
-            });
+            setTimeout(() => {
+                navigate("/devdashboard");
+            }, 2000); 
 
             return;
 

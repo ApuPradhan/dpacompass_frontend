@@ -2,7 +2,9 @@ import {
     FiFileText,
     FiLayers,
     FiBarChart2,
-    FiBookOpen
+    FiBookOpen,
+    FiShield,
+    FiActivity
 } from "react-icons/fi";
 
 export const sidebarConfig = {
@@ -33,6 +35,11 @@ export const sidebarConfig = {
             icon: FiBarChart2,
             path: "/admin/ongoingaudits",
         },
+         {
+            label: "Audit Reports",
+            icon: FiBarChart2,
+            path: "/admin/reports",
+        },
         {
             label: "Manage Users",
             icon: FiBarChart2,
@@ -52,7 +59,16 @@ export const sidebarConfig = {
                 { label: "Bulk Checklist Upload", path: "/admin/checklist/bulkupload/" },
             ],
         },
-
+        // {
+        //     label: "Data Breach Scanner Configuration",
+        //     icon: FiShield,
+        //     children: [
+        //         {
+        //             label: "Manage Keywords",
+        //             path: "/admin/data-breach-scanner/keywords"
+        //         }
+        //     ]
+        // }
         // {
         //     label: "Generate Report",
         //     icon: FiBarChart2,
@@ -75,9 +91,19 @@ export const sidebarConfig = {
             path: "/auditor/acceptedAudits",
         },
         {
+            label: "In Progress Audits",
+            icon: FiFileText,
+            path: "/auditor/inprogress",
+        },
+        {
             label: "Rejected Audits",
             icon: FiFileText,
             path: "/auditor/declinedAudits",
+        },
+        {
+            label: "Completed Audits",
+            icon: FiBarChart2,
+            path: "/auditor/completedaudits",
         },
         {
             label: "Data Breach Scanner",  // Ongoing Audits
@@ -85,62 +111,94 @@ export const sidebarConfig = {
             path: "/auditor/databreachscanner",
         },
         {
-            label: "Complete Audit and Generate Report",
-            icon: FiBarChart2,
-             path: "/auditor/completedaudits",
-        },
-        // {
-        //     label: "Consent Scanner v2",
-        //     icon: FiBarChart2,
-        //     path: "/admin/consentv2/demo",
-        // },
-        {
             label: "Consent Scanner",
             icon: FiBarChart2,
             path: "/auditor/consentscanner/"
         },
-         {
+        {
             label: "Learn DPDP",
             icon: FiLayers,
             path: "/learndpdp",
         },
     ],
 
-    auditee: [
-        {
-            label: "Register for Audit",
-            icon: FiFileText,
-            path: "/user/register",
-        },
-        {
-            label: "My Approved Applications",
-            icon: FiLayers,
-            path: "/user/approvedaudits",
-        },
-        {
-            label: "On-progress applications",
-            icon: FiLayers,
-            path: "/user/approvedaudits",
-        },
-        {
-            label: "Rejected Applications",
-            icon: FiLayers,
-            path: "/user/rejectedaudits",
-        },
-        {
-            label: "Learn DPDP",
-            icon: FiLayers,
-            path: "/learndpdp",
-        },
-        {
-            label: "Audit Reports",
-            icon: FiBarChart2,
-            // no path → handled later or keep placeholder
-        },
-        // {
-        //     label: "Apply for Remediation",
-        //     icon: FiBookOpen,
-        //     path: "/remediation/signin",
-        // }
-    ]
+    auditee: {
+        self_check: [
+            {
+                label: "Consent Scanner",
+                icon: FiShield,
+                children: [
+                    {
+                        label: "Start a New Scan",
+                        icon: FiFileText,
+                        path: "/user/self-check/consent-scanner",
+                    },
+                    {
+                        label: "View Your Scans",
+                        icon: FiActivity,
+                        path: "/user/self-check/scans",
+                    },
+                ],
+            },
+            {
+                label: "Data Breach Scanner",
+                icon: FiShield,
+                children: [
+                    {
+                        label: "Start a New Scan",
+                        icon: FiFileText,
+                        path: "/user/self-check/data-breach-scanner",
+                    },
+                    {
+                        label: "View Your Scans",
+                        icon: FiActivity,
+                        path: "/user/self-check/breach-scans",
+                    },
+                ],
+            },
+            {
+                label: "Learn DPDP",
+                icon: FiBookOpen,
+                path: "/learndpdp",
+            },
+        ],
+
+        third_party_audit: [
+            {
+                label: "Register for Audit",
+                icon: FiFileText,
+                path: "/user/register",
+            },
+            {
+                label: "My Approved Applications",
+                icon: FiLayers,
+                path: "/user/approvedaudits",
+            },
+            {
+                label: "My Pending Applications",
+                icon: FiLayers,
+                path: "/application/pending",
+            },
+            {
+                label: "In-progress applications",
+                icon: FiLayers,
+                path: "/application/inprogress",
+            },
+            {
+                label: "Rejected Applications",
+                icon: FiLayers,
+                path: "/user/rejectedaudits",
+            },
+            {
+                label: "Learn DPDP",
+                icon: FiBookOpen,
+                path: "/learndpdp",
+            },
+            {
+                label: "Audit Reports",
+                icon: FiBarChart2,
+                path : "/application/published-reports"
+            },
+        ],
+    },
 };

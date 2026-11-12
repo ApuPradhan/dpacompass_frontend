@@ -1,44 +1,54 @@
-import { useEffect, useState } from "react";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DynamicAuditTable from "../AdminDashboard/DynamicAuditTable";
-import { FiEye, FiPlay, FiArrowLeft, FiRefreshCw } from "react-icons/fi";
+import {
+    FiEye,
+    FiPlay,
+    FiArrowLeft,
+    FiRefreshCw,
+    FiClipboard,
+} from "react-icons/fi";
 import Loader from "../utilities/Loader";
 import AuditViewModal from "./AuditViewModal";
-import ScanResultViewer from "../utilities/ScanResultsViewer";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
-
 export default function DataBreachScanner() {
-
     const navigate = useNavigate();
-    const token = localStorage.getItem("access");
+
     const [pendingAudits, setPendingAudits] = useState([]);
-    const [scannedAudits, setScannedAudits] = useState([]);
+    const [runningAudits, setRunningAudits] = useState([]);
+    const [completedAudits, setCompletedAudits] = useState([]);
+    const [failedAudits, setFailedAudits] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
     const [error, setError] = useState(null);
+
     const [selectedAudit, setSelectedAudit] = useState(null);
-    const [scanningAuditId, setScanningAuditId] = useState(null);
-    const [selectedScanResult, setSelectedScanResult] = useState(null);
-    const [resultLoading, setResultLoading] = useState(false);
+    const [mappingAuditId, setMappingAuditId] = useState(null);
+
+    const isFetchingRef = useRef(false);
 
     // =====================================================
-
     // FETCH DATA BREACH AUDITS
-
     // =====================================================
 
-    const fetchDataBreachAudits = async (showLoader = true) => {
+    const fetchDataBreachAudits = useCallback(async (showLoader = false) => {
+        if (isFetchingRef.current) return;
+
+        isFetchingRef.current = true;
+
         try {
             if (showLoader) {
                 setLoading(true);
-            } else {
-                setRefreshing(true);
             }
+
             setError(null);
+
             const res = await fetchWithAuth(
-                `/api/scanner/data-breach/audits/`,
+                "/api/audits/assigned/tool-status/",
                 {
                     method: "GET",
                     headers: {
@@ -46,19 +56,98 @@ export default function DataBreachScanner() {
                     },
                 }
             );
+
             const data = await res.json();
+
             if (!res.ok) {
                 throw new Error(
                     data?.message ||
                     data?.error ||
-                    "Failed to fetch Data Breach audits"
+                    "Failed to fetch audit tool statuses"
                 );
             }
 
-            setPendingAudits(data?.pending || []);
-            setScannedAudits(data?.scanned || []);
+            const audits = Array.isArray(data?.results)
+                ? data.results
+                : [];
+
+            const formattedAudits = audits.map((audit) => {
+                const application = audit.application || {};
+                const auditor = audit.auditor || {};
+                const breachTool = audit.tools?.breach_management || {};
+
+                const toolStatus = String(
+                    breachTool.status || "NOT_EXECUTED"
+                ).toUpperCase();
+
+                let scanStatus = "pending";
+
+                if (toolStatus === "RUNNING") {
+                    scanStatus = "running";
+                } else if (toolStatus === "COMPLETED") {
+                    scanStatus = "completed";
+                } else if (toolStatus === "FAILED") {
+                    scanStatus = "failed";
+                }
+
+                return {
+                    id: audit.audit_id,
+                    audit_id: audit.audit_id,
+                    public_audit_id: audit.public_audit_id,
+
+                    application_id: application.id,
+                    name: application.name || "N/A",
+
+                    auditor_name:
+                        auditor.username ||
+                        auditor.name ||
+                        "N/A",
+
+                    url: application.url || "",
+
+                    status: audit.dpacompass_status || "assigned",
+                    scan_status: scanStatus,
+                    tool_status: toolStatus,
+
+                    tool_exists: Boolean(breachTool.exists),
+                    progress: breachTool.progress ?? 0,
+                    started_at: breachTool.started_at || null,
+                    completed_at: breachTool.completed_at || null,
+                    error_message: breachTool.error_message || null,
+                    findings_count: breachTool.findings_count ?? null,
+
+                    application,
+                    auditor,
+                    original_audit: audit,
+                };
+            });
+
+            setPendingAudits(
+                formattedAudits.filter(
+                    (audit) => audit.scan_status === "pending"
+                )
+            );
+
+            setRunningAudits(
+                formattedAudits.filter(
+                    (audit) => audit.scan_status === "running"
+                )
+            );
+
+            setCompletedAudits(
+                formattedAudits.filter(
+                    (audit) => audit.scan_status === "completed"
+                )
+            );
+
+            setFailedAudits(
+                formattedAudits.filter(
+                    (audit) => audit.scan_status === "failed"
+                )
+            );
         } catch (err) {
             console.error("Data Breach Scanner fetch error:", err);
+
             setError(
                 err.message ||
                 "Failed to load Data Breach Scanner data."
@@ -66,828 +155,444 @@ export default function DataBreachScanner() {
         } finally {
             setLoading(false);
             setRefreshing(false);
+            isFetchingRef.current = false;
         }
-    };
+    }, []);
 
-    // ====================================================
-    // INITIAL LOAD
+    // =====================================================
+    // INITIAL LOAD + AUTOMATIC POLLING EVERY 4 SECONDS
     // =====================================================
 
     useEffect(() => {
-        fetchDataBreachAudits();
-    }, []);
+        fetchDataBreachAudits(true);
+
+        const interval = setInterval(() => {
+            fetchDataBreachAudits(false);
+        }, 4000);
+
+        return () => clearInterval(interval);
+    }, [fetchDataBreachAudits]);
+
+    // =====================================================
+    // MANUAL REFRESH
+    // =====================================================
+
+    const handleRefresh = () => {
+        if (isFetchingRef.current) return;
+
+        setRefreshing(true);
+        fetchDataBreachAudits(false);
+    };
 
     // =====================================================
     // START DATA BREACH SCAN
     // =====================================================
 
-    const handleScan = async (row) => {
+    const handleScan = (row) => {
+        if (!row?.audit_id) {
+            toast.error("Audit ID is missing. Cannot configure the scan.");
+            return;
+        }
+
+        if (!row?.public_audit_id) {
+            toast.error("Public Audit ID is missing.");
+            return;
+        }
+
+        navigate(
+            `/data-breach-scan-config/${encodeURIComponent(row.audit_id)}`,
+            {
+                state: {
+                    audit: row,
+                },
+            }
+        );
+    };
+
+    // =====================================================
+    // NAVIGATE TO DATA BREACH SCAN RESULT PAGE
+    // =====================================================
+
+    const handleViewScanResults = (row) => {
+        if (!row?.public_audit_id) {
+            toast.error("Public Audit ID is missing.");
+            return;
+        }
+
+        navigate(
+            `/user/data-breach-scan/${encodeURIComponent(
+                row.public_audit_id
+            )}/result`,
+            {
+                state: {
+                    audit_id: row.audit_id,
+                    public_audit_id: row.public_audit_id,
+                    application: row.application,
+                    auditor: row.auditor,
+                },
+            }
+        );
+    };
+
+    // =====================================================
+    // MAP COMPLETED DATA BREACH RESULT TO CHECKLIST
+    // =====================================================
+
+    const handleMapToChecklist = async (row) => {
+        const publicAuditId = row?.public_audit_id;
+
+        if (!publicAuditId) {
+            toast.error("Public Audit ID is missing. Cannot map checklist results.");
+            return;
+        }
+
+        if (mappingAuditId) return;
+
+        setMappingAuditId(publicAuditId);
+
         try {
-            setScanningAuditId(row.audit_id);
-            const res = await fetchWithAuth(
-                `/api/scanner/data-breach/${row.audit_id}/scan/`,
+            const response = await fetchWithAuth(
+                `/api/checklists/fetch-breach-result/${encodeURIComponent(publicAuditId)}/`,
                 {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                 }
             );
 
-            const data = await res.json();
-            if (!res.ok) {
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok || data?.success !== true) {
                 throw new Error(
                     data?.message ||
                     data?.error ||
-                    "Failed to start Data Breach scan"
+                    "Failed to map Data Breach results to the checklist."
                 );
             }
 
             toast.success(
-                data?.message ||
-                "Data Breach scan started successfully."
+                `Checklist mapped successfully. ${data.total_saved ?? 0} results saved.`
             );
-            // Refresh both lists after starting the scan
-            await fetchDataBreachAudits(false);
         } catch (err) {
-            console.error("Data Breach scan error:", err);
+            console.error("Data Breach checklist mapping error:", err);
             toast.error(
-                err.message ||
-                "Failed to start Data Breach scan."
+                err?.message || "Unable to map Data Breach results to checklist."
             );
         } finally {
-            setScanningAuditId(null);
+            setMappingAuditId(null);
         }
     };
 
     // =====================================================
-
-    // =====================================================
-    // VIEW DATA BREACH SCAN RESULTS
-    // =====================================================
-
-    const handleViewScanResults = async (row) => {
-        try {
-            setResultLoading(true);
-            setSelectedScanResult(null);
-
-            const res = await fetchWithAuth(
-                `/api/scanner/data-breach/${row.audit_id}/results/`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                throw new Error(
-                    data?.message ||
-                    data?.error ||
-                    "Failed to fetch scan results"
-                );
-            }
-
-            // console.log("Data Breach Scan Results:", data);
-
-            setSelectedScanResult(data);
-        } catch (err) {
-            console.error("Data Breach result error:", err);
-
-            toast.error(
-                err.message ||
-                "Failed to load Data Breach scan results."
-            );
-        } finally {
-            setResultLoading(false);
-        }
-    };
-
-    // =====================================================
-    // FORMAT PENDING AUDITS
-    // =====================================================
-
-
-    const formattedPendingAudits = pendingAudits.map((audit) => ({
-        id: audit.audit_id,
-        audit_id: audit.audit_id,
-        application_id: audit.application_id,
-        name:
-            audit.application_name ||
-            audit.name ||
-            "N/A",
-
-        auditor_name:
-            audit.auditor_name ||
-            "N/A",
-        url:
-            audit.url ||
-            "",
-        status:
-            audit.status ||
-            "pending",
-        scan_status:
-            audit.scan_status ||
-            "pending",
-        created_at:
-            audit.created_at ||
-            null,
-
-    }));
-
-    // =====================================================
-
-    // FORMAT SCANNED AUDITS
-
-    // =====================================================
-
-    const formattedScannedAudits = scannedAudits.map((audit) => ({
-
-        id: audit.audit_id,
-
-        audit_id: audit.audit_id,
-
-        application_id: audit.application_id,
-
-        name:
-
-            audit.application_name ||
-
-            audit.name ||
-
-            "N/A",
-
-        auditor_name:
-
-            audit.auditor_name ||
-
-            "N/A",
-
-        url:
-
-            audit.url ||
-
-            "",
-
-        status:
-
-            audit.status ||
-
-            "completed",
-
-        scan_status:
-
-            audit.scan_status ||
-
-            "completed",
-
-        created_at:
-
-            audit.created_at ||
-
-            null,
-
-        completed_at:
-
-            audit.completed_at ||
-
-            null,
-
-    }));
-
-    // =====================================================
-
     // TABLE COLUMNS
-
     // =====================================================
 
     const columns = [
-
         {
-
             key: "name",
-
             label: "Application",
-
         },
-
         {
-
             key: "auditor_name",
-
             label: "Auditor",
-
         },
-
         {
-
             key: "url",
-
             label: "URL",
-
             render: (value) => (
-
                 <span
-
                     className="block max-w-75 truncate text-gray-400"
-
                     title={value}
-
                 >
-
                     {value || "-"}
-
                 </span>
-
             ),
-
         },
-
         {
-
             key: "scan_status",
-
             label: "Scan Status",
-
             render: (value) => {
-
                 const status = String(value || "").toLowerCase();
 
-                if (status === "running") {
-
-                    return (
-
-                        <span className="px-3 py-1 text-xs rounded-full border border-blue-500/30 bg-blue-500/20 text-blue-400">
-
-                            Running
-
-                        </span>
-
-                    );
-
-                }
-
-                if (status === "failed") {
-
-                    return (
-
-                        <span className="px-3 py-1 text-xs rounded-full border border-red-500/30 bg-red-500/20 text-red-400">
-
-                            Failed
-
-                        </span>
-
-                    );
-
-                }
-
-                if (status === "completed") {
-
-                    return (
-
-                        <span className="px-3 py-1 text-xs rounded-full border border-green-500/30 bg-green-500/20 text-green-400">
-
-                            Completed
-
-                        </span>
-
-                    );
-
-                }
+                const styles = {
+                    pending:
+                        "border-yellow-500/30 bg-yellow-500/20 text-yellow-400",
+                    running:
+                        "border-blue-500/30 bg-blue-500/20 text-blue-400",
+                    completed:
+                        "border-green-500/30 bg-green-500/20 text-green-400",
+                    failed:
+                        "border-red-500/30 bg-red-500/20 text-red-400",
+                };
 
                 return (
-
-                    <span className="px-3 py-1 text-xs rounded-full border border-yellow-500/30 bg-yellow-500/20 text-yellow-400">
-
-                        Pending
-
+                    <span
+                        className={`px-3 py-1 text-xs rounded-full border ${styles[status] || styles.pending
+                            }`}
+                    >
+                        {status
+                            ? status.charAt(0).toUpperCase() + status.slice(1)
+                            : "Pending"}
                     </span>
-
                 );
-
             },
-
         },
-
     ];
 
     // =====================================================
-
     // PENDING ACTIONS
-
+    // View Application + Start Scan
     // =====================================================
 
-    const renderPendingActions = (row) => {
-
-        const isScanning =
-
-            scanningAuditId === row.audit_id;
-
-        return (
-
-            <div className="flex justify-center items-center gap-4">
-
-                {/* VIEW */}
-
-                <button
-
-                    onClick={() => setSelectedAudit(row)}
-
-                    className="text-indigo-400 hover:text-indigo-300 transition"
-
-                    title="View Application"
-
-                >
-
-                    <FiEye size={17} />
-
-                </button>
-
-                {/* SCAN */}
-
-                <button
-
-                    disabled={isScanning}
-
-                    onClick={() => handleScan(row)}
-
-                    className={`transition ${isScanning
-
-                        ? "text-gray-500 cursor-not-allowed"
-
-                        : "text-green-400 hover:text-green-300"
-
-                        }`}
-
-                    title={
-
-                        isScanning
-
-                            ? "Starting scan..."
-
-                            : "Start Data Breach Scan"
-
-                    }
-
-                >
-
-                    {isScanning ? (
-
-                        <FiRefreshCw
-
-                            size={17}
-
-                            className="animate-spin"
-
-                        />
-
-                    ) : (
-
-                        <FiPlay size={17} />
-
-                    )}
-
-                </button>
-
-            </div>
-
-        );
-
-    };
-
-    // =====================================================
-
-    // SCANNED ACTIONS
-
-    // =====================================================
-
-    const renderScannedActions = (row) => (
-
-        <div className="flex justify-center items-center">
-
+    const renderPendingActions = (row) => (
+        <div className="flex justify-center items-center gap-4">
             <button
-
-                onClick={() => handleViewScanResults(row)}
-
+                onClick={() => setSelectedAudit(row)}
                 className="text-indigo-400 hover:text-indigo-300 transition"
-
-                title="View Scan Result"
-                disabled={resultLoading}
-
+                title="View Application"
             >
-
                 <FiEye size={17} />
-
             </button>
 
+            <button
+                onClick={() => handleScan(row)}
+                className="text-green-400 hover:text-green-300 transition"
+                title="Start Data Breach Scan"
+            >
+                <FiPlay size={17} />
+            </button>
         </div>
-
     );
 
     // =====================================================
+    // RUNNING ACTIONS
+    // No action button
+    // =====================================================
 
+    const renderRunningActions = () => null;
+
+    // =====================================================
+    // COMPLETED ACTIONS
+    // =====================================================
+
+    const renderCompletedActions = (row) => (
+        <div className="flex justify-center items-center gap-3">
+            <button
+                onClick={() => handleViewScanResults(row)}
+                className="text-indigo-400 hover:text-indigo-300 transition"
+                title="View Scan Result"
+            >
+                <FiEye size={17} />
+            </button>
+
+            <button
+                onClick={() => handleMapToChecklist(row)}
+                disabled={Boolean(mappingAuditId)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition ${mappingAuditId === row.public_audit_id
+                        ? "border-gray-600 bg-gray-700/40 text-gray-500 cursor-not-allowed"
+                        : "border-green-500/30 bg-green-500/10 text-green-400 hover:bg-green-500/20"
+                    }`}
+            >
+                {mappingAuditId === row.public_audit_id ? (
+                    <span className="flex items-center gap-2">
+                        <FiRefreshCw size={13} className="animate-spin" />
+                        Mapping...
+                    </span>
+                ) : (
+                    "Map to Checklist"
+                )}
+            </button>
+        </div>
+    );
+
+    // =====================================================
+    // FAILED ACTIONS
+    // =====================================================
+
+    const renderFailedActions = (row) => (
+        <div className="flex justify-center items-center">
+            <button
+                onClick={() => handleViewScanResults(row)}
+                className="text-indigo-400 hover:text-indigo-300 transition"
+                title="View Scan Details"
+            >
+                <FiEye size={17} />
+            </button>
+        </div>
+    );
+
+    // =====================================================
+    // REUSABLE AUDIT SECTION
+    // =====================================================
+
+    const renderAuditSection = ({
+        title,
+        description,
+        audits,
+        statusLabel,
+        statusColor,
+        actions,
+        emptyMessage,
+    }) => (
+        <section>
+            <div className="flex items-center justify-between mb-4">
+                <div>
+                    <h2 className="text-lg font-semibold text-gray-200">
+                        {title}
+                    </h2>
+
+                    <p className="text-sm text-gray-500 mt-1">
+                        {description}
+                    </p>
+                </div>
+
+                <span
+                    className={`px-3 py-1 rounded-full text-xs border ${statusColor}`}
+                >
+                    {audits.length} {statusLabel}
+                </span>
+            </div>
+
+            <div className="bg-[#111827]/80 border border-gray-700 rounded-xl p-4">
+                {audits.length === 0 ? (
+                    <div className="py-10 text-center text-gray-500">
+                        {emptyMessage}
+                    </div>
+                ) : (
+                    <DynamicAuditTable
+                        audits={audits}
+                        columns={columns}
+                        customActions={actions}
+                        expandableContent={true}
+                    />
+                )}
+            </div>
+        </section>
+    );
+
+    // =====================================================
     // UI
-
     // =====================================================
 
     return (
-
         <div className="min-h-screen bg-[#0b1120] text-gray-200 p-6">
 
-            {/* RESULT LOADING OVERLAY */}
-            {resultLoading && !selectedScanResult && (
-                <div className="fixed inset-0 z-60 bg-black/60 flex items-center justify-center">
-                    <div className="bg-[#111827] border border-gray-700 rounded-xl px-6 py-5">
-                        <Loader text="Loading scan results..." />
-                    </div>
-                </div>
-            )}
-
-            {/* BACK */}
+            {/* BACK TO DASHBOARD */}
 
             <div
-
                 className="mb-8 flex items-center gap-2 text-xl text-indigo-400 cursor-pointer"
-
                 onClick={() => navigate("/auditdashboard")}
-
             >
-
                 <FiArrowLeft size={16} />
-
                 <span>Back to Dashboard</span>
-
             </div>
 
             {/* HEADER */}
 
             <div className="flex items-center justify-between mb-6">
-
                 <div>
-
                     <h1 className="text-xl font-semibold text-indigo-400">
-
                         Data Breach Scanner
-
                     </h1>
 
                     <p className="text-sm text-gray-400 mt-1">
-
                         Website security and data breach checks for accepted audits
-
                     </p>
 
+                    <p className="text-xs text-gray-500 mt-1">
+                        Status automatically refreshes every 4 seconds.
+                    </p>
                 </div>
 
                 <button
-
-                    onClick={() => fetchDataBreachAudits(false)}
-
+                    onClick={handleRefresh}
                     disabled={refreshing}
-
                     className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-700 bg-[#111827] text-gray-300 hover:text-white hover:border-indigo-500/50 transition"
-
                 >
-
                     <FiRefreshCw
-
                         size={15}
-
-                        className={
-
-                            refreshing
-
-                                ? "animate-spin"
-
-                                : ""
-
-                        }
-
+                        className={refreshing ? "animate-spin" : ""}
                     />
-
                     Refresh
-
                 </button>
-
             </div>
 
             {/* CONTENT */}
 
             {loading ? (
-
                 <div className="bg-[#111827]/80 border border-gray-700 rounded-xl p-6">
-
                     <Loader text="Loading Data Breach Scanner..." />
-
                 </div>
-
             ) : error ? (
-
                 <div className="bg-[#111827]/80 border border-red-500/30 rounded-xl p-6">
-
-                    <p className="text-red-400 mb-4">
-
-                        {error}
-
-                    </p>
+                    <p className="text-red-400 mb-4">{error}</p>
 
                     <button
-
-                        onClick={() => fetchDataBreachAudits()}
-
+                        onClick={() => fetchDataBreachAudits(true)}
                         className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition"
-
                     >
-
                         Retry
-
                     </button>
-
                 </div>
-
             ) : (
-
                 <div className="space-y-8">
 
-                    {/* ================================================= */}
+                    {renderAuditSection({
+                        title: "Pending Applications",
+                        description:
+                            "Applications where Data Breach scanning has not been executed",
+                        audits: pendingAudits,
+                        statusLabel: "Pending",
+                        statusColor:
+                            "border-yellow-500/30 bg-yellow-500/10 text-yellow-400",
+                        actions: renderPendingActions,
+                        emptyMessage: "No pending applications.",
+                    })}
+
+                    {renderAuditSection({
+                        title: "Running Applications",
+                        description:
+                            "Data Breach scans currently in progress",
+                        audits: runningAudits,
+                        statusLabel: "Running",
+                        statusColor:
+                            "border-blue-500/30 bg-blue-500/10 text-blue-400",
+                        actions: renderRunningActions,
+                        emptyMessage: "No running applications.",
+                    })}
+
+                    {renderAuditSection({
+                        title: "Completed Applications",
+                        description:
+                            "Applications with successfully completed Data Breach scans",
+                        audits: completedAudits,
+                        statusLabel: "Completed",
+                        statusColor:
+                            "border-green-500/30 bg-green-500/10 text-green-400",
+                        actions: renderCompletedActions,
+                        emptyMessage: "No completed applications.",
+                    })}
+
+                    {renderAuditSection({
+                        title: "Failed Applications",
+                        description:
+                            "Applications where the Data Breach scan failed",
+                        audits: failedAudits,
+                        statusLabel: "Failed",
+                        statusColor:
+                            "border-red-500/30 bg-red-500/10 text-red-400",
+                        actions: renderFailedActions,
+                        emptyMessage: "No failed applications.",
+                    })}
 
-                    {/* PENDING APPLICATIONS */}
-
-                    {/* ================================================= */}
-
-                    <section>
-
-                        <div className="flex items-center justify-between mb-4">
-
-                            <div>
-
-                                <h2 className="text-lg font-semibold text-gray-200">
-
-                                    Pending Applications
-
-                                </h2>
-
-                                <p className="text-sm text-gray-500 mt-1">
-
-                                    Accepted applications waiting for Data Breach scanning
-
-                                </p>
-
-                            </div>
-
-                            <span className="px-3 py-1 rounded-full text-xs border border-yellow-500/30 bg-yellow-500/10 text-yellow-400">
-
-                                {formattedPendingAudits.length} Pending
-
-                            </span>
-
-                        </div>
-
-                        <div className="bg-[#111827]/80 border border-gray-700 rounded-xl p-4">
-
-                            {formattedPendingAudits.length === 0 ? (
-
-                                <div className="py-10 text-center text-gray-500">
-
-                                    No pending applications.
-
-                                </div>
-
-                            ) : (
-
-                                <DynamicAuditTable
-
-                                    audits={formattedPendingAudits}
-
-                                    columns={columns}
-
-                                    customActions={renderPendingActions}
-
-                                    expandableContent={true}
-
-                                />
-
-                            )}
-
-                        </div>
-
-                    </section>
-
-                    {/* ================================================= */}
-
-                    {/* SCANNED APPLICATIONS */}
-
-                    {/* ================================================= */}
-
-                    <section>
-
-                        <div className="flex items-center justify-between mb-4">
-
-                            <div>
-
-                                <h2 className="text-lg font-semibold text-gray-200">
-
-                                    Scanned Applications
-
-                                </h2>
-
-                                <p className="text-sm text-gray-500 mt-1">
-
-                                    Applications with completed Data Breach scans
-
-                                </p>
-
-                            </div>
-
-                            <span className="px-3 py-1 rounded-full text-xs border border-green-500/30 bg-green-500/10 text-green-400">
-
-                                {formattedScannedAudits.length} Scanned
-
-                            </span>
-
-                        </div>
-
-                        <div className="bg-[#111827]/80 border border-gray-700 rounded-xl p-4">
-
-                            {formattedScannedAudits.length === 0 ? (
-
-                                <div className="py-10 text-center text-gray-500">
-
-                                    No scanned applications.
-
-                                </div>
-
-                            ) : (
-
-                                <DynamicAuditTable
-
-                                    audits={formattedScannedAudits}
-
-                                    columns={columns}
-
-                                    customActions={renderScannedActions}
-
-                                    expandableContent={true}
-
-                                />
-
-                            )}
-
-                        </div>
-
-                    </section>
-
-                </div>
-
-            )}
-
-            {/* SCANNER RESULT MODAL */}
-            {selectedScanResult && (
-                <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-6">
-
-                    <div className="w-full max-w-6xl max-h-[90vh] overflow-hidden bg-[#111827] border border-gray-700 rounded-xl shadow-2xl">
-
-                        {/* HEADER */}
-                        <div className="sticky top-0 z-10 bg-[#111827] border-b border-gray-700 px-6 py-4 flex items-center justify-between">
-
-                            <div>
-                                <h2 className="text-lg font-semibold text-indigo-400">
-                                    Data Breach Scan Results
-                                </h2>
-
-                                <p className="text-sm text-gray-400 mt-1">
-                                    {selectedScanResult.application?.name || "Application"}
-                                </p>
-
-                                <p className="text-xs text-gray-500 mt-1">
-                                    {selectedScanResult.application?.url || ""}
-                                </p>
-                            </div>
-
-                            <button
-                                onClick={() => setSelectedScanResult(null)}
-                                className="text-gray-400 hover:text-white text-2xl transition"
-                                title="Close"
-                            >
-                                ×
-                            </button>
-
-                        </div>
-
-                        {/* RESULTS */}
-                        <div className="p-6 overflow-y-auto max-h-[calc(90vh-100px)]">
-
-                            {selectedScanResult.results?.length === 0 ? (
-                                <div className="py-12 text-center text-gray-500">
-                                    No scanner results found.
-                                </div>
-                            ) : (
-                                <div className="space-y-5">
-
-                                    {selectedScanResult.results?.map((scanner) => {
-
-                                        const scannerName = scanner.scanner
-                                            ? scanner.scanner
-                                                .replace(/_/g, " ")
-                                                .replace(/\b\w/g, (c) => c.toUpperCase())
-                                            : "Scanner";
-
-                                        const scannerStatus =
-                                            String(scanner.status || "").toUpperCase();
-
-                                        return (
-                                            <div
-                                                key={scanner.job_id}
-                                                className="border border-gray-700 rounded-xl overflow-hidden"
-                                            >
-
-                                                {/* SCANNER HEADER */}
-                                                <div className="bg-[#0b1120] px-5 py-4 flex items-center justify-between">
-
-                                                    <div>
-                                                        <h3 className="text-sm font-semibold text-gray-200">
-                                                            {scannerName}
-                                                        </h3>
-
-                                                        <p className="text-xs text-gray-500 mt-1">
-                                                            Job ID: {scanner.job_id}
-                                                        </p>
-                                                    </div>
-
-                                                    <span
-                                                        className={`px-3 py-1 text-xs rounded-full border ${scannerStatus === "COMPLETED"
-                                                            ? "border-green-500/30 bg-green-500/20 text-green-400"
-                                                            : scannerStatus === "FAILED"
-                                                                ? "border-red-500/30 bg-red-500/20 text-red-400"
-                                                                : "border-yellow-500/30 bg-yellow-500/20 text-yellow-400"
-                                                            }`}
-                                                    >
-                                                        {scannerStatus || "PENDING"}
-                                                    </span>
-
-                                                </div>
-
-                                                {/* SCANNER RESULT */}
-                                                <div className="p-5">
-
-                                                    {scannerStatus === "COMPLETED" ? (
-                                                        scanner.result ? (
-                                                            <ScanResultViewer
-                                                                result={scanner.result}
-                                                            />
-                                                        ) : (
-                                                            <div className="py-6 text-center text-gray-500 text-sm">
-                                                                Scanner completed but no formatted result was returned.
-                                                            </div>
-                                                        )
-                                                    ) : scannerStatus === "FAILED" ? (
-                                                        <div className="p-4 rounded-lg border border-red-500/20 bg-red-500/10">
-                                                            <p className="text-red-400 text-sm font-medium">
-                                                                Scanner failed
-                                                            </p>
-
-                                                            <p className="text-sm text-gray-400 mt-1">
-                                                                {scanner.error_message ||
-                                                                    "No error message was provided."}
-                                                            </p>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="p-4 rounded-lg border border-yellow-500/20 bg-yellow-500/10">
-                                                            <p className="text-yellow-400 text-sm">
-                                                                Scanner is still processing.
-                                                            </p>
-                                                        </div>
-                                                    )}
-
-                                                </div>
-
-                                            </div>
-                                        );
-                                    })}
-
-                                </div>
-                            )}
-
-                        </div>
-                    </div>
                 </div>
             )}
 
-            {/* VIEW MODAL */}
+            {/* VIEW APPLICATION MODAL */}
 
             <AuditViewModal
-
                 audit={selectedAudit}
-
                 onClose={() => setSelectedAudit(null)}
-
             />
-
         </div>
-
     );
-
 }

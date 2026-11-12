@@ -102,7 +102,10 @@ const AuditorDashboard = () => {
                                     {user.first_name} {user.last_name}
                                 </p>
 
-                                <button className="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-indigo-500/10">
+                                <button
+                                    onClick={() => navigate("/profile")}
+                                    className="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-indigo-500/10"
+                                >
                                     Edit Profile / Password
                                 </button>
 

@@ -13,7 +13,7 @@ import AuditorDashboard from './dashboard_old/AuditorDashboard';
 import ProtectedRoute from './utilities/ProtectedRoute'
 import UserVerification from './UserVerification/UserVerfication';
 import PendingApproval from './utilities/PendingApproval'
-
+import CompletedReports from './AuditorDashboard/CompletedAudits';
 import RegisterApplication from './AuditeeDashboard/RegisterApplication'
 import AuditAssignment from './AdminDashboard/AuditAssignment'
 import NewAudits from './AuditorDashboard/NewAudits';
@@ -31,7 +31,15 @@ import RemediationSigin from './Remediation/RemediationSigin';
 import ViewChecklist from './ChecklistModule/ViewChecklist'
 import DataBreachScanner from './AuditorDashboard/DataBreachScanner';
 
+
 import SessionExpiredScreen from './utilities/SessionExpiredScreen';
+
+import SelfCheckConsentScanner
+  from "./AuditeeDashboard/Tools/ConsentScanner/SelfCheckConsentScanner";
+
+import ConsentScans
+  from "./AuditeeDashboard/Tools/ConsentScanner/ConsentScans";
+
 
 
 
@@ -69,6 +77,14 @@ import ReassignAudits from './AdminDashboard/ReassignAudits';
 
 
 
+
+// ---------------------------KEYWORD MANAGEMENT----------------------------
+
+import KeywordManagement from "./AdminDashboard/ToolsManagement/DataBreachScanner/KeywordManagement/KeywordManagement";
+
+
+import AuditorChecklistPage from "./AuditorWorkspace/AuditorChecklistPage";
+
 /*-------------------TESTING CONSENT MANAGEMENT V2.0----------*/
 import ConsentAuditDemo from "./ConsentScannerModule/Consent2.0/pages/ConsentAuditDemo";
 
@@ -78,6 +94,21 @@ import BulkUpload from './ChecklistModule/BullkUpload';
 import ConsentAutoAudit from './ConsentScannerModule/Consent2.0/components/ConsentAutoAudit';
 import LearnDPDP from './AuditeeDashboard/LearnDPDP';
 import CompletedAudits from './AuditorDashboard/CompletedAudits';
+import SelfCheckDataBreachScanner from './AuditeeDashboard/Tools/BreachScanner/SelfCheckDataBreachScanner';
+import ProfilePage from './Profile/ProfilePage';
+import SelfCheckScanResult from './AuditeeDashboard/Tools/ConsentScanner/SelfCheckScanResult';
+import InProgressAudits from './AuditorDashboard/InProgressAudits';
+import DataBreachScanConfig from './AuditorDashboard/DataBreachScanConfig';
+import SelfCheckDataBreachScans from './AuditeeDashboard/Tools/BreachScanner/SelfCheckDataBreachScans';
+import SelfCheckDataBreachResult from './AuditeeDashboard/Tools/BreachScanner/SelfCheckDataBreachResult';
+import DataBreachScannerResult from './AuditorDashboard/DataBreachScannerResult';
+import AdminReports from './AdminDashboard/AdminReports';
+import PendingApplications from './AuditeeDashboard/PendingApplications';
+import OnProgressAudits from './AuditeeDashboard/OnProgressAudits';
+import AuditeePublishedReports from './AuditeeDashboard/AuditeePublishedReport';
+
+
+
 
 /* ------------------ ROLE BASED REDIRECT ------------------ */
 const getDashboardRoute = () => {
@@ -163,7 +194,36 @@ function App() {
 
           <Route path='/pending' element={<PendingApproval />} />
 
+          {/* ------------------------ PROFILE ROUTES ---------------------- */}
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute allowedRoles={[1, 2, 3]}>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
           {/* ---------------- ADMIN ---------------- */}
+
+          <Route
+            path="/admin/data-breach-scanner/keywords"
+            element={
+              <ProtectedRoute allowedRoles={[1]}>
+                <KeywordManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/reports"
+            element={
+              <ProtectedRoute allowedRoles={[1]}>
+                <AdminReports />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path='/admin/checklist/bulkupload/'
@@ -337,6 +397,96 @@ function App() {
 
 
           {/* ---------------- auditee ---------------- */}
+
+
+          <Route
+            path="/application/pending"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <PendingApplications />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/application/inprogress"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <OnProgressAudits />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/application/published-reports"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <AuditeePublishedReports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/self-check/breach-scans/:publicAuditId/result"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <SelfCheckDataBreachResult />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/self-check/breach-scans"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <SelfCheckDataBreachScans />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/self-check/scans/:publicAuditId/results"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <SelfCheckScanResult />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/self-check/scans/:publicAuditId/results"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <ConsentAutoAudit />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/self-check/consent-scanner"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <SelfCheckConsentScanner />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/self-check/data-breach-scanner"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <SelfCheckDataBreachScanner />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/user/self-check/scans"
+            element={
+              <ProtectedRoute allowedRoles={[3]}>
+                <ConsentScans />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/learndpdp" element={
             <ProtectedRoute allowedRoles={[2, 3]}>
               <LearnDPDP />
@@ -394,6 +544,43 @@ function App() {
 
 
           {/* ---------------- AUDITOR ---------------- */}
+
+          <Route
+            path="/auditor/completed-reports"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <CompletedReports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user/data-breach-scan/:publicAuditId/result"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DataBreachScannerResult />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/data-breach-scan-config/:auditId"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DataBreachScanConfig />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/auditor-workspace/:publicAuditId"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <AuditorChecklistPage />
+              </ProtectedRoute>
+            }
+          />
+
+
           <Route
             path="/auditor/completedaudits"
             element={
@@ -402,6 +589,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/auditor/inprogress"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <InProgressAudits />
+              </ProtectedRoute>
+            }
+          />
+
+
           <Route
             path="/consent-management/:publicAuditId"
             element={

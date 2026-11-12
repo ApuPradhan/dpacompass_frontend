@@ -14,3 +14,6 @@ export const CONSENT_API_BASE_URL =
   runtimeConfig.CONSENT_API_BASE_URL ??
   import.meta.env.VITE_CONSENT_API_BASE_URL ??
   "http://localhost:8000";
+
+  export const DATA_BREACH_API_BASE_URL =
+    import.meta.env.VITE_DATA_BREACH_API_BASE_URL;

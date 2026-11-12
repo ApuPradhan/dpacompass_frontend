@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     ArrowLeft,
     RefreshCw,
     Eye,
     Play,
+    ClipboardCheck,
+    CheckCircle2,
+    Loader2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { fetchWithAuth } from "../../../utilities/fetchWithAuth";
@@ -36,190 +39,121 @@ const ConsentScanner = () => {
     const [runningAuditId, setRunningAuditId] =
         useState(null);
 
-    const token = localStorage.getItem("access");
+    const [mappingAuditId, setMappingAuditId] =
+        useState(null);
+
+    const [mappingFeedback, setMappingFeedback] =
+        useState({});
 
     // ============================================================
-    // HEADERS
+    // TOOL STATUS API
+    // GET /api/audits/assigned/tool-status/
     // ============================================================
 
-    const getHeaders = () => ({
-        Accept: "application/json",
-
-        ...(token
-            ? {
-                Authorization: `Bearer ${token}`,
-            }
-            : {}),
-    });
-
-    // ============================================================
-    // API 1
-    // GET /api/audits/assigned/consent-status/
-    // ============================================================
+    const isFetchingRef = useRef(false);
 
     const fetchConsentStatus = async () => {
         const response = await fetchWithAuth(
-            "/api/audits/assigned/consent-status/"
+            "/api/audits/assigned/tool-status/"
         );
 
         if (!response.ok) {
             throw new Error(
-                `Consent status API returned ${response.status}`
+                `Tool Status API returned ${response.status}`
             );
         }
 
         const data = await response.json();
 
-        console.log(
-            "CONSENT STATUS API RESPONSE:",
-            data
-        );
+        console.log("TOOL STATUS API RESPONSE:", data);
 
-        return Array.isArray(data) ? data : [];
-    };
-
-    // ============================================================
-    // API 2
-    // GET /api/audits/consent/scanned/
-    // ============================================================
-
-    const fetchScannedApplications = async () => {
-        const response = await fetchWithAuth("/api/audits/consent/scanned/");
-        if (!response.ok) {
-            throw new Error(
-                `Consent scanned API returned ${response.status}`
-            );
-        }
-
-        const data = await response.json();
-
-        console.log(
-            "CONSENT SCANNED API RESPONSE:",
-            data
-        );
-
-        return Array.isArray(data?.audits)
-            ? data.audits
+        return Array.isArray(data?.results)
+            ? data.results
             : [];
     };
+
     // ============================================================
-    // LOAD BOTH SECTIONS
+    // LOAD PENDING AND SCANNED APPLICATIONS
     // ============================================================
 
-    const fetchAllData = async () => {
-        setLoading(true);
+    const fetchAllData = async (showLoader = true) => {
+        // Prevent overlapping requests during automatic polling.
+        if (isFetchingRef.current) return;
+
+        isFetchingRef.current = true;
+
+        if (showLoader) {
+            setLoading(true);
+        }
 
         setPendingError("");
         setScannedError("");
 
-        // --------------------------------------------------------
-        // PENDING APPLICATIONS
-        // --------------------------------------------------------
-
         try {
-            const consentData =
-                await fetchConsentStatus();
+            const auditData = await fetchConsentStatus();
+            const pending = [];
+            const scanned = [];
 
-            /*
-             * NOT_EXECUTED means the consent scanner
-             * has not been executed yet.
-             *
-             * Display it as Pending in the UI.
-             */
+            auditData.forEach((item) => {
+                const consentTool = item?.tools?.consent_management || {};
+                const consentStatus = String(
+                    consentTool?.status || ""
+                ).toUpperCase();
 
-            const pending = consentData.filter(
-                (item) =>
-                    item?.consent_management?.status ===
-                    "NOT_EXECUTED"
-            );
+                // Preserve the property expected by the existing UI.
+                const formattedItem = {
+                    ...item,
+                    consent_management: consentTool,
+                };
 
-            console.log(
-                "PENDING APPLICATIONS:",
-                pending
-            );
-
-            setPendingApplications(pending);
-
-        } catch (error) {
-            console.error(
-                "Pending Applications Error:",
-                error
-            );
-
-            setPendingApplications([]);
-
-            setPendingError(
-                error.message ||
-                "Failed to fetch pending applications."
-            );
-        }
-
-        try {
-            const auditData =
-                await fetchScannedApplications();
-
-            /*
-             * The API returns:
-             *
-             * consent_management.status
-             *
-             * Possible values:
-             *
-             * NOT_EXECUTED
-             * QUEUED
-             * RUNNING
-             * COMPLETED
-             *
-             * Only QUEUED / RUNNING / COMPLETED
-             * should appear in Scanned Applications.
-             */
-
-            const scanned = auditData.filter((item) => {
-
-                const status =
-                    String(
-                        item?.consent_management?.status ||
-                        ""
-                    ).toUpperCase();
-
-                return (
-                    status === "QUEUED" ||
-                    status === "RUNNING" ||
-                    status === "COMPLETED"
-                );
+                if (consentStatus === "NOT_EXECUTED") {
+                    pending.push(formattedItem);
+                } else if (
+                    ["QUEUED", "RUNNING", "COMPLETED", "FAILED"].includes(
+                        consentStatus
+                    )
+                ) {
+                    scanned.push(formattedItem);
+                }
             });
 
-            console.log(
-                "SCANNED APPLICATIONS:",
-                scanned
-            );
+            console.log("PENDING CONSENT APPLICATIONS:", pending);
+            console.log("SCANNED CONSENT APPLICATIONS:", scanned);
 
+            setPendingApplications(pending);
             setScannedApplications(scanned);
-
         } catch (error) {
+            console.error("Consent Tool Status Error:", error);
 
-            console.error(
-                "Scanned Applications Error:",
-                error
-            );
-
+            setPendingApplications([]);
             setScannedApplications([]);
 
-            setScannedError(
-                error.message ||
-                "Failed to fetch scanned applications."
-            );
-        }
+            const message =
+                error?.message || "Failed to fetch consent applications.";
 
-        setLoading(false);
+            setPendingError(message);
+            setScannedError(message);
+        } finally {
+            isFetchingRef.current = false;
+
+            if (showLoader) {
+                setLoading(false);
+            }
+        }
     };
 
     // ============================================================
-    // INITIAL LOAD
+    // INITIAL LOAD + AUTOMATIC STATUS POLLING
     // ============================================================
 
     useEffect(() => {
-        fetchAllData();
+        fetchAllData(true);
+
+        const interval = setInterval(() => {
+            fetchAllData(false);
+        }, 4000);
+
+        return () => clearInterval(interval);
     }, []);
 
     // ============================================================
@@ -240,14 +174,14 @@ const ConsentScanner = () => {
             audit?.application?.password || "";
 
         if (!publicAuditId) {
-            setError(
+            setPendingError(
                 "Unable to start scanner: Public Audit ID is missing."
             );
             return;
         }
 
         if (!url) {
-            setError(
+            setPendingError(
                 "Unable to start scanner: Application URL is missing."
             );
             return;
@@ -272,6 +206,79 @@ const ConsentScanner = () => {
                 },
             }
         );
+    };
+
+    // ============================================================
+    // MAP CONSENT SCAN RESULTS TO AUDIT CHECKLISTS
+    // POST /api/checklists/fetch-consent-result/<public_audit_id>/
+    // ============================================================
+
+    const handleMapToChecklist = async (application) => {
+        const publicAuditId = application?.public_audit_id;
+        const auditKey = application?.audit_id || publicAuditId;
+
+        if (!publicAuditId) {
+            setMappingFeedback((previous) => ({
+                ...previous,
+                [auditKey]: {
+                    type: "error",
+                    message: "Public Audit ID is missing. Cannot map checklist results.",
+                },
+            }));
+            return;
+        }
+
+        if (mappingAuditId !== null) return;
+
+        setMappingAuditId(auditKey);
+        setMappingFeedback((previous) => ({
+            ...previous,
+            [auditKey]: null,
+        }));
+
+        try {
+            const response = await fetchWithAuth(
+                `/api/checklists/fetch-consent-result/${encodeURIComponent(publicAuditId)}/`,
+                { method: "POST" }
+            );
+
+            let data = {};
+            try {
+                data = await response.json();
+                console.log("Data from consent-fetch:", data);
+                
+            } catch {
+                // The API may return an empty or non-JSON response.
+            }
+
+            if (!response.ok || data?.success !== true) {
+                throw new Error(
+                    data?.message ||
+                    data?.detail ||
+                    data?.error ||
+                    `Checklist mapping failed (${response.status}).`
+                );
+            }
+
+            setMappingFeedback((previous) => ({
+                ...previous,
+                [auditKey]: {
+                    type: "success",
+                    message: "Checklist Mapping done successfully.",
+                    details: data,
+                },
+            }));
+        } catch (error) {
+            setMappingFeedback((previous) => ({
+                ...previous,
+                [auditKey]: {
+                    type: "error",
+                    message: error?.message || "Failed to map consent results to checklists.",
+                },
+            }));
+        } finally {
+            setMappingAuditId(null);
+        }
     };
 
     // ============================================================
@@ -352,6 +359,9 @@ const ConsentScanner = () => {
 
             case "COMPLETED":
                 return "Completed";
+
+            case "FAILED":
+                return "Failed";
 
             case "NOT_EXECUTED":
                 return "Pending";
@@ -957,7 +967,23 @@ const ConsentScanner = () => {
                                                                 text-blue-400
                                                               `
 
-                                                                            : `
+                                                                            : normalizedStatus ===
+                                                                                "FAILED"
+                                                                                ? `
+                                                                border
+                                                                border-red-600
+                                                                bg-red-950/30
+                                                                text-red-400
+                                                              `
+                                                                                : normalizedStatus ===
+                                                                                    "QUEUED"
+                                                                                    ? `
+                                                                border
+                                                                border-indigo-600
+                                                                bg-indigo-950/30
+                                                                text-indigo-400
+                                                              `
+                                                                                    : `
                                                                 border
                                                                 border-yellow-600
                                                                 bg-yellow-950/30
@@ -981,32 +1007,58 @@ const ConsentScanner = () => {
 
                                                             <div className="
                                                 flex
+                                                flex-col
                                                 items-center
                                                 justify-center
+                                                gap-2
                                             ">
 
-                                                                {/* ONLY VIEW */}
+                                                                <div className="flex items-center justify-center gap-4">
+                                                                    {/* VIEW SCAN RESULTS */}
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => handleView(item)}
+                                                                        title="View scan results"
+                                                                        className="text-indigo-400 hover:text-indigo-300 transition"
+                                                                    >
+                                                                        <Eye size={18} />
+                                                                    </button>
 
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() =>
-                                                                        handleView(
-                                                                            item
-                                                                        )
-                                                                    }
-                                                                    title="View"
-                                                                    className="
-                                                        text-indigo-400
-                                                        hover:text-indigo-300
-                                                        transition
-                                                    "
-                                                                >
+                                                                    {/* MAP ONLY AFTER SCAN COMPLETION */}
+                                                                    {normalizedStatus === "COMPLETED" && (
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => handleMapToChecklist(item)}
+                                                                            disabled={mappingAuditId !== null}
+                                                                            title="Map to Checklist"
+                                                                            className="inline-flex items-center gap-1.5 rounded-md border border-indigo-500/60 px-2.5 py-1.5 text-xs font-medium text-indigo-300 hover:bg-indigo-950/40 hover:text-indigo-200 disabled:cursor-not-allowed disabled:opacity-50 transition"
+                                                                        >
+                                                                            {mappingAuditId === (item?.audit_id || item?.public_audit_id) ? (
+                                                                                <Loader2 size={14} className="animate-spin" />
+                                                                            ) : (
+                                                                                <ClipboardCheck size={14} />
+                                                                            )}
+                                                                            Map to Checklist
+                                                                        </button>
+                                                                    )}
+                                                                </div>
 
-                                                                    <Eye
-                                                                        size={18}
-                                                                    />
-
-                                                                </button>
+                                                                {mappingFeedback[item?.audit_id || item?.public_audit_id] && (
+                                                                    <div
+                                                                        className={`max-w-xs text-center text-xs ${
+                                                                            mappingFeedback[item?.audit_id || item?.public_audit_id]?.type === "success"
+                                                                                ? "text-emerald-400"
+                                                                                : "text-red-400"
+                                                                        }`}
+                                                                    >
+                                                                        <span className="inline-flex items-center gap-1">
+                                                                            {mappingFeedback[item?.audit_id || item?.public_audit_id]?.type === "success" && (
+                                                                                <CheckCircle2 size={13} />
+                                                                            )}
+                                                                            {mappingFeedback[item?.audit_id || item?.public_audit_id]?.message}
+                                                                        </span>
+                                                                    </div>
+                                                                )}
 
                                                             </div>
 

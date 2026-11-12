@@ -3,11 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import { sidebarConfig } from "../utilities/sidebarConfig";
 
-export default function Sidebar({ role = "admin" }) {
+export default function Sidebar({
+    role = "admin",
+    auditMode = "self_check",
+    onAuditModeChange,
+}) {
     const navigate = useNavigate();
-    const menu = sidebarConfig[(role || "admin").toLowerCase()] || [];
 
+    const normalizedRole = (role || "admin").toLowerCase();
     const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+
+    const roleMenu = sidebarConfig[normalizedRole];
+
+    const menu =
+        normalizedRole === "auditee"
+            ? roleMenu?.[auditMode] || roleMenu?.self_check || []
+            : roleMenu || [];
 
     const [openMenus, setOpenMenus] = useState({});
     const [openSideMenu, setOpenSideMenu] = useState(false);
@@ -82,7 +94,31 @@ export default function Sidebar({ role = "admin" }) {
                 <h1 className="text-3xl font-bold mb-8 text-indigo-400">
                     DPACOMPASS
                 </h1>
+                {/* {normalizedRole === "auditee" && (
+                    <div className="mb-6">
+                        <label
+                            htmlFor="auditee-mode"
+                            className="block text-sm font-medium text-gray-400 mb-2"
+                        >
+                            Select Role:
+                        </label>
 
+                        <select
+                            id="auditee-mode"
+                            value={auditMode}
+                            onChange={(e) => {
+                                onAuditModeChange?.(e.target.value);
+                            }}
+                            className="w-full rounded-lg border border-gray-700
+               bg-[#1e293b] text-white px-3 py-2.5
+               focus:outline-none focus:ring-2
+               focus:ring-indigo-500"
+                        >
+                            <option value="self_check">Self Check</option>
+                            <option value="third_party_audit">Third Party Audit</option>
+                        </select>
+                    </div>
+                )} */}
                 <nav className="space-y-4 text-base">
                     {menu.map((item, index) => {
                         const Icon = item.icon;
@@ -197,7 +233,10 @@ export default function Sidebar({ role = "admin" }) {
                             </p>
                         </div>
 
-                        <button className="w-full text-left px-3 py-2 rounded-lg hover:bg-indigo-500/10">
+                        <button
+                            onClick={() => navigate("/profile")}
+                            className="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-indigo-500/10"
+                        >
                             Edit Profile / Password
                         </button>
 

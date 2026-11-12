@@ -32,6 +32,7 @@ export const startAudit = async ({
     public_audit_id,
     audit_id,
     url,
+    max_pages = 20,
     username = "",
     password = "",
 }) => {
@@ -39,7 +40,7 @@ export const startAudit = async ({
         throw new Error("Audit URL is required.");
     }
     // console.log(url,username, password);
-    
+
     const response = await fetch(
         `${CONSENT_API_BASE_URL}/api/audits/test-crawl/`,
         {
@@ -48,9 +49,10 @@ export const startAudit = async ({
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                audit_id: audit_id,
-                public_audit_id : public_audit_id,
+                audit_id,
+                public_audit_id,
                 url: url.trim(),
+                max_pages: Number(max_pages),
                 username,
                 password,
             }),
@@ -84,7 +86,7 @@ export const startAudit = async ({
         success: true,
         message: data.message || "Audit started successfully.",
         audit_id: data.audit_id,
-        public_audit_id : data.public_audit_id,
+        public_audit_id: data.public_audit_id,
         task_id: data.task_id || null,
     };
 };
@@ -183,4 +185,68 @@ export const getConsentAuditResult = async (
     }
 
     return response.json();
+};
+export const getConsentChecklistAssessment = async (publicAuditId) => {
+    if (!publicAuditId) {
+        throw new Error("Public Audit ID is required.");
+    }
+
+    const response = await fetch(
+        `${CONSENT_API_BASE_URL}/api/checklist_assessment/audits/${encodeURIComponent(publicAuditId)}/`,
+        {
+            method: "GET",
+            headers: {
+                Accept: "application/json",
+            },
+        }
+    );
+
+    if (!response.ok) {
+        const message = await getErrorMessage(
+            response,
+            `Failed to fetch checklist assessment (${response.status})`
+        );
+
+        throw new Error(message);
+    }
+
+    const data = await response.json();
+
+    if (!data?.success) {
+        throw new Error(
+            data?.message || "Failed to fetch checklist assessment."
+        );
+    }
+
+    return data;
+};
+
+export const mapConsentResultToChecklist = async (publicAuditId) => {
+    if (!publicAuditId) {
+        throw new Error("Public Audit ID is required.");
+    }
+
+    const response = await fetch(
+        `${API_BASE_URL}/api/checklists/fetch-consent-result/${encodeURIComponent(publicAuditId)}/`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("access")}`,
+            },
+        }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data?.success) {
+        throw new Error(
+            data?.message ||
+            data?.detail ||
+            data?.error ||
+            "Failed to map consent results to checklists."
+        );
+    }
+
+    return data;
 };

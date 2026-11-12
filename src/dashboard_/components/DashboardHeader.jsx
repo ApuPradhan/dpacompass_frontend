@@ -52,22 +52,22 @@ export default function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-4">
-
+{/* 
                 <button
                     className="relative w-11 h-11 rounded-xl bg-[#111827] border border-gray-700
                     flex items-center justify-center hover:border-indigo-500 transition"
                 >
 
-                    <FiBell size={18} />
+                    <FiBell size={18} /> */}
 
                     {/* Placeholder Badge */}
 
-                    <span
+                    {/* <span
                         className="absolute top-2 right-2
                         w-2 h-2 rounded-full bg-red-500"
                     />
 
-                </button>
+                </button> */}
 
                 <div
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border

@@ -1,21 +1,13 @@
-import React, {
-    useEffect,
-    useRef,
-    useState,
-} from "react";
-
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
     ArrowLeft,
-    CheckCircle2,
-    ShieldCheck,
     AlertCircle,
+    CheckCircle2,
+    Clock3,
+    LoaderCircle,
+    ShieldCheck,
 } from "lucide-react";
-
-import {
-    useLocation,
-    useNavigate,
-    useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import AuditProgress from "../components/AuditProgress";
 import AuditSummary from "../components/AuditSummary";
@@ -24,1438 +16,778 @@ import AuditStepList from "../components/AuditStepList";
 import {
     startAudit,
     getConsentAuditResult,
+    getConsentChecklistAssessment,
 } from "../services/auditApi";
 
+const DEFAULT_MAX_PAGES = 20;
+const MIN_MAX_PAGES = 1;
+const MAX_MAX_PAGES = 1000;
+const POLLING_INTERVAL = 4000;
+
+const normalizeStatus = (value) => String(value || "").trim().toUpperCase();
+
+const normalizeSteps = (data) => {
+    const source = data?.steps ?? data?.consent_management?.steps;
+
+    if (Array.isArray(source)) {
+        return source.map((step) => ({
+            ...step,
+            step_id: step?.step_id,
+            status: normalizeStatus(step?.status || step?.execution_status),
+            execution_status: normalizeStatus(step?.execution_status || step?.status),
+        }));
+    }
+
+    if (source && typeof source === "object") {
+        return Object.entries(source).map(([stepId, status]) => ({
+            step_id: stepId,
+            status: normalizeStatus(status),
+            execution_status: normalizeStatus(status),
+        }));
+    }
+
+    return [];
+};
+
+const getAuditStatus = (data) =>
+    normalizeStatus(data?.status || data?.audit?.status || data?.audit_status);
+
+const isScanFullyCompleted = (data) => {
+    const auditStatus = getAuditStatus(data);
+    const steps = normalizeSteps(data);
+
+    return (
+        auditStatus === "COMPLETED" &&
+        steps.length > 0 &&
+        steps.every((step) => step.status === "COMPLETED")
+    );
+};
+
+const formatDate = (value) => {
+    if (!value) return "—";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString();
+};
+
+const formatStatus = (value) =>
+    String(value || "UNKNOWN")
+        .toLowerCase()
+        .replaceAll("_", " ")
+        .replace(/\b\w/g, (character) => character.toUpperCase());
+
+const StatusBadge = ({ status }) => {
+    const normalized = normalizeStatus(status);
+    const styles = {
+        COMPLETED: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
+        SUCCESS: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
+        RUNNING: "border-blue-500/30 bg-blue-500/10 text-blue-300",
+        QUEUED: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+        FAILED: "border-red-500/30 bg-red-500/10 text-red-300",
+        ERROR: "border-red-500/30 bg-red-500/10 text-red-300",
+        NOT_EVALUATED: "border-slate-600 bg-slate-800 text-slate-300",
+        PARTIALLY_COMPLIANT: "border-amber-500/30 bg-amber-500/10 text-amber-300",
+        NON_COMPLIANT: "border-red-500/30 bg-red-500/10 text-red-300",
+        COMPLIANT: "border-emerald-500/30 bg-emerald-500/10 text-emerald-300",
+    };
+
+    return (
+        <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-medium ${styles[normalized] || "border-slate-700 bg-slate-800 text-slate-300"}`}>
+            {formatStatus(status)}
+        </span>
+    );
+};
+
+const PageHeader = ({ title, description }) => (
+    <div className="mb-8">
+        <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-indigo-500/20 bg-indigo-500/10">
+                <ShieldCheck className="h-5 w-5 text-indigo-400" />
+            </div>
+            <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-indigo-400">
+                    Consent Audit
+                </p>
+                <h1 className="mt-1 text-2xl font-semibold tracking-tight text-slate-100">
+                    {title}
+                </h1>
+                <p className="mt-1.5 text-sm leading-6 text-slate-400">
+                    {description}
+                </p>
+            </div>
+        </div>
+    </div>
+);
+
+const AuditMetadata = ({ configuration, metadata }) => (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                Target Website
+            </p>
+            <p className="mt-1.5 break-all text-sm font-medium text-slate-200">
+                {configuration?.url || metadata?.url || "—"}
+            </p>
+        </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                Authentication
+            </p>
+            <p className="mt-1.5 text-sm font-medium text-slate-200">
+                {configuration?.username ? "Credentials available" : "Not configured"}
+            </p>
+        </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                Maximum Pages
+            </p>
+            <p className="mt-1.5 text-sm font-medium text-slate-200">
+                {metadata?.max_pages ?? configuration?.max_pages ?? "—"}
+            </p>
+        </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-4">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                Completed At
+            </p>
+            <p className="mt-1.5 text-sm font-medium text-slate-200">
+                {formatDate(metadata?.completed_at)}
+            </p>
+        </div>
+    </div>
+);
+
+const ChecklistAssessment = ({ data, loading, error, onRetry }) => {
+    const results = Array.isArray(data?.results) ? data.results : [];
+
+    const counts = useMemo(() => {
+        return results.reduce((accumulator, item) => {
+            const status = normalizeStatus(item?.status) || "UNKNOWN";
+            accumulator[status] = (accumulator[status] || 0) + 1;
+            return accumulator;
+        }, {});
+    }, [results]);
+
+    return (
+        <section className="mt-6 overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70">
+            <div className="border-b border-slate-800 px-5 py-5">
+                <h2 className="text-xl font-semibold text-slate-100">
+                    Checklist Assessment
+                </h2>
+                <p className="mt-1 text-sm text-slate-400">
+                    Assessment of the audit checklist based on the completed scan.
+                </p>
+            </div>
+
+            {loading ? (
+                <div className="flex items-center gap-3 p-6 text-sm text-slate-400">
+                    <LoaderCircle className="h-5 w-5 animate-spin" />
+                    Generating checklist assessment...
+                </div>
+            ) : error ? (
+                <div className="flex flex-col items-start gap-3 p-6">
+                    <div className="flex items-start gap-2 text-sm text-red-300">
+                        <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                        <div>
+                            <p className="font-medium">Checklist assessment could not be loaded.</p>
+                            <p className="mt-1 text-red-300/80">{error}</p>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={onRetry}
+                        className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm text-slate-200 hover:bg-slate-700"
+                    >
+                        Retry Assessment
+                    </button>
+                </div>
+            ) : !data ? (
+                <p className="p-6 text-sm text-slate-400">
+                    Checklist assessment is not available.
+                </p>
+            ) : (
+                <div className="p-5">
+                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                            <p className="text-sm text-slate-300">
+                                Total checklist items:{" "}
+                                <span className="font-semibold text-white">
+                                    {data.total_checklists ?? results.length}
+                                </span>
+                            </p>
+                            <p className="mt-1 text-xs text-slate-500">
+                                Assessment ID: {data.public_audit_id || "—"}
+                            </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {Object.entries(counts).map(([status, count]) => (
+                                <span
+                                    key={status}
+                                    className="inline-flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2 text-xs text-slate-300"
+                                >
+                                    <StatusBadge status={status} />
+                                    <span>{count}</span>
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {results.length === 0 ? (
+                        <p className="rounded-lg border border-slate-800 p-5 text-sm text-slate-400">
+                            The assessment API returned no checklist items.
+                        </p>
+                    ) : (
+                        <div className="space-y-3">
+                            {results.map((item, index) => (
+                                <article
+                                    key={`${item.question || "checklist"}-${index}`}
+                                    className="rounded-lg border border-slate-800 bg-slate-950/50 p-4"
+                                >
+                                    <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+                                        <div className="flex min-w-0 gap-3">
+                                            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slate-800 text-xs font-semibold text-slate-300">
+                                                {index + 1}
+                                            </span>
+                                            <p className="text-sm leading-6 text-slate-200">
+                                                {item.question || "Checklist question"}
+                                            </p>
+                                        </div>
+                                        <div className="shrink-0">
+                                            <StatusBadge status={item.status} />
+                                        </div>
+                                    </div>
+                                    {item.comment && (
+                                        <div className="ml-10 mt-3 rounded-md border border-slate-800 bg-slate-900/70 px-3 py-2">
+                                            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+                                                Assessment Comment
+                                            </p>
+                                            <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-300">
+                                                {item.comment}
+                                            </p>
+                                        </div>
+                                    )}
+                                </article>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+        </section>
+    );
+};
 
 const ConsentAutoAudit = () => {
-
     const location = useLocation();
     const navigate = useNavigate();
     const { publicAuditId } = useParams();
 
-    // =========================================================
-    // DATA PASSED FROM RUN BUTTON
-    // =========================================================
-
-    const configuration =
-        location.state?.configuration || null;
-
-    /*
-     * There are two ways this page can be opened:
-     *
-     * 1. Run:
-     *    public_audit_id comes from location.state.configuration
-     *
-     * 2. View:
-     *    public_audit_id comes from the URL:
-     *    /consent-management/:publicAuditId
-     *
-     * Use the URL ID first, then fall back to the
-     * configuration ID.
-     */
+    const configuration = location.state?.configuration || null;
     const effectivePublicAuditId =
-        publicAuditId ||
-        configuration?.public_audit_id ||
-        null;
+        publicAuditId || configuration?.public_audit_id || null;
 
+    const [auditState, setAuditState] = useState("checking");
+    const [auditId, setAuditId] = useState(null);
+    const [taskId, setTaskId] = useState(null);
+    const [auditProgress, setAuditProgress] = useState(null);
+    const [auditResult, setAuditResult] = useState(null);
+    const [error, setError] = useState("");
 
-    console.log(
-        "[Consent Audit] Configuration:",
-        configuration
+    const [maxPages, setMaxPages] = useState(
+        Number(configuration?.max_pages) || DEFAULT_MAX_PAGES
     );
+    const [maxPagesError, setMaxPagesError] = useState("");
 
-    console.log(
-        "[Consent Audit] Public Audit ID:",
-        effectivePublicAuditId
-    );
+    const [checklistAssessment, setChecklistAssessment] = useState(null);
+    const [assessmentLoading, setAssessmentLoading] = useState(false);
+    const [assessmentError, setAssessmentError] = useState("");
 
+    const pollingRef = useRef(null);
+    const startedRef = useRef(false);
+    const assessmentTriggeredRef = useRef(false);
+    const assessmentRequestRef = useRef(false);
 
-    // =========================================================
-    // STATE
-    // =========================================================
+    const stepsForDisplay = useMemo(() => {
+        const source =
+            auditResult?.consent_management?.steps ??
+            auditResult?.steps ??
+            [];
 
-    const [auditState, setAuditState] =
-        useState("starting");
+        if (!Array.isArray(source)) return [];
 
-    const [auditId, setAuditId] =
-        useState(null);
+        return source
+            .filter((step) => step?.result)
+            .map((step) => ({
+                ...step.result,
+                step_id: step.step_id,
+                execution_status: normalizeStatus(step.status),
+            }));
+    }, [auditResult]);
 
-    const [taskId, setTaskId] =
-        useState(null);
+    const auditMetadata = auditResult?.audit || null;
 
-    const [auditProgress, setAuditProgress] =
-        useState(null);
+    const loadChecklistAssessment = useCallback(async ({ retry = false } = {}) => {
+        if (!effectivePublicAuditId || assessmentRequestRef.current) return;
+        if (assessmentTriggeredRef.current && !retry) return;
 
-    const [auditResult, setAuditResult] =
-        useState(null);
+        assessmentRequestRef.current = true;
+        assessmentTriggeredRef.current = true;
+        setAssessmentLoading(true);
+        setAssessmentError("");
 
-    const [error, setError] =
-        useState("");
+        try {
+            const data = await getConsentChecklistAssessment(effectivePublicAuditId);
+            setChecklistAssessment(data);
+        } catch (assessmentErr) {
+            assessmentTriggeredRef.current = false;
+            setAssessmentError(
+                assessmentErr?.message || "Failed to load checklist assessment."
+            );
+        } finally {
+            assessmentRequestRef.current = false;
+            setAssessmentLoading(false);
+        }
+    }, [effectivePublicAuditId]);
 
+    const updateAuditProgress = useCallback((data) => {
+        const steps = normalizeSteps(data);
+        const completedSteps = steps.filter(
+            (step) => step.status === "COMPLETED"
+        );
+        const runningStep = steps.find((step) => step.status === "RUNNING");
+        const queuedStep = steps.find((step) => step.status === "QUEUED");
 
-    const pollingRef =
-        useRef(null);
+        setAuditProgress({
+            progress: steps.length
+                ? Math.round((completedSteps.length / steps.length) * 100)
+                : 0,
+            currentStep: runningStep?.step_id || queuedStep?.step_id || null,
+            status: getAuditStatus(data),
+            steps,
+        });
+    }, []);
 
-    const startedRef =
-        useRef(false);
+    const handleStartAudit = useCallback(async () => {
+        if (!configuration) {
+            setError("Audit configuration is missing. Return to the application and run the scanner again.");
+            setAuditState("failed");
+            return;
+        }
 
+        const parsedMaxPages = Number(maxPages);
+        if (
+            !Number.isInteger(parsedMaxPages) ||
+            parsedMaxPages < MIN_MAX_PAGES ||
+            parsedMaxPages > MAX_MAX_PAGES
+        ) {
+            setMaxPagesError(`Enter a whole number between ${MIN_MAX_PAGES} and ${MAX_MAX_PAGES}.`);
+            return;
+        }
 
-    // =========================================================
-    // EXTRACT STEPS FROM FINAL RESULT
-    //
-    // API response:
-    //
-    // {
-    //     "success": true,
-    //     "public_audit_id": "DPA-2026-000006",
-    //     "status": "COMPLETED",
-    //     "steps": {
-    //         "STEP-01": "COMPLETED",
-    //         "STEP-02": "COMPLETED",
-    //         ...
-    //     }
-    // }
-    //
-    // Convert it into:
-    //
-    // [
-    //     {
-    //         step_id: "STEP-01",
-    //         status: "COMPLETED",
-    //         execution_status: "COMPLETED"
-    //     }
-    // ]
-    // =========================================================
+        setMaxPagesError("");
+        setError("");
+        setAuditState("starting");
 
-    const auditSteps = Array.isArray(
-        auditResult?.consent_management?.steps
-    )
-        ? auditResult.consent_management.steps
-            .map((step) => {
-                if (!step?.result) {
-                    return null;
-                }
+        try {
+            const response = await startAudit({
+                public_audit_id: configuration.public_audit_id,
+                audit_id: configuration.audit_id,
+                url: configuration.url,
+                max_pages: parsedMaxPages,
+                username: configuration.username || "",
+                password: configuration.password || "",
+            });
 
-                return {
-                    ...step.result,
-
-                    step_id:
-                        step.step_id,
-
-                    execution_status:
-                        String(
-                            step.status || ""
-                        ).toUpperCase(),
-                };
-            })
-            .filter(Boolean)
-        : [];
-
-
-    // =========================================================
-    // AUDIT METADATA
-    // =========================================================
-
-    const auditMetadata =
-        auditResult?.audit || null;
-
-
-    // =========================================================
-    // START AUDIT
-    // =========================================================
-
-    const handleStartAudit =
-        async () => {
-
-            if (!configuration) {
-
-                setError(
-                    "Audit configuration is missing."
-                );
-
-                setAuditState(
-                    "failed"
-                );
-
-                return;
+            if (!response?.audit_id) {
+                throw new Error("Audit started but no audit ID was returned.");
             }
 
+            setAuditId(response.audit_id);
+            setTaskId(response.task_id || null);
+            setAuditState("running");
+        } catch (startError) {
+            setError(startError?.message || "Failed to start consent audit.");
+            setAuditState("failed");
+        }
+    }, [configuration, maxPages]);
 
-            try {
-
-                setError("");
-
-                setAuditState(
-                    "starting"
-                );
-
-
-                console.log(
-                    "[Auto Consent Audit] Starting with:",
-                    configuration
-                );
-
-
-                // =================================================
-                // START API
-                // =================================================
-
-                const response =
-                    await startAudit({
-
-                        public_audit_id:
-                            configuration.public_audit_id,
-
-                        audit_id:
-                            configuration.audit_id,
-
-                        url:
-                            configuration.url,
-
-                        username:
-                            configuration.username ||
-                            "",
-
-                        password:
-                            configuration.password ||
-                            "",
-                    });
-
-
-                console.log(
-                    "[Auto Consent Audit] Start response:",
-                    response
-                );
-
-
-                // =================================================
-                // GET AUDIT ID
-                // =================================================
-
-                const returnedAuditId =
-                    response?.audit_id;
-
-
-                const returnedTaskId =
-                    response?.task_id;
-
-
-                if (!returnedAuditId) {
-
-                    throw new Error(
-                        "Audit started but no audit ID was returned."
-                    );
-                }
-
-
-                console.log(
-                    "[Auto Consent Audit] Audit ID:",
-                    returnedAuditId
-                );
-
-
-                console.log(
-                    "[Auto Consent Audit] Task ID:",
-                    returnedTaskId
-                );
-
-
-                setAuditId(
-                    returnedAuditId
-                );
-
-
-                setTaskId(
-                    returnedTaskId || null
-                );
-
-
-                setAuditState(
-                    "running"
-                );
-
-            } catch (err) {
-
-                console.error(
-                    "[Auto Consent Audit] Start failed:",
-                    err
-                );
-
-
-                setError(
-                    err?.message ||
-                    "Failed to start consent audit."
-                );
-
-
-                setAuditState(
-                    "failed"
-                );
-            }
-        };
-
-
-    // =========================================================
-    // CHECK EXISTING AUDIT BEFORE STARTING A NEW ONE
-    // =========================================================
-
-    const checkExistingAudit = async () => {
-
-        const currentPublicAuditId =
-            effectivePublicAuditId;
-
-        if (!currentPublicAuditId) {
-
-            setError(
-                "Public Audit ID is missing."
-            );
-
-            setAuditState(
-                "failed"
-            );
-
+    const checkExistingAudit = useCallback(async () => {
+        if (!effectivePublicAuditId) {
+            setError("Public Audit ID is missing.");
+            setAuditState("failed");
             return;
         }
 
         try {
-
             setError("");
+            const data = await getConsentAuditResult(effectivePublicAuditId);
+            const existingAuditId = data?.audit?.id || data?.audit_id || null;
+            const status = getAuditStatus(data);
+            const recognizedStatuses = [
+                "QUEUED", "PENDING", "RUNNING", "COMPLETED",
+                "FAILED", "ERROR", "CANCELLED",
+            ];
 
-            console.log(
-                "[Consent Audit] Checking existing audit:",
-                currentPublicAuditId
-            );
-
-            const data =
-                await getConsentAuditResult(
-                    currentPublicAuditId
-                );
-
-            console.log(
-                "[Consent Audit] Existing audit response:",
-                data
-            );
-
-            const existingAuditId =
-                data?.audit?.id ||
-                data?.audit_id ||
-                null;
-
-            const auditStatus =
-                String(
-                    data?.status ||
-                    data?.audit?.status ||
-                    ""
-                ).toUpperCase();
-
-            /*
-             * If the result endpoint returns an existing
-             * audit, NEVER call startAudit().
-             */
-            if (
-                existingAuditId ||
-                [
-                    "QUEUED",
-                    "RUNNING",
-                    "COMPLETED",
-                    "FAILED",
-                    "ERROR",
-                    "CANCELLED",
-                ].includes(auditStatus)
-            ) {
-
-                if (existingAuditId) {
-                    setAuditId(existingAuditId);
-                }
+            if (existingAuditId || recognizedStatuses.includes(status)) {
+                if (existingAuditId) setAuditId(existingAuditId);
 
                 setAuditResult({
                     ...data,
                     steps: normalizeSteps(data),
                 });
-
                 updateAuditProgress(data);
 
-                if (auditStatus === "COMPLETED") {
-
+                if (status === "COMPLETED") {
                     setAuditState("completed");
+                    if (isScanFullyCompleted(data)) {
+                        await loadChecklistAssessment();
+                    } else {
+                        setAssessmentError(
+                            "The audit is marked completed, but one or more steps are missing or not completed. Assessment was not requested."
+                        );
+                    }
                     return;
                 }
 
-                if (
-                    auditStatus === "FAILED" ||
-                    auditStatus === "ERROR" ||
-                    auditStatus === "CANCELLED"
-                ) {
-
-                    setError(
-                        data?.error ||
-                        data?.message ||
-                        `Audit ${auditStatus.toLowerCase()}.`
-                    );
-
+                if (["FAILED", "ERROR", "CANCELLED"].includes(status)) {
+                    setError(data?.error || data?.message || `Audit ${status.toLowerCase()}.`);
                     setAuditState("failed");
                     return;
                 }
 
-                /*
-                 * QUEUED / RUNNING
-                 */
                 setAuditState("running");
                 return;
             }
 
-            /*
-             * No existing audit was returned.
-             * Only in this case do we start a new audit.
-             */
-            console.log(
-                "[Consent Audit] No existing audit found. Starting new audit..."
-            );
-
-            await handleStartAudit();
-
-        } catch (err) {
-
-            console.error(
-                "[Consent Audit] Existing audit check failed:",
-                err
-            );
-
-            /*
-             * A 404 means that the public audit does not
-             * have an existing audit yet.
-             */
-            if (err?.status === 404) {
-
-                /*
-                 * If this page was opened from RUN, configuration
-                 * exists, so a 404 means a new audit can be started.
-                 *
-                 * If this page was opened through VIEW, there is
-                 * no configuration and we must NOT start a new crawl.
-                 */
+            // A successful response without an audit record is not treated as a new scan.
+            setError("The existing audit status could not be determined.");
+            setAuditState("failed");
+        } catch (checkError) {
+            if (checkError?.status === 404) {
                 if (configuration?.public_audit_id) {
-
-                    console.log(
-                        "[Consent Audit] Audit not found. Starting new audit..."
-                    );
-
-                    await handleStartAudit();
+                    setAuditState("configuring");
                     return;
                 }
 
-                setError(
-                    `No existing consent audit was found for public audit ID ${effectivePublicAuditId}.`
-                );
-
+                setError(`No existing consent audit was found for ${effectivePublicAuditId}.`);
                 setAuditState("failed");
                 return;
             }
 
-            /*
-             * Do NOT start a new crawl for other errors.
-             */
-            setError(
-                err?.message ||
-                "Failed to check existing consent audit."
-            );
-
+            setError(checkError?.message || "Failed to check existing consent audit.");
             setAuditState("failed");
         }
-    };
-
-
-    // =========================================================
-    // NORMALIZE STEPS
-    // =========================================================
-
-    const normalizeSteps = (data) => {
-
-        if (Array.isArray(data?.steps)) {
-
-            return data.steps.map((step) => ({
-                ...step,
-
-                step_id:
-                    step?.step_id,
-
-                status:
-                    String(
-                        step?.status || ""
-                    ).toUpperCase(),
-
-                execution_status:
-                    String(
-                        step?.status || ""
-                    ).toUpperCase(),
-            }));
-        }
-
-        return Object.entries(
-            data?.steps || {}
-        ).map(
-            ([stepId, status]) => ({
-                step_id:
-                    stepId,
-
-                status:
-                    String(
-                        status || ""
-                    ).toUpperCase(),
-
-                execution_status:
-                    String(
-                        status || ""
-                    ).toUpperCase(),
-            })
-        );
-    };
-
-
-    // =========================================================
-    // UPDATE PROGRESS FROM RESULT API
-    // =========================================================
-
-    const updateAuditProgress = (data) => {
-
-        const steps =
-            normalizeSteps(data);
-
-        const completedSteps =
-            steps.filter(
-                (step) =>
-                    String(
-                        step?.status || ""
-                    ).toUpperCase() ===
-                    "COMPLETED"
-            );
-
-        const runningStep =
-            steps.find(
-                (step) =>
-                    String(
-                        step?.status || ""
-                    ).toUpperCase() ===
-                    "RUNNING"
-            );
-
-        const queuedStep =
-            steps.find(
-                (step) =>
-                    String(
-                        step?.status || ""
-                    ).toUpperCase() ===
-                    "QUEUED"
-            );
-
-        const auditStatus =
-            String(
-                data?.status ||
-                data?.audit?.status ||
-                ""
-            ).toUpperCase();
-
-        const calculatedProgress =
-            steps.length > 0
-                ? Math.round(
-                    (
-                        completedSteps.length /
-                        steps.length
-                    ) * 100
-                )
-                : 0;
-
-        setAuditProgress({
-
-            progress:
-                calculatedProgress,
-
-            currentStep:
-                runningStep?.step_id ||
-                queuedStep?.step_id ||
-                null,
-
-            status:
-                auditStatus,
-
-            steps,
-        });
-    };
-
-
-    // =========================================================
-    // CHECK AUTOMATICALLY
-    // =========================================================
+    }, [
+        effectivePublicAuditId,
+        configuration,
+        updateAuditProgress,
+        loadChecklistAssessment,
+    ]);
 
     useEffect(() => {
-
-        if (startedRef.current) {
-            return;
-        }
-
+        if (startedRef.current) return;
         startedRef.current = true;
-
         checkExistingAudit();
-
-    }, []);
-
-
-    // =========================================================
-    // POLLING
-    // =========================================================
+    }, [checkExistingAudit]);
 
     useEffect(() => {
-
-        /*
-         * Poll using PUBLIC AUDIT ID.
-         * The result API is now the source of truth.
-         */
-
-        if (
-            auditState !== "running" ||
-            !effectivePublicAuditId
-        ) {
-            return;
-        }
-
-        const currentPublicAuditId =
-            effectivePublicAuditId;
-
-        console.log(
-            `[Consent Audit] Polling started for public audit ${currentPublicAuditId}`
-        );
+        if (auditState !== "running" || !effectivePublicAuditId) return undefined;
 
         let isPolling = true;
 
         const pollAudit = async () => {
-
-            if (!isPolling) {
-                return;
-            }
+            if (!isPolling) return;
 
             try {
+                const data = await getConsentAuditResult(effectivePublicAuditId);
+                const returnedAuditId = data?.audit?.id || data?.audit_id || null;
 
-                console.log(
-                    `[Consent Audit] Checking result for public audit ${currentPublicAuditId}`
-                );
+                if (returnedAuditId) setAuditId(returnedAuditId);
 
-                const data =
-                    await getConsentAuditResult(
-                        currentPublicAuditId
-                    );
-
-                console.log(
-                    "[Consent Audit] Result response:",
-                    data
-                );
-
-                const returnedAuditId =
-                    data?.audit?.id ||
-                    data?.audit_id ||
-                    null;
-
-                if (returnedAuditId) {
-                    setAuditId(returnedAuditId);
-                }
-
-                const auditStatus =
-                    String(
-                        data?.status ||
-                        data?.audit?.status ||
-                        ""
-                    ).toUpperCase();
-
-                console.log(
-                    "[Consent Audit] Current status:",
-                    auditStatus
-                );
-
-                const steps =
-                    normalizeSteps(data);
-
-                console.log(
-                    "[Consent Audit] Normalized steps:",
-                    steps
-                );
+                const status = getAuditStatus(data);
+                const steps = normalizeSteps(data);
 
                 updateAuditProgress(data);
+                setAuditResult({ ...data, steps });
 
-                setAuditResult({
-                    ...data,
-                    steps,
-                });
-
-                if (auditStatus === "COMPLETED") {
-
-                    console.log(
-                        "[Consent Audit] Audit completed."
-                    );
-
+                if (status === "COMPLETED") {
                     setAuditState("completed");
+
+                    if (isScanFullyCompleted(data)) {
+                        await loadChecklistAssessment();
+                    } else {
+                        setAssessmentError(
+                            "The audit reports completion, but not all steps have completed successfully. Checklist assessment was not requested."
+                        );
+                    }
                     return;
                 }
 
-                if (
-                    auditStatus === "FAILED" ||
-                    auditStatus === "ERROR" ||
-                    auditStatus === "CANCELLED"
-                ) {
-
-                    console.error(
-                        "[Consent Audit] Audit failed:",
-                        data
-                    );
-
-                    setError(
-                        data?.error ||
-                        data?.message ||
-                        `Audit ${auditStatus.toLowerCase()}.`
-                    );
-
+                if (["FAILED", "ERROR", "CANCELLED"].includes(status)) {
+                    setError(data?.error || data?.message || `Audit ${status.toLowerCase()}.`);
                     setAuditState("failed");
-                    return;
                 }
-
-            } catch (err) {
-
-                console.error(
-                    "[Consent Audit] Polling error:",
-                    err
-                );
-
-                /*
-                 * Do not immediately mark the audit as failed
-                 * because of a temporary polling request failure.
-                 */
+            } catch (pollError) {
+                // A temporary polling error should not mark the running audit as failed.
+                console.error("[Consent Audit] Polling error:", pollError);
             }
         };
 
         pollAudit();
-
-        pollingRef.current =
-            setInterval(
-                pollAudit,
-                4000
-            );
+        pollingRef.current = setInterval(pollAudit, POLLING_INTERVAL);
 
         return () => {
-
             isPolling = false;
-
             if (pollingRef.current) {
-
-                clearInterval(
-                    pollingRef.current
-                );
-
+                clearInterval(pollingRef.current);
                 pollingRef.current = null;
             }
         };
-
     }, [
         auditState,
         effectivePublicAuditId,
+        updateAuditProgress,
+        loadChecklistAssessment,
     ]);
 
-
-    // =========================================================
-    // CLEANUP ON UNMOUNT
-    // =========================================================
-
     useEffect(() => {
-
         return () => {
-
-            if (
-                pollingRef.current
-            ) {
-
-                clearInterval(
-                    pollingRef.current
-                );
-
-
-                pollingRef.current =
-                    null;
+            if (pollingRef.current) {
+                clearInterval(pollingRef.current);
+                pollingRef.current = null;
             }
         };
-
     }, []);
 
-
-    // =========================================================
-    // STARTING SCREEN
-    // =========================================================
-
-    if (
-        auditState ===
-        "starting"
-    ) {
-
-        return (
-
-            <div className="
-                min-h-screen
-                bg-[#0b1120]
-                px-6
-                py-6
-                text-slate-100
-            ">
-
-                <div className="
-                    mx-auto
-                    w-full
-                    max-w-6xl
-                ">
-
-                    <PageHeader
-                        title="Consent Audit"
-                        description={
-                            configuration?.url
-                                ? `Starting audit for ${configuration.url}`
-                                : "Starting consent audit"
-                        }
-                    />
-
-
-                    <div className="
-                        rounded-xl
-                        border
-                        border-slate-800
-                        bg-slate-900/70
-                        p-8
-                    ">
-
-                        <div className="
-                            flex
-                            items-center
-                            gap-4
-                        ">
-
-                            <div className="
-                                h-10
-                                w-10
-                                animate-spin
-                                rounded-full
-                                border-2
-                                border-indigo-400
-                                border-t-transparent
-                            " />
-
-
-                            <div>
-
-                                <p className="
-                                    text-sm
-                                    font-semibold
-                                    text-slate-200
-                                ">
-                                    Starting Consent Audit
-                                </p>
-
-
-                                <p className="
-                                    mt-1
-                                    text-xs
-                                    text-slate-500
-                                ">
-                                    The scanner is being initialized...
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-        );
-    }
-
-
-    // =========================================================
-    // RUNNING SCREEN
-    // =========================================================
-
-    if (
-        auditState ===
-        "running"
-    ) {
-
-        return (
-
-            <div className="
-                min-h-screen
-                bg-[#0b1120]
-                px-6
-                py-6
-                text-slate-100
-            ">
-
-                <div className="
-                    mx-auto
-                    w-full
-                    max-w-6xl
-                ">
-
-                    <PageHeader
-                        title="Consent Audit"
-                        description={
-                            configuration?.url
-                                ? `Auditing ${configuration.url}`
-                                : "Audit in progress"
-                        }
-                    />
-
-
-                    <AuditProgress
-
-                        progress={
-                            auditProgress?.progress ||
-                            0
-                        }
-
-                        currentStep={
-                            auditProgress?.currentStep ||
-                            null
-                        }
-
-                        status={
-                            auditProgress?.status ||
-                            "RUNNING"
-                        }
-
-                        steps={
-                            auditProgress?.steps ||
-                            []
-                        }
-
-                    />
-
-                </div>
-
-            </div>
-        );
-    }
-
-
-    // =========================================================
-    // FAILED SCREEN
-    // =========================================================
-
-    if (
-        auditState ===
-        "failed"
-    ) {
-
-        return (
-
-            <div className="
-                min-h-screen
-                bg-[#0b1120]
-                px-6
-                py-6
-                text-slate-100
-            ">
-
-                <div className="
-                    mx-auto
-                    w-full
-                    max-w-6xl
-                ">
-
-                    <PageHeader
-                        title="Consent Audit"
-                        description="Unable to complete the consent audit."
-                    />
-
-
-                    <div className="
-                        rounded-xl
-                        border
-                        border-red-500/20
-                        bg-red-500/5
-                        px-5
-                        py-5
-                    ">
-
-                        <div className="
-                            flex
-                            items-start
-                            gap-3
-                        ">
-
-                            <AlertCircle
-                                className="
-                                    mt-0.5
-                                    h-5
-                                    w-5
-                                    shrink-0
-                                    text-red-400
-                                "
-                            />
-
-
-                            <div>
-
-                                <p className="
-                                    text-sm
-                                    font-semibold
-                                    text-red-300
-                                ">
-                                    Audit Failed
-                                </p>
-
-
-                                <p className="
-                                    mt-1
-                                    text-xs
-                                    text-red-300/70
-                                ">
-                                    {error}
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            onClick={() =>
-                                navigate(-1)
-                            }
-                            className="
-                                mt-5
-                                inline-flex
-                                items-center
-                                gap-2
-                                rounded-lg
-                                border
-                                border-slate-700
-                                bg-slate-900
-                                px-4
-                                py-2
-                                text-xs
-                                font-medium
-                                text-slate-300
-                                hover:bg-slate-800
-                            "
-                        >
-
-                            <ArrowLeft
-                                className="
-                                    h-3.5
-                                    w-3.5
-                                "
-                            />
-
-                            Back to Applications
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-        );
-    }
-
-
-    // =========================================================
-    // COMPLETED / RESULT SCREEN
-    // =========================================================
-
-    return (
-
-        <div className="
-            min-h-screen
-            bg-[#0b1120]
-            px-6
-            py-6
-            text-slate-100
-        ">
-
-            <div className="
-                mx-auto
-                w-full
-                max-w-6xl
-            ">
-
-                {/* =================================================
-                    HEADER
-                    ================================================= */}
-
-                <div className="
-                    mb-6
-                    flex
-                    flex-col
-                    gap-4
-                    lg:flex-row
-                    lg:items-center
-                    lg:justify-between
-                ">
-
-                    <PageHeader
-                        title="Consent Audit Results"
-                        description={
-                            configuration?.url
-                                ? `Audit results for ${configuration.url}`
-                                : "Completed DPDP consent compliance audit."
-                        }
-                    />
-
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            navigate(-1)
-                        }
-                        className="
-                            inline-flex
-                            items-center
-                            justify-center
-                            gap-2
-                            rounded-lg
-                            border
-                            border-slate-700
-                            bg-slate-900/80
-                            px-3
-                            py-2
-                            text-xs
-                            font-medium
-                            text-slate-300
-                            hover:border-slate-600
-                            hover:bg-slate-800
-                            hover:text-slate-100
-                        "
-                    >
-
-                        <ArrowLeft
-                            className="
-                                h-3.5
-                                w-3.5
-                            "
-                        />
-
-                        Back to Applications
-
-                    </button>
-
-                </div>
-
-
-                {/* =================================================
-                    COMPLETION BANNER
-                    ================================================= */}
-
-                <div className="
-                    mb-6
-                    rounded-xl
-                    border
-                    border-emerald-500/20
-                    bg-emerald-500/5
-                    px-5
-                    py-4
-                ">
-
-                    <div className="
-                        flex
-                        items-center
-                        gap-3
-                    ">
-
-                        <div className="
-                            flex
-                            h-9
-                            w-9
-                            shrink-0
-                            items-center
-                            justify-center
-                            rounded-lg
-                            border
-                            border-emerald-500/20
-                            bg-emerald-500/10
-                        ">
-
-                            <CheckCircle2
-                                className="
-                                    h-5
-                                    w-5
-                                    text-emerald-400
-                                "
-                            />
-
-                        </div>
-
-
-                        <div>
-
-                            <h2 className="
-                                text-sm
-                                font-semibold
-                                text-emerald-300
-                            ">
-                                Audit Completed
-                            </h2>
-
-
-                            <p className="
-                                mt-0.5
-                                text-xs
-                                text-slate-400
-                            ">
-                                The configured audit requirements have been evaluated successfully.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                {/* =================================================
-                    METADATA
-                    ================================================= */}
-
-                <AuditMetadata
-                    configuration={
-                        configuration
-                    }
-                    metadata={
-                        auditMetadata
+    const estimatedSeconds = 30 + (15 * (Number(maxPages) || 0));
+    const estimatedDuration =
+        estimatedSeconds >= 60
+            ? `${Math.floor(estimatedSeconds / 60)} min ${estimatedSeconds % 60} sec`
+            : `${estimatedSeconds} seconds`;
+
+    const renderShell = (children) => (
+        <div className="min-h-screen bg-[#0b1120] px-6 py-6 text-slate-100">
+            <div className="mx-auto w-full max-w-6xl">{children}</div>
+        </div>
+    );
+
+    if (auditState === "checking" || auditState === "starting") {
+        return renderShell(
+            <>
+                <PageHeader
+                    title="Consent Audit"
+                    description={
+                        auditState === "checking"
+                            ? "Checking whether a consent audit already exists..."
+                            : "Initializing the consent scanner..."
                     }
                 />
-
-
-                {/* =================================================
-                    SUMMARY
-                    ================================================= */}
-
-                <div className="
-                    mt-6
-                ">
-
-                    <AuditSummary
-                        steps={
-                            auditSteps
-                        }
-                    />
-
+                <div className="flex items-center gap-4 rounded-xl border border-slate-800 bg-slate-900/70 p-8">
+                    <LoaderCircle className="h-8 w-8 animate-spin text-indigo-400" />
+                    <div>
+                        <p className="text-sm font-semibold text-slate-200">
+                            {auditState === "checking" ? "Checking Existing Audit" : "Starting Consent Audit"}
+                        </p>
+                        <p className="mt-1 text-xs text-slate-500">
+                            Please wait. This page will update automatically.
+                        </p>
+                    </div>
                 </div>
+            </>
+        );
+    }
 
+    if (auditState === "configuring") {
+        return renderShell(
+            <>
+                <PageHeader
+                    title="Configure Consent Audit"
+                    description="Set the maximum number of pages the scanner should inspect before starting the audit."
+                />
 
-                {/* =================================================
-                    STEP RESULTS
-                    ================================================= */}
+                <div className="rounded-xl border border-slate-800 bg-slate-900/70 p-6">
+                    <div className="mb-6">
+                        <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-400">
+                            Target Website
+                        </label>
+                        <div className="rounded-lg border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm text-slate-300 break-all">
+                            {configuration?.url || "Website URL unavailable"}
+                        </div>
+                    </div>
 
-                <div className="
-                    mt-6
-                ">
+                    <div className="grid gap-6 md:grid-cols-2">
+                        <div>
+                            <label htmlFor="max-pages" className="mb-2 block text-sm font-medium text-slate-200">
+                                Maximum Pages to Crawl
+                            </label>
+                            <input
+                                id="max-pages"
+                                type="number"
+                                min={MIN_MAX_PAGES}
+                                max={MAX_MAX_PAGES}
+                                step="1"
+                                value={maxPages}
+                                onChange={(event) => {
+                                    setMaxPages(event.target.value);
+                                    setMaxPagesError("");
+                                }}
+                                className="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                            />
+                            <p className="mt-2 text-xs text-slate-500">
+                                Enter a value between {MIN_MAX_PAGES} and {MAX_MAX_PAGES}.
+                            </p>
+                            {maxPagesError && (
+                                <p className="mt-2 text-xs text-red-400">{maxPagesError}</p>
+                            )}
+                        </div>
 
-                    <AuditStepList
-                        steps={
-                            auditSteps
-                        }
-                    />
+                        <div className="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+                            <div className="flex items-center gap-2 text-indigo-300">
+                                <Clock3 className="h-4 w-4" />
+                                <p className="text-sm font-medium">Estimated Crawl Duration</p>
+                            </div>
+                            <p className="mt-3 text-2xl font-semibold text-white">
+                                {estimatedDuration}
+                            </p>
+                            <p className="mt-1 text-xs leading-5 text-slate-400">
+                                Approximate estimate based on the selected page limit. Actual duration depends on website response times.
+                            </p>
+                        </div>
+                    </div>
 
+                    <div className="mt-6 rounded-lg border border-slate-800 bg-slate-950/50 p-4">
+                        <p className="text-sm font-medium text-slate-200">Authentication</p>
+                        <p className="mt-1 text-xs leading-5 text-slate-400">
+                            {configuration?.username
+                                ? "Auditee login credentials are available and will be passed automatically to the scanner."
+                                : "No Auditee login credentials were provided for this application. The scanner will run without authenticated access."}
+                        </p>
+                    </div>
+
+                    {error && (
+                        <p className="mt-4 text-sm text-red-400">{error}</p>
+                    )}
+
+                    <div className="mt-7 flex flex-wrap justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={() => navigate(-1)}
+                            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                            Back
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleStartAudit}
+                            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-indigo-500"
+                        >
+                            <ShieldCheck className="h-4 w-4" />
+                            Start Consent Scan
+                        </button>
+                    </div>
                 </div>
+            </>
+        );
+    }
 
+    if (auditState === "running") {
+        return renderShell(
+            <>
+                <PageHeader
+                    title="Consent Audit in Progress"
+                    description={configuration?.url ? `Auditing ${configuration.url}` : "The consent scanner is running."}
+                />
+                <AuditProgress
+                    progress={auditProgress?.progress || 0}
+                    currentStep={auditProgress?.currentStep || null}
+                    status={auditProgress?.status || "RUNNING"}
+                    steps={auditProgress?.steps || []}
+                />
+                {taskId && (
+                    <p className="mt-3 text-xs text-slate-500">Task ID: {taskId}</p>
+                )}
+            </>
+        );
+    }
+
+    if (auditState === "failed") {
+        return renderShell(
+            <>
+                <PageHeader
+                    title="Consent Audit"
+                    description="Unable to complete the consent audit."
+                />
+                <div className="rounded-xl border border-red-500/20 bg-red-500/5 px-5 py-5">
+                    <div className="flex items-start gap-3">
+                        <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
+                        <div>
+                            <p className="text-sm font-semibold text-red-300">Audit Failed</p>
+                            <p className="mt-1 text-sm text-red-300/80">{error}</p>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="mt-5 inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-300 hover:bg-slate-800"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                        Back to Applications
+                    </button>
+                </div>
+            </>
+        );
+    }
+
+    return renderShell(
+        <>
+            <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <PageHeader
+                    title="Consent Audit Results"
+                    description={configuration?.url ? `Audit results for ${configuration.url}` : "Completed DPDP consent compliance audit."}
+                />
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+                >
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Applications
+                </button>
             </div>
 
-        </div>
+            <div className="mb-6 rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-5 py-4">
+                <div className="flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    <div>
+                        <h2 className="text-sm font-semibold text-emerald-300">Audit Completed</h2>
+                        <p className="mt-0.5 text-xs text-slate-400">
+                            All scanner steps have completed. The checklist assessment is requested separately.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <AuditMetadata configuration={configuration} metadata={auditMetadata} />
+
+            <div className="mt-6">
+                <AuditSummary steps={stepsForDisplay} />
+            </div>
+
+            <div className="mt-6">
+                <AuditStepList steps={stepsForDisplay} />
+            </div>
+
+            <ChecklistAssessment
+                data={checklistAssessment}
+                loading={assessmentLoading}
+                error={assessmentError}
+                onRetry={() => loadChecklistAssessment({ retry: true })}
+            />
+
+            <div className="mt-4 text-xs text-slate-500">
+                {auditId ? `Audit ID: ${auditId}` : ""}
+                {effectivePublicAuditId ? ` • Public Audit ID: ${effectivePublicAuditId}` : ""}
+            </div>
+        </>
     );
 };
-
-
-// =============================================================
-// PAGE HEADER
-// =============================================================
-
-const PageHeader = ({
-    title,
-    description,
-}) => {
-
-    return (
-
-        <div className="
-            mb-8
-        ">
-
-            <div className="
-                flex
-                items-center
-                gap-3
-            ">
-
-                <div className="
-                    flex
-                    h-11
-                    w-11
-                    shrink-0
-                    items-center
-                    justify-center
-                    rounded-lg
-                    border
-                    border-indigo-500/20
-                    bg-indigo-500/10
-                ">
-
-                    <ShieldCheck
-                        className="
-                            h-5
-                            w-5
-                            text-indigo-400
-                        "
-                    />
-
-                </div>
-
-
-                <div>
-
-                    <p className="
-                        text-xs
-                        font-semibold
-                        uppercase
-                        tracking-[0.12em]
-                        text-indigo-400
-                    ">
-                        Consent Audit
-                    </p>
-
-
-                    <h1 className="
-                        mt-1
-                        text-2xl
-                        font-semibold
-                        tracking-tight
-                        text-slate-100
-                    ">
-                        {title}
-                    </h1>
-
-
-                    <p className="
-                        mt-1.5
-                        text-sm
-                        leading-6
-                        text-slate-400
-                    ">
-                        {description}
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-    );
-};
-
-
-// =============================================================
-// METADATA
-// =============================================================
-
-const AuditMetadata = ({
-    configuration,
-    metadata,
-}) => {
-
-    return (
-
-        <div className="
-            grid
-            grid-cols-1
-            gap-3
-            md:grid-cols-2
-        ">
-
-            {/* =================================================
-                URL
-                ================================================= */}
-
-            <div className="
-                rounded-xl
-                border
-                border-slate-800
-                bg-slate-900/70
-                px-4
-                py-4
-            ">
-
-                <p className="
-                    text-[10px]
-                    font-semibold
-                    uppercase
-                    tracking-[0.12em]
-                    text-slate-500
-                ">
-                    Target Website
-                </p>
-
-
-                <p className="
-                    mt-1.5
-                    truncate
-                    text-sm
-                    font-medium
-                    text-slate-200
-                ">
-                    {configuration?.url ||
-                        metadata?.url ||
-                        "—"}
-                </p>
-
-            </div>
-
-
-            {/* =================================================
-                AUTH
-                ================================================= */}
-
-            <div className="
-                rounded-xl
-                border
-                border-slate-800
-                bg-slate-900/70
-                px-4
-                py-4
-            ">
-
-                <p className="
-                    text-[10px]
-                    font-semibold
-                    uppercase
-                    tracking-[0.12em]
-                    text-slate-500
-                ">
-                    Authentication
-                </p>
-
-
-                <p className="
-                    mt-1.5
-                    text-sm
-                    font-medium
-                    text-slate-200
-                ">
-                    {configuration?.username
-                        ? "Required"
-                        : "Not Required"}
-                </p>
-
-            </div>
-
-        </div>
-    );
-};
-
 
 export default ConsentAutoAudit;

@@ -65,7 +65,7 @@ const AuditeeDashboard = () => {
             <Sidebar role="Auditee" />
 
             {/* Main */}
-            <main className="flex-1 p-6">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+            <main className="flex-1 p-6">
 
                 {/* Header */}
                 <div className="flex justify-between items-center mb-6">
@@ -105,7 +105,10 @@ const AuditeeDashboard = () => {
                                     Saikat Mohanta
                                 </p>
 
-                                <button className="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-indigo-500/10">
+                                <button
+                                    onClick={() => navigate("/profile")}
+                                    className="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-indigo-500/10"
+                                >
                                     Edit Profile / Password
                                 </button>
 
