@@ -109,6 +109,11 @@ import AuditeePublishedReports from './AuditeeDashboard/AuditeePublishedReport';
 
 
 
+//  ------------------------------------------ NEW UI -------------------------------------
+import NewUIRoot from './new_ui/app/NewUIRoot';
+
+
+
 
 /* ------------------ ROLE BASED REDIRECT ------------------ */
 const getDashboardRoute = () => {
@@ -712,6 +717,15 @@ function App() {
             }
           />
 
+
+          <Route
+            path="/new-ui/*"
+            element={
+              <ProtectedRoute allowedRoles={[1, 2, 3]}>
+                <NewUIRoot />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
         <SessionExpiredScreen />
       </Router>

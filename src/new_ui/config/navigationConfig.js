@@ -1,0 +1,93 @@
+
+import {
+    LayoutDashboard,
+    ClipboardList,
+    FileCheck,
+    ShieldCheck,
+    Database,
+    AlertTriangle,
+    BookOpen,
+    Users,
+    FileText,
+    Settings,
+} from "lucide-react";
+
+export const navigationConfig = [
+    {
+        id: "dashboard",
+        label: "Dashboard",
+        path: "/new-ui",
+        icon: LayoutDashboard,
+        permission: "dashboard.view",
+    },
+    {
+        id: "applications",
+        label: "Applications",
+        path: "/new-ui/applications",
+        icon: ClipboardList,
+        permission: "applications.view",
+    },
+    {
+        id: "audits",
+        label: "Audit Management",
+        path: "/new-ui/audits",
+        icon: FileCheck,
+        permission: "audits.view",
+    },
+    {
+        id: "self-check",
+        label: "Self-Check",
+        path: "/new-ui/self-check",
+        icon: ShieldCheck,
+        permission: "self_check.view",
+    },
+    {
+        id: "consent-scanner",
+        label: "Consent Scanner",
+        path: "/new-ui/consent-scanner",
+        icon: ShieldCheck,
+        permission: "consent_scanner.view",
+    },
+    {
+        id: "breach-scanner",
+        label: "Data Breach Scanner",
+        path: "/new-ui/breach-scanner",
+        icon: AlertTriangle,
+        permission: "breach_scanner.view",
+    },
+    {
+        id: "database-scanner",
+        label: "Database Scanner",
+        path: "/new-ui/database-scanner",
+        icon: Database,
+        permission: "database_scanner.view",
+    },
+    {
+        id: "reports",
+        label: "Reports",
+        path: "/new-ui/reports",
+        icon: FileText,
+        permission: "reports.view",
+    },
+    {
+        id: "training",
+        label: "Training",
+        path: "/new-ui/training",
+        icon: BookOpen,
+        permission: "training.view",
+    },
+    {
+        id: "users",
+        label: "User Management",
+        path: "/new-ui/users",
+        icon: Users,
+        permission: "users.manage",
+    },
+    {
+        id: "settings",
+        label: "Settings",
+        path: "/new-ui/settings",
+        icon: Settings,
+        permission: null,
+    },
+];
