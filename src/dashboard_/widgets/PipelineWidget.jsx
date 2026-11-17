@@ -1,6 +1,6 @@
+
 import {
     FiArrowRight,
-    FiCheckCircle,
 } from "react-icons/fi";
 
 export default function PipelineWidget({
@@ -13,11 +13,11 @@ export default function PipelineWidget({
 
     return (
 
-        <div className="rounded-2xl border border-gray-700 bg-[#111827]/80 backdrop-blur-lg">
+        <div className="rounded-2xl border theme-border theme-bg-card shadow-sm">
 
-            <div className="border-b border-gray-700 px-6 py-5">
+            <div className="border-b theme-border px-6 py-5">
 
-                <h2 className="text-lg font-semibold">
+                <h2 className="text-lg font-semibold theme-text-primary">
 
                     {title}
 
@@ -31,20 +31,19 @@ export default function PipelineWidget({
 
                     {
 
-                        stages.map((stage,index)=>(
+                        stages.map((stage, index) => (
 
-                            <>
+                            <React.Fragment key={stage.id || index}>
 
                                 <div
-                                    key={stage.id}
                                     className="flex flex-col items-center min-w-32.5"
                                 >
 
                                     <div
-                                        className="w-16 h-16 rounded-full bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center"
+                                        className="w-16 h-16 rounded-full theme-bg-primary-soft border theme-border flex items-center justify-center"
                                     >
 
-                                        <span className="text-2xl font-bold">
+                                        <span className="text-2xl font-bold theme-text-primary-color">
 
                                             {stage.value}
 
@@ -52,7 +51,7 @@ export default function PipelineWidget({
 
                                     </div>
 
-                                    <p className="mt-4 text-sm text-gray-400 text-center">
+                                    <p className="mt-4 text-sm theme-text-secondary text-center">
 
                                         {stage.title}
 
@@ -62,17 +61,17 @@ export default function PipelineWidget({
 
                                 {
 
-                                    index!==stages.length-1 && (
+                                    index !== stages.length - 1 && (
 
                                         <FiArrowRight
-                                            className="text-gray-600 text-2xl"
+                                            className="theme-text-muted text-2xl"
                                         />
 
                                     )
 
                                 }
 
-                            </>
+                            </React.Fragment>
 
                         ))
 

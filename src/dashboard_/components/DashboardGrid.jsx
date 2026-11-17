@@ -5,7 +5,7 @@ export default function DashboardGrid({ widgets = [] }) {
 
     if (!widgets.length) {
         return (
-            <div className="rounded-2xl border border-dashed border-slate-700 p-12 text-center text-slate-400">
+            <div className="rounded-2xl border border-dashed theme-border p-12 text-center theme-text-secondary">
                 No dashboard statistics available.
             </div>
         );

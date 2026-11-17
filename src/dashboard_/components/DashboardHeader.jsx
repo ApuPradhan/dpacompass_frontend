@@ -1,4 +1,3 @@
-// dashboard_/components/DashboardHeader.jsx
 
 import {
     FiWifi,
@@ -34,16 +33,16 @@ export default function DashboardHeader({
 
             <div>
 
-                <h1 className="text-3xl font-bold text-white">
+                <h1 className="text-3xl font-bold theme-text-primary">
 
                     {greeting},{" "}
-                    <span className="text-indigo-400">
+                    <span className="theme-text-primary-color">
                         {user?.first_name || "User"}
                     </span>
 
                 </h1>
 
-                <p className="text-gray-400 mt-2">
+                <p className="theme-text-secondary mt-2">
 
                     Welcome to DPACOMPASS • {formattedDate}
 
@@ -52,29 +51,15 @@ export default function DashboardHeader({
             </div>
 
             <div className="flex items-center gap-4">
-{/* 
-                <button
-                    className="relative w-11 h-11 rounded-xl bg-[#111827] border border-gray-700
-                    flex items-center justify-center hover:border-indigo-500 transition"
-                >
 
-                    <FiBell size={18} /> */}
-
-                    {/* Placeholder Badge */}
-
-                    {/* <span
-                        className="absolute top-2 right-2
-                        w-2 h-2 rounded-full bg-red-500"
-                    />
-
-                </button> */}
+                {/* WebSocket Connection Status */}
 
                 <div
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border
                     ${
                         connected
-                            ? "border-green-500/30 bg-green-500/10 text-green-400"
-                            : "border-red-500/30 bg-red-500/10 text-red-400"
+                            ? "border-green-500/30 bg-green-500/10 text-green-600"
+                            : "border-red-500/30 bg-red-500/10 text-red-600"
                     }`}
                 >
 

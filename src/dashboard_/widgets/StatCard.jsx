@@ -1,53 +1,52 @@
-// dashboard_/widgets/StatCard.jsx
 
 import React from "react";
 import { FiArrowUpRight } from "react-icons/fi";
 
 const colorVariants = {
     indigo: {
-        icon: "text-indigo-400",
+        icon: "text-indigo-600",
         bg: "bg-indigo-500/10",
         border: "hover:border-indigo-500/50",
     },
 
     blue: {
-        icon: "text-sky-400",
+        icon: "text-sky-600",
         bg: "bg-sky-500/10",
         border: "hover:border-sky-500/50",
     },
 
     green: {
-        icon: "text-emerald-400",
+        icon: "text-emerald-600",
         bg: "bg-emerald-500/10",
         border: "hover:border-emerald-500/50",
     },
 
     amber: {
-        icon: "text-amber-400",
+        icon: "text-amber-600",
         bg: "bg-amber-500/10",
         border: "hover:border-amber-500/50",
     },
 
     purple: {
-        icon: "text-purple-400",
+        icon: "text-purple-600",
         bg: "bg-purple-500/10",
         border: "hover:border-purple-500/50",
     },
 
     cyan: {
-        icon: "text-cyan-400",
+        icon: "text-cyan-600",
         bg: "bg-cyan-500/10",
         border: "hover:border-cyan-500/50",
     },
 
     orange: {
-        icon: "text-orange-400",
+        icon: "text-orange-600",
         bg: "bg-orange-500/10",
         border: "hover:border-orange-500/50",
     },
 
     red: {
-        icon: "text-red-400",
+        icon: "text-red-600",
         bg: "bg-red-500/10",
         border: "hover:border-red-500/50",
     },
@@ -93,11 +92,11 @@ export default function StatCard({
 
                 border
 
-                border-gray-700
+                theme-border
 
-                bg-[#111827]/80
+                theme-bg-card
 
-                backdrop-blur-lg
+                shadow-sm
 
                 p-5
 
@@ -149,13 +148,13 @@ export default function StatCard({
 
                 <div>
 
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm theme-text-secondary">
 
                         {title}
 
                     </p>
 
-                    <h2 className="mt-2 text-4xl font-bold tracking-tight">
+                    <h2 className="mt-2 text-4xl font-bold tracking-tight theme-text-primary">
 
                         {value}
 
@@ -165,7 +164,7 @@ export default function StatCard({
 
                         subtitle && (
 
-                            <p className="mt-2 text-sm text-gray-500">
+                            <p className="mt-2 text-sm theme-text-muted">
 
                                 {subtitle}
 
@@ -212,57 +211,33 @@ export default function StatCard({
             {
 
                 trend && (
-
                     <div className="mt-5 flex items-center gap-2">
-
                         <FiArrowUpRight
-
-                            className="text-green-400"
-
+                            className="text-green-600"
                         />
-
-                        <span className="text-sm text-green-400">
-
+                        <span className="text-sm text-green-600">
                             {trend}
-
                         </span>
-
                     </div>
-
                 )
-
             }
-
             {
-
                 progress !== undefined && (
 
                     <div className="mt-5">
-
-                        <div className="h-2 rounded-full bg-gray-700">
-
+                        <div className="h-2 rounded-full theme-bg-hover bg-slate-200">
                             <div
-
                                 style={{
-
                                     width: `${progress}%`,
-
                                 }}
-
-                                className="h-2 rounded-full bg-indigo-500"
-
+                                className="h-2 rounded-full bg-indigo-600"
                             />
-
                         </div>
-
                     </div>
-
                 )
-
             }
 
         </div>
-
     );
 
 }
