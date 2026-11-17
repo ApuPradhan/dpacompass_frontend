@@ -1,11 +1,16 @@
-import { useEffect, useMemo, useState } from "react";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FiX, FiChevronDown, FiChevronRight, FiUser, FiCalendar, FiFileText } from "react-icons/fi";
+import {
+    FiX,
+    FiUser,
+    FiCalendar,
+    FiFileText,
+    FiInfo,
+} from "react-icons/fi";
 import { toast } from "react-toastify";
-import { primaryBtn, secondaryBtn } from "../theme";
 import { fetchWithAuth } from "../utilities/fetchWithAuth";
-
 
 export default function AuditAssignmentModal({
     mode = "view",
@@ -13,10 +18,8 @@ export default function AuditAssignmentModal({
     isOpen,
     onClose,
     onSuccess,
-    onAssign
+    onAssign,
 }) {
-
-    const [showChecklist, setShowChecklist] = useState(false);
     const [auditors, setAuditors] = useState([]);
     const [selectedAuditor, setSelectedAuditor] = useState("");
     const [selectedAuditorData, setSelectedAuditorData] = useState(null);
@@ -25,32 +28,95 @@ export default function AuditAssignmentModal({
     const [loading, setLoading] = useState(false);
     const [loadingAuditors, setLoadingAuditors] = useState(false);
 
+    const contentRef = useRef(null);
+    const assignmentSectionRef = useRef(null);
 
     const isView = mode === "view";
     const isAssign = mode === "assign";
     const isReassign = mode === "reassign";
-    const isRejectedAssignment =
-        !!audit?.assignment_rejection_reason;
+    const isRejectedAssignment = !!audit?.assignment_rejection_reason;
 
     const minimumDate = useMemo(() => {
-        const d = new Date();
-        d.setHours(0, 0, 0, 0);
-        d.setDate(d.getDate() + 10);
-        return d;
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        date.setDate(date.getDate() + 10);
+        return date;
     }, []);
 
+    // --------------------------------------------------
+    // LOCAL STYLING VARIABLES
+    // --------------------------------------------------
 
+    const modalOverlay =
+        "fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-sm";
+
+    const modalContainer =
+        "relative flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl";
+
+    const header =
+        "sticky top-0 z-20 flex shrink-0 items-center justify-between border-b border-slate-200 bg-white px-5 py-5 sm:px-8";
+
+    const heading =
+        "text-xl font-bold tracking-tight text-[#14213D] sm:text-2xl";
+
+    const subHeading =
+        "mt-1 text-sm font-medium text-slate-500";
+
+    const closeButton =
+        "rounded-lg p-2 text-slate-500 transition-all duration-200 hover:bg-blue-50 hover:text-[#087FD3] cursor-pointer";
+
+    const content =
+        "flex-1 space-y-6 overflow-y-auto bg-[#F7FAFE] p-5 sm:p-8";
+
+    const section =
+        "overflow-hidden rounded-xl border border-[#D8E5F3] bg-white shadow-sm transition-shadow duration-200 hover:shadow-md";
+
+    const sectionHeader =
+        "flex items-center gap-2.5 border-b border-[#DCE8F6] bg-[#EDF5FF] px-5 py-4 sm:px-6";
+
+    const sectionTitle =
+        "text-base font-semibold text-[#173B70] sm:text-lg";
+
+    const sectionBody =
+        "p-5 sm:p-6";
+
+    const fieldLabel =
+        "mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[#526783]";
+
+    const fieldValue =
+        "break-words text-[15px] font-medium leading-6 text-[#14213D]";
+
+    const inputClass =
+        "w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 hover:border-blue-400 focus:border-[#087FD3] focus:ring-4 focus:ring-blue-100 disabled:cursor-not-allowed disabled:bg-slate-100";
+
+    const textAreaClass =
+        "w-full resize-none rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 hover:border-blue-400 focus:border-[#087FD3] focus:ring-4 focus:ring-blue-100";
+
+    const primaryButton =
+        "inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#087FD3] px-6 py-3 text-sm font-bold text-white shadow-md shadow-blue-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#0568B5] hover:shadow-lg hover:shadow-blue-200 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer";
+
+    const secondaryButton =
+        "inline-flex shrink-0 items-center justify-center rounded-lg border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100 cursor-pointer";
+
+    const infoCard =
+        "rounded-lg border border-[#DCE7F3] bg-[#F8FBFF] p-4";
+
+    const badgeBase =
+        "inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold capitalize";
+
+    // --------------------------------------------------
+    // FETCH AUDITORS
+    // --------------------------------------------------
 
     const fetchAuditors = async () => {
         try {
-
             setLoadingAuditors(true);
 
-            const res = await fetchWithAuth("/api/auth/admin/get/auditors");
+            const res = await fetchWithAuth(
+                "/api/auth/admin/get/auditors"
+            );
 
             const data = await res.json();
-            console.log(data);
-            
 
             if (!res.ok) {
                 toast.error(data.message || "Failed to fetch auditors");
@@ -58,7 +124,6 @@ export default function AuditAssignmentModal({
             }
 
             setAuditors(data.data || []);
-
         } catch (err) {
             console.error(err);
             toast.error("Unable to fetch auditors");
@@ -67,28 +132,59 @@ export default function AuditAssignmentModal({
         }
     };
 
+    // --------------------------------------------------
+    // RESET FORM AND LOAD AUDITORS
+    // --------------------------------------------------
+
     useEffect(() => {
         if (isView) return;
+
         setDeadline(new Date(minimumDate));
         setRemarks("");
         setSelectedAuditor("");
         setSelectedAuditorData(null);
+
         fetchAuditors();
     }, [audit]);
 
-    if (!audit || !isOpen) return null;
-    const handleAuditorChange = id => {
+    // --------------------------------------------------
+    // SCROLL TO ASSIGNMENT SECTION WHEN MODE CHANGES
+    // --------------------------------------------------
 
+    useEffect(() => {
+        if (!isOpen || isView) return;
+
+        const timer = setTimeout(() => {
+            assignmentSectionRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }, 200);
+
+        return () => clearTimeout(timer);
+    }, [mode, isOpen]);
+
+    if (!audit || !isOpen) return null;
+
+    // --------------------------------------------------
+    // AUDITOR SELECTION
+    // --------------------------------------------------
+
+    const handleAuditorChange = (id) => {
         setSelectedAuditor(id);
 
-        const auditor = auditors.find(a => String(a.id) === String(id));
+        const auditor = auditors.find(
+            (item) => String(item.id) === String(id)
+        );
 
         setSelectedAuditorData(auditor || null);
-
     };
 
-    const validate = () => {
+    // --------------------------------------------------
+    // VALIDATION
+    // --------------------------------------------------
 
+    const validate = () => {
         if (!selectedAuditor) {
             toast.error("Please select an auditor.");
             return false;
@@ -106,51 +202,54 @@ export default function AuditAssignmentModal({
         min.setHours(0, 0, 0, 0);
 
         if (selected < min) {
-            toast.error("Deadline should be at least 10 days from today.");
+            toast.error(
+                "Deadline should be at least 10 days from today."
+            );
             return false;
         }
 
         return true;
-
     };
 
-    const handleSubmit = async () => {
+    // --------------------------------------------------
+    // ASSIGN / REASSIGN
+    // --------------------------------------------------
 
+    const handleSubmit = async () => {
         if (!validate()) return;
 
         try {
-
             setLoading(true);
 
             const endpoint = "/api/audits/assign/";
-            console.log("Audit", audit);
-            
+
             const payload = {
                 application_id: audit.application_id,
                 auditor_id: Number(selectedAuditor),
                 audit_deadline: deadline.toISOString().split("T")[0],
-                remarks
+                remarks,
             };
-            
+
             const res = await fetchWithAuth(endpoint, {
                 method: "POST",
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
             });
 
             const data = await res.json();
-            console.log("Handle Submit:" ,data);
 
             if (!res.ok) {
                 toast.error(data.message || "Operation failed");
                 return;
             }
 
-            toast.success(isAssign ? "Auditor assigned successfully" : "Audit re-assigned successfully");
+            toast.success(
+                isAssign
+                    ? "Auditor assigned successfully"
+                    : "Audit re-assigned successfully"
+            );
 
             onSuccess?.();
-
             onClose();
-
         } catch (err) {
             console.error(err);
             toast.error("Something went wrong.");
@@ -158,562 +257,575 @@ export default function AuditAssignmentModal({
             setLoading(false);
         }
     };
+
+    // --------------------------------------------------
+    // WORKLOAD STYLING
+    // --------------------------------------------------
+
+    const workload =
+        selectedAuditorData?.total_active_workload ?? 0;
+
+    const workloadColor =
+        workload <= 5
+            ? "bg-emerald-500"
+            : workload <= 15
+                ? "bg-amber-500"
+                : "bg-red-500";
+
+    const workloadBadge =
+        workload <= 5
+            ? "bg-emerald-50 text-emerald-700"
+            : workload <= 15
+                ? "bg-amber-50 text-amber-700"
+                : "bg-red-50 text-red-700";
+
+    const getStatusStyle = (status) => {
+        const value = String(status || "").toLowerCase();
+
+        if (value === "approved" || value === "completed") {
+            return "bg-emerald-50 text-emerald-700";
+        }
+
+        if (value === "rejected" || value === "failed") {
+            return "bg-red-50 text-red-700";
+        }
+
+        return "bg-blue-50 text-blue-700";
+    };
+
+    // --------------------------------------------------
+    // REUSABLE DETAIL FIELD
+    // --------------------------------------------------
+
+    const DetailField = ({ label, children, className = "" }) => (
+        <div className={className}>
+            <p className={fieldLabel}>{label}</p>
+            <div className={fieldValue}>{children ?? "-"}</div>
+        </div>
+    );
+
+    // --------------------------------------------------
+    // RENDER
+    // --------------------------------------------------
+
     return (
         <>
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40" onClick={onClose} />
+            <div
+                className={modalOverlay}
+                onClick={onClose}
+            />
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
-
-                <div className="w-full max-w-6xl max-h-[94vh] overflow-y-auto rounded-2xl border border-slate-700 bg-[#0f172a] shadow-2xl">
-
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5">
+                <div
+                    className={modalContainer}
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {/* HEADER */}
 
-                    <div className="sticky top-0 z-20 flex items-center justify-between border-b border-slate-700 bg-[#0f172a] px-8 py-5">
+                    <div className={header}>
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                                <span className="hidden h-9 w-9 items-center justify-center rounded-lg bg-blue-100 text-[#087FD3] sm:flex">
+                                    <FiFileText size={19} />
+                                </span>
 
-                        <div>
-
-                            <h2 className="text-2xl font-semibold text-indigo-300">
-                                {
-                                    audit?.assignment_rejection_reason
+                                <h2 className={heading}>
+                                    {isRejectedAssignment
                                         ? "Rejected Assignment Details"
                                         : isView
                                             ? "Audit Details"
                                             : isAssign
                                                 ? "Assign Auditor"
-                                                : "Re-Assign Auditor"
-                                }
-                            </h2>
+                                                : "Re-Assign Auditor"}
+                                </h2>
+                            </div>
 
-                            <p className="mt-1 text-sm text-slate-400">
-                                {audit.name}
+                            <p className={subHeading}>
+                                {audit.name ||
+                                    audit.application_name ||
+                                    "Application information"}
                             </p>
-
                         </div>
 
                         <button
+                            type="button"
                             onClick={onClose}
-                            className="rounded-lg p-2 transition hover:bg-slate-800"
+                            className={closeButton}
+                            aria-label="Close modal"
                         >
-                            <FiX size={22} />
+                            <FiX size={23} />
                         </button>
-
                     </div>
 
-                    <div className="space-y-8 p-8">
+                    {/* SCROLLABLE CONTENT */}
 
+                    <div
+                        ref={contentRef}
+                        className={content}
+                    >
                         {/* APPLICATION INFORMATION */}
 
-                        <div className="rounded-2xl border border-slate-700 bg-[#111827]">
+                        <section className={section}>
+                            <div className={sectionHeader}>
+                                <FiInfo
+                                    className="text-[#087FD3]"
+                                    size={19}
+                                />
 
-                            <div className="border-b border-slate-700 px-6 py-4">
-
-                                <h3 className="text-lg font-semibold text-indigo-300">
+                                <h3 className={sectionTitle}>
                                     Application Information
                                 </h3>
-
                             </div>
 
-                            <div className="grid grid-cols-2 gap-x-10 gap-y-6 p-6">
-
+                            <div className="grid grid-cols-1 gap-x-8 gap-y-6 p-5 sm:grid-cols-2 sm:p-6">
                                 {(isReassign || isRejectedAssignment) ? (
-
                                     <>
+                                        <DetailField
+                                            label="Application"
+                                            children={audit.application_name}
+                                        />
 
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Application
-                                            </p>
-                                            <p>{audit.application_name}</p>
-                                        </div>
+                                        <DetailField
+                                            label="Audit ID"
+                                            children={`#${audit.audit_id ?? "-"}`}
+                                        />
 
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Audit ID
-                                            </p>
-                                            <p>#{audit.audit_id}</p>
-                                        </div>
+                                        <DetailField
+                                            label="Previous Auditor"
+                                            children={audit.auditor_name}
+                                        />
 
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Previous Auditor
-                                            </p>
-                                            <p>{audit.auditor_name}</p>
-                                        </div>
+                                        <DetailField
+                                            label="Assigned By"
+                                            children={audit.assigned_by_name}
+                                        />
 
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Assigned By
-                                            </p>
-                                            <p>{audit.assigned_by_name}</p>
-                                        </div>
+                                        <DetailField
+                                            label="Previous Deadline"
+                                            children={audit.audit_deadline}
+                                        />
 
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Previous Deadline
-                                            </p>
-                                            <p>{audit.audit_deadline}</p>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Remaining Days
-                                            </p>
-                                            <p className="font-medium text-yellow-400">
-                                                {audit.remaining_days} Days
-                                            </p>
-                                        </div>
-
-                                        <div className="col-span-2">
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Assignment Declined On
-                                            </p>
-                                            <p>
-                                                {audit.assignment_responded_at
-                                                    ? new Date(audit.assignment_responded_at).toLocaleString()
-                                                    : "-"}
-                                            </p>
-                                        </div>
-
-                                    </>
-
-                                ) : (
-
-                                    <>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Application Name
-                                            </p>
-                                            <p className="font-medium">
-                                                {audit.name}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Application Owner
-                                            </p>
-                                            <p>
-                                                {audit.owner_name || audit.owner || "-"}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Department
-                                            </p>
-                                            <p>
-                                                {audit.department}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Environment
-                                            </p>
-                                            <p>
-                                                {audit.environment}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Application Type
-                                            </p>
-                                            <p>
-                                                Type {audit.type}
-                                            </p>
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Version
-                                            </p>
-                                            <p>
-                                                {audit.version}
-                                            </p>
-                                        </div>
-
-                                        <div className="col-span-2">
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Application URL
-                                            </p>
-
-                                            <a
-                                                href={audit.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-indigo-400 hover:underline break-all"
-                                            >
-                                                {audit.url}
-                                            </a>
-
-                                        </div>
-
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Status
-                                            </p>
-
-                                            <span className="rounded-full bg-indigo-500/20 px-3 py-1 text-sm text-indigo-300">
-                                                {audit.status}
+                                        <DetailField label="Remaining Days">
+                                            <span className="font-semibold text-amber-600">
+                                                {audit.remaining_days ?? "-"} Days
                                             </span>
+                                        </DetailField>
 
-                                        </div>
+                                        <DetailField
+                                            label="Assignment Declined On"
+                                            className="sm:col-span-2"
+                                        >
+                                            {audit.assignment_responded_at
+                                                ? new Date(
+                                                    audit.assignment_responded_at
+                                                ).toLocaleString()
+                                                : "-"}
+                                        </DetailField>
+                                    </>
+                                ) : (
+                                    <>
+                                        <DetailField
+                                            label="Application Name"
+                                            children={audit.name}
+                                        />
 
-                                        <div>
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                                Created On
-                                            </p>
+                                        <DetailField label="Application Owner">
+                                            {audit.owner_name ||
+                                                audit.owner ||
+                                                "-"}
+                                        </DetailField>
 
-                                            <p>
-                                                {audit.created_at
-                                                    ? new Date(audit.created_at).toLocaleString()
-                                                    : "-"}
-                                            </p>
+                                        <DetailField
+                                            label="Department"
+                                            children={audit.department}
+                                        />
 
-                                        </div>
+                                        <DetailField
+                                            label="Environment"
+                                            children={audit.environment}
+                                        />
 
-                                        <div className="col-span-2">
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
+                                        <DetailField label="Application Type">
+                                            Type {audit.type ?? "-"}
+                                        </DetailField>
+
+                                        <DetailField
+                                            label="Version"
+                                            children={audit.version}
+                                        />
+
+                                        <DetailField
+                                            label="Application URL"
+                                            className="sm:col-span-2"
+                                        >
+                                            {audit.url ? (
+                                                <a
+                                                    href={audit.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="break-all font-semibold text-blue-600 transition hover:text-blue-800 hover:underline"
+                                                >
+                                                    {audit.url}
+                                                </a>
+                                            ) : (
+                                                "-"
+                                            )}
+                                        </DetailField>
+
+                                        <DetailField label="Status">
+                                            <span
+                                                className={`${badgeBase} ${getStatusStyle(
+                                                    audit.status
+                                                )}`}
+                                            >
+                                                {audit.status || "-"}
+                                            </span>
+                                        </DetailField>
+
+                                        <DetailField label="Created On">
+                                            {audit.created_at
+                                                ? new Date(
+                                                    audit.created_at
+                                                ).toLocaleString()
+                                                : "-"}
+                                        </DetailField>
+
+                                        <div className="sm:col-span-2">
+                                            <p className={fieldLabel}>
                                                 Description
                                             </p>
 
-                                            <div className="rounded-lg border border-slate-700 bg-[#020617] p-4 whitespace-pre-wrap">
-                                                {audit.description || "-"}
+                                            <div className={infoCard}>
+                                                <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                                                    {audit.description || "-"}
+                                                </p>
                                             </div>
-
                                         </div>
 
-                                        <div className="col-span-2">
-                                            <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
+                                        <div className="sm:col-span-2">
+                                            <p className={fieldLabel}>
                                                 Data Categories
                                             </p>
 
-                                            <div className="rounded-lg border border-slate-700 bg-[#020617] p-4 whitespace-pre-wrap">
-                                                {audit.data_categories || "-"}
+                                            <div className={infoCard}>
+                                                <p className="whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                                                    {audit.data_categories || "-"}
+                                                </p>
                                             </div>
-
                                         </div>
-
                                     </>
-
                                 )}
-
                             </div>
+                        </section>
 
-                        </div>
+                        {/* PREVIOUS ASSIGNMENT */}
 
-                        {/* REASSIGN REASON */}
                         {isReassign && (
+                            <section className={section}>
+                                <div className={sectionHeader}>
+                                    <FiUser
+                                        className="text-[#087FD3]"
+                                        size={19}
+                                    />
 
-                            <div className="rounded-2xl border border-slate-700 bg-[#111827]">
-
-                                <div className="border-b border-slate-700 px-6 py-4">
-
-                                    <h3 className="text-lg font-semibold text-indigo-300">
+                                    <h3 className={sectionTitle}>
                                         Previous Assignment
                                     </h3>
-
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-6 p-6">
+                                <div className="grid grid-cols-1 gap-6 p-5 sm:grid-cols-2 sm:p-6">
+                                    <DetailField
+                                        label="Previous Auditor"
+                                        children={audit.auditor_name}
+                                    />
 
-                                    <div>
-                                        <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                            Previous Auditor
-                                        </p>
-                                        <p>{audit.auditor_name}</p>
-                                    </div>
+                                    <DetailField
+                                        label="Assigned By"
+                                        children={audit.assigned_by_name}
+                                    />
 
-                                    <div>
-                                        <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                            Assigned By
-                                        </p>
-                                        <p>{audit.assigned_by_name}</p>
-                                    </div>
+                                    <DetailField label="Assigned On">
+                                        {audit.created_at
+                                            ? new Date(
+                                                audit.created_at
+                                            ).toLocaleString()
+                                            : "-"}
+                                    </DetailField>
 
-                                    <div>
-                                        <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                            Assigned On
-                                        </p>
-                                        <p>{new Date(audit.created_at).toLocaleString()}</p>
-                                    </div>
-
-                                    <div>
-                                        <p className="mb-1 text-xs uppercase tracking-wider text-slate-400">
-                                            Assignment Declined On
-                                        </p>
-                                        <p>{new Date(audit.assignment_responded_at).toLocaleString()}</p>
-                                    </div>
-
+                                    <DetailField label="Assignment Declined On">
+                                        {audit.assignment_responded_at
+                                            ? new Date(
+                                                audit.assignment_responded_at
+                                            ).toLocaleString()
+                                            : "-"}
+                                    </DetailField>
                                 </div>
-
-                            </div>
-
+                            </section>
                         )}
+
+                        {/* REJECTION REASON */}
+
                         {isReassign && (
-
-                            <div className="rounded-2xl border border-red-500/30 bg-red-500/10">
-
-                                <div className="border-b border-red-500/20 px-6 py-4">
-
-                                    <h3 className="text-lg font-semibold text-red-400">
+                            <section className="overflow-hidden rounded-xl border border-red-200 bg-white shadow-sm">
+                                <div className="border-b border-red-100 bg-red-50 px-5 py-4 sm:px-6">
+                                    <h3 className="text-base font-semibold text-red-700">
                                         Reason For Declining Assignment
                                     </h3>
-
                                 </div>
 
-                                <div className="p-6">
-
-                                    <p className="text-red-300 leading-7">
-                                        {audit.assignment_rejection_reason || "No reason provided."}
+                                <div className="p-5 sm:p-6">
+                                    <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">
+                                        {audit.assignment_rejection_reason ||
+                                            "No reason provided."}
                                     </p>
-
                                 </div>
-
-                            </div>
-
+                            </section>
                         )}
 
                         {/* SELECT AUDITOR */}
 
                         {!isView && (
+                            <section
+                                ref={assignmentSectionRef}
+                                className={`${section} scroll-mt-5`}
+                            >
+                                <div className={sectionHeader}>
+                                    <FiUser
+                                        className="text-[#087FD3]"
+                                        size={19}
+                                    />
 
-                            <div className="rounded-2xl border border-slate-700 bg-[#111827]">
-
-                                <div className="border-b border-slate-700 px-6 py-4">
-
-                                    <h3 className="flex items-center gap-2 text-lg font-semibold text-indigo-300">
-                                        <FiUser />
+                                    <h3 className={sectionTitle}>
                                         Select Auditor
                                     </h3>
-
                                 </div>
 
-                                <div className="p-6">
+                                <div className={sectionBody}>
+                                    <label className={fieldLabel}>
+                                        Choose an auditor
+                                    </label>
 
                                     <select
                                         value={selectedAuditor}
-                                        onChange={e => handleAuditorChange(e.target.value)}
+                                        onChange={(e) =>
+                                            handleAuditorChange(e.target.value)
+                                        }
                                         disabled={loadingAuditors}
-                                        className="w-full rounded-xl border border-slate-700 bg-[#020617] px-4 py-3 outline-none focus:border-indigo-500"
+                                        className={inputClass}
                                     >
-
                                         <option value="">
-                                            Select Auditor
+                                            {loadingAuditors
+                                                ? "Loading auditors..."
+                                                : "Select an auditor"}
                                         </option>
 
-                                        {auditors.map(a => (
+                                        {auditors.map((auditor) => (
                                             <option
-                                                key={a.id}
-                                                value={a.id}
+                                                key={auditor.id}
+                                                value={auditor.id}
                                             >
-                                                {a.username} ({a.email_id})
+                                                {auditor.username} (
+                                                {auditor.email_id})
                                             </option>
                                         ))}
-
                                     </select>
 
+                                    <p className="mt-2 text-xs text-slate-500">
+                                        Select an auditor to view their current
+                                        workload before assignment.
+                                    </p>
                                 </div>
-
-                            </div>
-
+                            </section>
                         )}
+
+                        {/* AUDITOR DETAILS */}
+
                         {!isView && selectedAuditorData && (
+                            <section className={section}>
+                                <div className={sectionHeader}>
+                                    <FiUser
+                                        className="text-[#087FD3]"
+                                        size={19}
+                                    />
 
-                            <div className="rounded-2xl border border-slate-700 bg-[#111827]">
-
-                                <div className="border-b border-slate-700 px-6 py-4">
-
-                                    <h3 className="text-lg font-semibold text-indigo-300">
+                                    <h3 className={sectionTitle}>
                                         Auditor Details
                                     </h3>
-
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-6 p-6">
+                                <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2 sm:p-6">
+                                    <div className={infoCard}>
+                                        <p className={fieldLabel}>
+                                            Auditor Name
+                                        </p>
 
-                                    <div className="rounded-xl bg-[#020617] border border-slate-700 p-4">
-                                        <p className="text-xs uppercase text-slate-400">Auditor Name</p>
-                                        <p className="mt-2 text-lg font-semibold">
-                                            {selectedAuditorData.full_name || selectedAuditorData.username}
+                                        <p className="text-base font-semibold text-slate-800">
+                                            {selectedAuditorData.full_name ||
+                                                selectedAuditorData.username}
                                         </p>
                                     </div>
 
-                                    <div className="rounded-xl bg-[#020617] border border-slate-700 p-4">
-                                        <p className="text-xs uppercase text-slate-400">Email Address</p>
-                                        <p className="mt-2 break-all">
-                                            {selectedAuditorData.email_id}
+                                    <div className={infoCard}>
+                                        <p className={fieldLabel}>
+                                            Email Address
+                                        </p>
+
+                                        <p className="break-all text-sm font-medium text-slate-800">
+                                            {selectedAuditorData.email_id || "-"}
                                         </p>
                                     </div>
 
-                                    <div className="rounded-xl bg-[#020617] border border-slate-700 p-4">
-                                        <p className="text-xs uppercase text-slate-400">Active Audits</p>
-                                        <p className="mt-2 text-2xl font-bold text-yellow-400">
-                                            {selectedAuditorData.active_audits}
+                                    <div className={infoCard}>
+                                        <p className={fieldLabel}>
+                                            Active Audits
+                                        </p>
+
+                                        <p className="mt-1 text-2xl font-bold text-amber-600">
+                                            {selectedAuditorData.active_audits ?? 0}
                                         </p>
                                     </div>
 
-                                    <div className="rounded-xl bg-[#020617] border border-slate-700 p-4">
-                                        <p className="text-xs uppercase text-slate-400">Active Reviews</p>
-                                        <p className="mt-2 text-2xl font-bold text-green-400">
-                                            {selectedAuditorData.active_reviews}
+                                    <div className={infoCard}>
+                                        <p className={fieldLabel}>
+                                            Active Reviews
+                                        </p>
+
+                                        <p className="mt-1 text-2xl font-bold text-emerald-600">
+                                            {selectedAuditorData.active_reviews ?? 0}
                                         </p>
                                     </div>
 
-                                    <div className="col-span-2 rounded-xl bg-[#020617] border border-slate-700 p-4">
-                                        <p className="text-xs uppercase text-slate-400">
-                                            Current Workload
-                                        </p>
+                                    <div className={`${infoCard} sm:col-span-2`}>
+                                        <div className="flex flex-wrap items-center justify-between gap-3">
+                                            <div>
+                                                <p className={fieldLabel}>
+                                                    Current Workload
+                                                </p>
 
-                                        <div className="mt-3 flex items-center justify-between">
-
-                                            <div className="h-3 w-64 rounded-full bg-slate-700 overflow-hidden">
-
-                                                <div
-                                                    style={{
-                                                        width: `${Math.min(selectedAuditorData.total_active_workload * 5, 100)}%`
-                                                    }}
-                                                    className={`h-full ${selectedAuditorData.total_active_workload <= 5
-                                                        ? "bg-green-500"
-                                                        : selectedAuditorData.total_active_workload <= 15
-                                                            ? "bg-yellow-500"
-                                                            : "bg-red-500"
-                                                        }`}
-                                                />
-
+                                                <p className="text-sm text-slate-500">
+                                                    Total active audits and reviews
+                                                </p>
                                             </div>
 
-                                            <span className={`rounded-full px-3 py-1 text-sm font-medium ${selectedAuditorData.total_active_workload <= 5
-                                                ? "bg-green-500/20 text-green-400"
-                                                : selectedAuditorData.total_active_workload <= 15
-                                                    ? "bg-yellow-500/20 text-yellow-400"
-                                                    : "bg-red-500/20 text-red-400"
-                                                }`}>
-
-                                                {selectedAuditorData.total_active_workload} Active
-
+                                            <span
+                                                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${workloadBadge}`}
+                                            >
+                                                {workload} Active
                                             </span>
-
                                         </div>
 
+                                        <div className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+                                            <div
+                                                className={`h-full rounded-full transition-all duration-500 ${workloadColor}`}
+                                                style={{
+                                                    width: `${Math.min(
+                                                        workload * 5,
+                                                        100
+                                                    )}%`,
+                                                }}
+                                            />
+                                        </div>
                                     </div>
-
                                 </div>
-
-                            </div>
-
+                            </section>
                         )}
 
+                        {/* AUDIT DEADLINE */}
+
                         {!isView && (
+                            <section className={section}>
+                                <div className={sectionHeader}>
+                                    <FiCalendar
+                                        className="text-[#087FD3]"
+                                        size={19}
+                                    />
 
-                            <div className="rounded-2xl border border-slate-700 bg-[#111827]">
-
-                                <div className="border-b border-slate-700 px-6 py-4">
-
-                                    <h3 className="flex items-center gap-2 text-lg font-semibold text-indigo-300">
-                                        <FiCalendar />
+                                    <h3 className={sectionTitle}>
                                         Audit Deadline
                                     </h3>
-
                                 </div>
 
-                                <div className="p-6">
+                                <div className={sectionBody}>
+                                    <label className={fieldLabel}>
+                                        Select deadline
+                                    </label>
 
                                     <DatePicker
                                         selected={deadline}
                                         onChange={setDeadline}
                                         minDate={minimumDate}
                                         dateFormat="dd-MM-yyyy"
-                                        placeholderText="Select Deadline"
-                                        className="w-full rounded-xl border border-slate-700 bg-[#020617] px-4 py-3 outline-none focus:border-indigo-500"
+                                        placeholderText="Select deadline"
+                                        className={inputClass}
+                                        calendarClassName="!rounded-xl !border-slate-200 !shadow-xl"
+                                        popperClassName="z-[70]"
                                     />
 
-                                    <p className="mt-3 text-sm text-yellow-400">
-                                        Minimum deadline is 10 days from assignment date.
-                                    </p>
+                                    <div className="mt-3 flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3">
+                                        <FiInfo
+                                            className="mt-0.5 shrink-0 text-blue-600"
+                                            size={16}
+                                        />
 
+                                        <p className="text-xs leading-5 text-blue-800">
+                                            Minimum deadline is 10 days from
+                                            the assignment date.
+                                        </p>
+                                    </div>
                                 </div>
-
-                            </div>
-
+                            </section>
                         )}
-
-                        {!isView && (
-
-                            <div className="rounded-2xl border border-slate-700 bg-[#111827]">
-
-                                <div className="border-b border-slate-700 px-6 py-4">
-
-                                    <h3 className="flex items-center gap-2 text-lg font-semibold text-indigo-300">
-                                        <FiFileText />
-                                        Admin Remarks
-                                    </h3>
-
-                                </div>
-
-                                <div className="p-6">
-
-                                    <textarea
-                                        rows={5}
-                                        value={remarks}
-                                        onChange={e => setRemarks(e.target.value)}
-                                        placeholder="Enter remarks..."
-                                        className="w-full rounded-xl border border-slate-700 bg-[#020617] px-4 py-3 resize-none outline-none focus:border-indigo-500"
-                                    />
-
-                                </div>
-
-                            </div>
-
-                        )}
-
                     </div>
 
-                    <div className="sticky bottom-0 flex items-center justify-end gap-3 border-t border-slate-700 bg-[#0f172a] px-8 py-5">
+                    {/* FOOTER */}
+
+                    <div className="sticky bottom-0 z-20 flex shrink-0 flex-row items-center justify-end gap-3 border-t border-slate-200 bg-white px-5 py-4 sm:px-8">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className={secondaryButton}
+                        >
+                            Close
+                        </button>
 
                         {isView && !audit.assignment_rejection_reason && (
                             <button
+                                type="button"
                                 onClick={() => onAssign?.(audit)}
-                                className={primaryBtn}
+                                className={primaryButton}
                             >
                                 Assign Auditor
                             </button>
                         )}
+
                         {isAssign && (
                             <button
+                                type="button"
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className={primaryBtn}
+                                className={primaryButton}
                             >
-                                {loading ? "Assigning..." : "Assign Auditor"}
+                                {loading
+                                    ? "Assigning..."
+                                    : "Assign Auditor"}
                             </button>
                         )}
 
                         {isReassign && (
                             <button
+                                type="button"
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className={primaryBtn}
+                                className={primaryButton}
                             >
-                                {loading ? "Re-Assigning..." : "Re-Assign Auditor"}
+                                {loading
+                                    ? "Re-Assigning..."
+                                    : "Re-Assign Auditor"}
                             </button>
                         )}
-
-                        <button
-                            onClick={onClose}
-                            className={secondaryBtn}
-                        >
-                            Close
-                        </button>
-
                     </div>
-
                 </div>
-
             </div>
-
         </>
     );
 }
