@@ -1,4 +1,4 @@
-nimport { useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 import Signup from './login/Signup'
@@ -111,6 +111,7 @@ import AuditeePublishedReports from './AuditeeDashboard/AuditeePublishedReport';
 
 //  ------------------------------------------ NEW UI -------------------------------------
 import NewUIRoot from './new_ui/app/NewUIRoot';
+import DashboardLayout from "./dashboard_/DashboardLayout";
 
 
 
@@ -551,6 +552,50 @@ function App() {
           {/* ---------------- AUDITOR ---------------- */}
 
           <Route
+            path="/auditor-workspace/:publicAuditId"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DashboardLayout role="auditor">
+                  <AuditorChecklistPage />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/auditor/acceptedAudits"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DashboardLayout role="auditor">
+                  <AcceptedAudits />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/auditor/pendingAudits"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DashboardLayout role="auditor">
+                  <PendingAssignments />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/auditor/completedaudits"
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DashboardLayout role="auditor">
+                  <CompletedAudits />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/auditor/completed-reports"
             element={
               <ProtectedRoute allowedRoles={[2]}>
@@ -585,25 +630,35 @@ function App() {
             }
           />
 
-
-          <Route
-            path="/auditor/completedaudits"
-            element={
-              <ProtectedRoute allowedRoles={[2]}>
-                <CompletedAudits />
-              </ProtectedRoute>
-            }
-          />
-
           <Route
             path="/auditor/inprogress"
             element={
               <ProtectedRoute allowedRoles={[2]}>
-                <InProgressAudits />
+                <DashboardLayout role="auditor">
+                  <InProgressAudits />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
 
+          <Route path='/auditor/declinedAudits' element={
+            <ProtectedRoute allowedRoles={[2]}>
+              <DashboardLayout role="auditor">
+                <DeclinedAudits />
+              </DashboardLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route
+            path='/auditor/databreachscanner/'
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DashboardLayout role="auditor">
+                  <DataBreachScanner />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/consent-management/:publicAuditId"
@@ -638,14 +693,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path='/auditor/databreachscanner/'
-            element={
-              <ProtectedRoute allowedRoles={[2]}>
-                <DataBreachScanner />
-              </ProtectedRoute>
-            }
-          />
+
           <Route
             path='/admin/consentv2/demo'
             element={
@@ -654,11 +702,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path='/auditor/declinedAudits' element={
-            <ProtectedRoute allowedRoles={[2]}>
-              <DeclinedAudits />
-            </ProtectedRoute>
-          } />
 
           <Route path='/consent/view/' element={
             <ProtectedRoute allowedRoles={[2]}>
