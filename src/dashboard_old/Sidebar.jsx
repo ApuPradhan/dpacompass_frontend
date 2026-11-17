@@ -1,260 +1,251 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiChevronRight } from "react-icons/fi";
+import { FiChevronRight, FiCompass, FiLogOut, FiUser, FiX } from "react-icons/fi";
 import { sidebarConfig } from "../utilities/sidebarConfig";
+
+function getStoredUser() {
+    try {
+        return JSON.parse(localStorage.getItem("user") || "{}") || {};
+    } catch {
+        return {};
+    }
+}
 
 export default function Sidebar({
     role = "admin",
     auditMode = "self_check",
     onAuditModeChange,
+    open = false,
+    onClose = () => { },
 }) {
     const navigate = useNavigate();
-
-    const normalizedRole = (role || "admin").toLowerCase();
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-
+    const normalizedRole = String(role || "admin").toLowerCase();
+    const user = getStoredUser();
 
     const roleMenu = sidebarConfig[normalizedRole];
-
     const menu =
         normalizedRole === "auditee"
             ? roleMenu?.[auditMode] || roleMenu?.self_check || []
             : roleMenu || [];
 
     const [openMenus, setOpenMenus] = useState({});
-    const [openSideMenu, setOpenSideMenu] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(256);
     const [isResizing, setIsResizing] = useState(false);
 
     useEffect(() => {
-        const handleMouseMove = (e) => {
-            if (!isResizing) return;
-            const newWidth = Math.min(Math.max(e.clientX, 200), 420);
-            setSidebarWidth(newWidth);
+        if (!isResizing) return;
+
+        const handleMove = (event) => {
+            setSidebarWidth(Math.min(Math.max(event.clientX, 220), 420));
         };
+        const stopResizing = () => setIsResizing(false);
 
-        const handleMouseUp = () => setIsResizing(false);
-
-        window.addEventListener("mousemove", handleMouseMove);
-        window.addEventListener("mouseup", handleMouseUp);
-
+        window.addEventListener("mousemove", handleMove);
+        window.addEventListener("mouseup", stopResizing);
         return () => {
-            window.removeEventListener("mousemove", handleMouseMove);
-            window.removeEventListener("mouseup", handleMouseUp);
+            window.removeEventListener("mousemove", handleMove);
+            window.removeEventListener("mouseup", stopResizing);
         };
     }, [isResizing]);
 
     useEffect(() => {
-        const handleClick = () => setOpenSideMenu(false);
-        window.addEventListener("click", handleClick);
-        return () => window.removeEventListener("click", handleClick);
+        const closeProfile = () => setProfileOpen(false);
+        window.addEventListener("click", closeProfile);
+        return () => window.removeEventListener("click", closeProfile);
     }, []);
 
     const toggleMenu = (label) => {
-        setOpenMenus(prev => ({
-            ...prev,
-            [label]: !prev[label]
+        setOpenMenus((previous) => ({
+            ...previous,
+            [label]: !previous[label],
         }));
     };
+
+    const goTo = (path) => {
+        if (!path) return;
+        navigate(path);
+        setProfileOpen(false);
+        onClose();
+    };
+
     const handleLogout = () => {
-        const keysToKeep = [];
-
-        // ✅ collect all audit job keys
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-
-            if (key && key.startsWith("audit_") && key.endsWith("_jobs")) {
-                keysToKeep.push({
-                    key,
-                    value: localStorage.getItem(key)
-                });
+        const auditJobs = [];
+        for (let index = 0; index < localStorage.length; index += 1) {
+            const key = localStorage.key(index);
+            if (key?.startsWith("audit_") && key.endsWith("_jobs")) {
+                auditJobs.push({ key, value: localStorage.getItem(key) });
             }
         }
-
-        // ❌ clear everything
         localStorage.clear();
-
-        // ✅ restore only job data
-        keysToKeep.forEach(item => {
-            localStorage.setItem(item.key, item.value);
-        });
-
-        setTimeout(() => {
-            navigate("/signin");
-        }, 500);
+        auditJobs.forEach(({ key, value }) => localStorage.setItem(key, value));
+        onClose();
+        navigate("/signin", { replace: true });
     };
+
+    const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ");
+    const initial = (user.first_name?.[0] || "U").toUpperCase();
+
     return (
         <aside
-            style={{ width: sidebarWidth }}
-            className="sticky top-0 h-screen bg-[#0f172a]/90 border-r border-gray-700
-                   flex flex-col relative transition-[width] duration-200"
+            id="dashboard-sidebar"
+            className={`dashboard-sidebar ${open ? "is-open" : ""}`}
+            style={{ "--sidebar-width": `${sidebarWidth}px` }}
+            aria-label="Dashboard navigation"
         >
-            {/* Scrollable Area */}
-            <div className="flex-1 overflow-y-auto p-5">
-                <h1 className="text-3xl font-bold mb-8 text-indigo-400">
-                    DPACOMPASS
-                </h1>
-                {/* {normalizedRole === "auditee" && (
-                    <div className="mb-6">
-                        <label
-                            htmlFor="auditee-mode"
-                            className="block text-sm font-medium text-gray-400 mb-2"
-                        >
-                            Select Role:
-                        </label>
+            <div className="dashboard-sidebar-header">
+                <div className="dashboard-brand-mark">
+                    <FiCompass size={22} aria-hidden="true" />
+                </div>
+                <div className="dashboard-brand-copy">
+                    <span className="dashboard-brand-name">DPACOMPASS</span>
+                    <span className="dashboard-brand-subtitle">Governance workspace</span>
+                </div>
+                <button
+                    type="button"
+                    className="dashboard-sidebar-close"
+                    aria-label="Close sidebar"
+                    onClick={onClose}
+                >
+                    <FiX size={19} aria-hidden="true" />
+                </button>
+            </div>
 
+            <div className="dashboard-sidebar-scroll">
+                {normalizedRole === "auditee" && (
+                    <div className="dashboard-mode-field">
+                        <label htmlFor="auditee-mode">Audit mode</label>
                         <select
                             id="auditee-mode"
                             value={auditMode}
-                            onChange={(e) => {
-                                onAuditModeChange?.(e.target.value);
-                            }}
-                            className="w-full rounded-lg border border-gray-700
-               bg-[#1e293b] text-white px-3 py-2.5
-               focus:outline-none focus:ring-2
-               focus:ring-indigo-500"
+                            onChange={(event) => onAuditModeChange?.(event.target.value)}
+                            className="dashboard-mode-select"
                         >
                             <option value="self_check">Self Check</option>
                             <option value="third_party_audit">Third Party Audit</option>
                         </select>
                     </div>
-                )} */}
-                <nav className="space-y-4 text-base">
+                )}
+
+                <div className="dashboard-nav-heading">WORKSPACE</div>
+                <nav className="dashboard-sidebar-nav" aria-label="Primary">
                     {menu.map((item, index) => {
                         const Icon = item.icon;
+                        const key = item.label || index;
 
-                        if (item.children) {
-                            const isOpen = openMenus[item.label];
-
+                        if (Array.isArray(item.children) && item.children.length > 0) {
+                            const isExpanded = Boolean(openMenus[item.label]);
                             return (
-                                <div key={index} className="space-y-1">
-
-                                    <div
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            toggleMenu(item.label);
-                                        }}
-                                        className={`flex items-center justify-between px-4 py-2.5 rounded-lg cursor-pointer transition
-                                        ${isOpen
-                                                ? "bg-indigo-500/10 text-indigo-400"
-                                                : "text-gray-300 hover:bg-[#1e293b] hover:text-white"
-                                            }`}
+                                <div key={key} className="dashboard-nav-group">
+                                    <button
+                                        type="button"
+                                        className={`dashboard-nav-item ${isExpanded ? "is-expanded" : ""}`}
+                                        onClick={() => toggleMenu(item.label)}
+                                        aria-expanded={isExpanded}
                                     >
-                                        <div className="flex items-center gap-3">
-                                            {Icon && <Icon className="text-[20px]" />}
-                                            <span className="font-medium">
-                                                {item.label}
-                                            </span>
-                                        </div>
-
+                                        {Icon && <Icon className="dashboard-nav-icon" aria-hidden="true" />}
+                                        <span className="dashboard-nav-label">{item.label}</span>
                                         <FiChevronRight
-                                            className={`text-[18px] transition-transform duration-300 ${isOpen ? "rotate-90 text-indigo-400" : ""
-                                                }`}
+                                            className={`dashboard-nav-chevron ${isExpanded ? "is-open" : ""}`}
+                                            aria-hidden="true"
                                         />
-                                    </div>
-
-                                    <div
-                                        className={`ml-6 overflow-hidden transition-all duration-500 ${isOpen ? "max-h-96 mt-2" : "max-h-0"
-                                            }`}
-                                    >
-                                        <div className="space-y-1 border-l border-gray-700 pl-3">
-                                            {item.children.map((child, i) => (
-                                                <div
-                                                    key={i}
-                                                    onClick={() => navigate(child.path)}
-                                                    className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer
-                                                    text-gray-400 hover:text-white hover:bg-[#1e293b] transition group"
+                                    </button>
+                                    {isExpanded && (
+                                        <div className="dashboard-nav-submenu">
+                                            {item.children.map((child, childIndex) => (
+                                                <button
+                                                    key={child.path || child.label || childIndex}
+                                                    type="button"
+                                                    className="dashboard-nav-subitem"
+                                                    onClick={() => goTo(child.path)}
                                                 >
-                                                    <span className="w-2 h-2 bg-indigo-400 rounded-full group-hover:scale-125 transition"></span>
-
-                                                    <span className="text-sm">
-                                                        {child.label}
-                                                    </span>
-                                                </div>
+                                                    <span className="dashboard-nav-dot" />
+                                                    <span>{child.label}</span>
+                                                </button>
                                             ))}
                                         </div>
-                                    </div>
-
+                                    )}
                                 </div>
                             );
                         }
 
                         return (
-                            <div
-                                key={index}
-                                onClick={() => item.path && navigate(item.path)}
-                                className="flex items-center gap-3 px-4 py-2.5 rounded-lg cursor-pointer
-                                text-gray-300 hover:bg-[#1e293b] hover:text-white transition"
+                            <button
+                                type="button"
+                                key={key}
+                                className="dashboard-nav-item"
+                                onClick={() => goTo(item.path)}
                             >
-                                {Icon && <Icon className="text-[20px]" />}
-                                <span className="font-medium">
-                                    {item.label}
-                                </span>
-                            </div>
+                                {Icon && <Icon className="dashboard-nav-icon" aria-hidden="true" />}
+                                <span className="dashboard-nav-label">{item.label}</span>
+                            </button>
                         );
                     })}
                 </nav>
             </div>
 
-            {/* Bottom Profile */}
-            <div className="border-t border-gray-700 p-5 relative shrink-0">
-
-                <div
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        setOpenSideMenu(!openSideMenu);
-                    }}
-                    className="flex items-center gap-3 p-4 rounded-lg bg-[#1e293b] border border-gray-700 cursor-pointer hover:bg-[#2a3446] transition"
-                >
-                    <div className="w-11 h-11 rounded-full bg-indigo-500 flex items-center justify-center font-bold text-lg">
-                        {user?.first_name?.[0] || "U"}
-                    </div>
-
-                    <div>
-                        <p className="text-base font-medium">
-                            {user?.first_name} {user?.last_name}
-                        </p>
-
-                        <p className="text-sm text-gray-400 capitalize">
-                            {role}
-                        </p>
-                    </div>
-                </div>
-
-                {openSideMenu && (
-                    <div
-                        onClick={(e) => e.stopPropagation()}
-                        className="absolute bottom-24 left-5 right-5 bg-[#0f172a]
-                               border border-gray-700 rounded-xl shadow-lg p-3 space-y-2 z-50"
+            <div className="dashboard-sidebar-footer">
+                <div className="dashboard-profile-wrapper">
+                    <button
+                        type="button"
+                        className="dashboard-profile-trigger"
+                        aria-expanded={profileOpen}
+                        aria-label="Open account menu"
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            setProfileOpen((previous) => !previous);
+                        }}
                     >
-                        <div className="px-2 py-1">
-                            <p className="text-base font-medium text-white">
-                                {user?.first_name} {user?.last_name}
-                            </p>
+                        <span className="dashboard-profile-avatar">{initial}</span>
+                        <span className="dashboard-profile-info">
+                            <span className="dashboard-profile-name">{fullName || "User"}</span>
+                            <span className="dashboard-profile-role">{normalizedRole}</span>
+                        </span>
+                        <FiChevronRight
+                            className={`dashboard-profile-chevron ${profileOpen ? "is-open" : ""}`}
+                            aria-hidden="true"
+                        />
+                    </button>
+
+                    {profileOpen && (
+                        <div
+                            className="dashboard-profile-popover"
+                            onClick={(event) => event.stopPropagation()}
+                        >
+                            <div className="dashboard-profile-popover-heading">{fullName || "Account"}</div>
+                            <button type="button" onClick={() => goTo("/profile")}>
+                                <FiUser aria-hidden="true" />
+                                Edit profile / password
+                            </button>
+                            <button type="button" className="is-danger" onClick={handleLogout}>
+                                <FiLogOut aria-hidden="true" />
+                                Log out
+                            </button>
                         </div>
-
-                        <button
-                            onClick={() => navigate("/profile")}
-                            className="w-full text-left text-sm px-3 py-2 rounded-lg hover:bg-indigo-500/10"
-                        >
-                            Edit Profile / Password
-                        </button>
-
-                        <button
-                            onClick={handleLogout}
-                            className="w-full text-left px-3 py-2 rounded-lg hover:bg-red-500/10 text-red-400"
-                        >
-                            Logout
-                        </button>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
-            {/* Resize Handle */}
             <div
-                onMouseDown={() => setIsResizing(true)}
-                className="absolute top-0 right-0 w-1 h-full cursor-col-resize
-                       bg-transparent hover:bg-indigo-500/30 transition"
+                className="dashboard-sidebar-resize"
+                role="separator"
+                aria-orientation="vertical"
+                aria-label="Resize sidebar"
+                aria-valuemin={220}
+                aria-valuemax={420}
+                aria-valuenow={sidebarWidth}
+                tabIndex={0}
+                onMouseDown={(event) => {
+                    event.preventDefault();
+                    setIsResizing(true);
+                }}
+                onKeyDown={(event) => {
+                    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+                        event.preventDefault();
+                        const offset = event.key === "ArrowLeft" ? -12 : 12;
+                        setSidebarWidth((current) => Math.min(Math.max(current + offset, 220), 420));
+                    }
+                }}
             />
         </aside>
     );

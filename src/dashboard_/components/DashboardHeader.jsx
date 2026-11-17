@@ -1,24 +1,24 @@
 
 import {
+    FiShield,
+    FiCalendar,
     FiWifi,
     FiWifiOff,
-    FiBell,
+    FiCheckCircle,
+    FiAlertCircle,
 } from "react-icons/fi";
 
-export default function DashboardHeader({
-    connected,
-    user,
-}) {
-
+export default function DashboardHeader({ connected, user }) {
     const now = new Date();
 
-    const greeting = (() => {
-        const hour = now.getHours();
+    const hour = now.getHours();
 
-        if (hour < 12) return "Good Morning";
-        if (hour < 17) return "Good Afternoon";
-        return "Good Evening";
-    })();
+    const greeting =
+        hour < 12
+            ? "Good Morning"
+            : hour < 17
+                ? "Good Afternoon"
+                : "Good Evening";
 
     const formattedDate = now.toLocaleDateString("en-IN", {
         weekday: "long",
@@ -27,62 +27,114 @@ export default function DashboardHeader({
         year: "numeric",
     });
 
+    const firstName =
+        user?.first_name?.trim() || "User";
+
     return (
+        <header className="gov-dashboard-header">
 
-        <div className="flex items-center justify-between">
+            <div className="gov-header-main">
 
-            <div>
+                {/* LEFT: PORTAL IDENTITY AND GREETING */}
 
-                <h1 className="text-3xl font-bold theme-text-primary">
+                <div className="gov-header-info">
 
-                    {greeting},{" "}
-                    <span className="theme-text-primary-color">
-                        {user?.first_name || "User"}
-                    </span>
+                    <div className="gov-header-identity">
 
-                </h1>
+                        <div className="gov-header-emblem">
+                            <FiShield aria-hidden="true" />
+                        </div>
 
-                <p className="theme-text-secondary mt-2">
+                        <div>
+                            <div className="gov-header-brand">
+                                DPACOMPASS
+                            </div>
 
-                    Welcome to DPACOMPASS • {formattedDate}
+                            <div className="gov-header-brand-subtitle">
+                                AUDIT & COMPLIANCE WORKSPACE
+                            </div>
+                        </div>
 
-                </p>
+                    </div>
 
-            </div>
+                    <div className="gov-header-greeting">
 
-            <div className="flex items-center gap-4">
+                        <h1 className="gov-header-title">
+                            {greeting},{" "}
+                            <span>{firstName}</span>
+                        </h1>
 
-                {/* WebSocket Connection Status */}
+                        <p className="gov-header-description">
+                            Welcome to your compliance management dashboard.
+                        </p>
 
-                <div
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border
-                    ${
-                        connected
-                            ? "border-green-500/30 bg-green-500/10 text-green-600"
-                            : "border-red-500/30 bg-red-500/10 text-red-600"
-                    }`}
-                >
+                    </div>
 
-                    {connected ? (
-                        <FiWifi />
-                    ) : (
-                        <FiWifiOff />
-                    )}
+                </div>
 
-                    <span className="text-sm font-medium">
+                {/* RIGHT: DATE AND CONNECTION STATUS */}
 
-                        {connected
-                            ? "Live"
-                            : "Disconnected"}
+                <div className="gov-header-meta">
 
-                    </span>
+                    <div className="gov-header-date">
+
+                        <FiCalendar aria-hidden="true" />
+
+                        <span>{formattedDate}</span>
+
+                    </div>
+
+                    <div
+                        className={`gov-header-status ${connected
+                                ? "gov-header-status-online"
+                                : "gov-header-status-offline"
+                            }`}
+                        role="status"
+                        aria-live="polite"
+                    >
+
+                        <div className="gov-header-status-icon">
+                            {connected ? (
+                                <FiWifi aria-hidden="true" />
+                            ) : (
+                                <FiWifiOff aria-hidden="true" />
+                            )}
+                        </div>
+
+                        <div className="gov-header-status-text">
+
+                            <span className="gov-header-status-title">
+                                {connected
+                                    ? "Live Connection"
+                                    : "Disconnected"}
+                            </span>
+
+                            <span className="gov-header-status-subtitle">
+                                {connected
+                                    ? "Real-time updates active"
+                                    : "Real-time updates unavailable"}
+                            </span>
+
+                        </div>
+
+                        {connected ? (
+                            <FiCheckCircle
+                                className="gov-header-status-check"
+                                aria-hidden="true"
+                            />
+                        ) : (
+                            <FiAlertCircle
+                                className="gov-header-status-check"
+                                aria-hidden="true"
+                            />
+                        )}
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
-
+        </header>
     );
-
 }
