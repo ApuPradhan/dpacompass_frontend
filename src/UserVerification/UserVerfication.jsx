@@ -15,6 +15,38 @@ import { fetchWithAuth } from "../utilities/fetchWithAuth";
 export default function UserVerification() {
     const navigate = useNavigate();
 
+    // Local styling variables for the User Verification page.
+    const styles = {
+        page: "min-h-screen bg-[#F4F7FB] px-4 py-6 text-slate-700 sm:px-6 lg:px-8",
+        container: "mx-auto max-w-[1600px]",
+        backButton: "mb-6 inline-flex cursor-pointer items-center gap-2 rounded-lg text-lg font-semibold text-blue-700 transition hover:text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-400/50",
+        header: "mb-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
+        eyebrow: "text-sm font-bold uppercase tracking-[0.16em] text-blue-700",
+        title: "mt-2 text-3xl font-bold tracking-tight text-[#14213D] sm:text-4xl",
+        subtitle: "mt-2 max-w-2xl text-lg leading-7 text-slate-600",
+        refreshButton: "inline-flex cursor-pointer items-center justify-center gap-2 self-start rounded-xl border border-blue-200 bg-white px-5 py-3 text-base font-semibold text-blue-700 shadow-sm transition hover:border-blue-400 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-50 sm:self-center",
+        summaryGrid: "mb-6 grid grid-cols-4 gap-3",
+        summaryCard: "relative flex min-h-[94px] min-w-0 items-center justify-between gap-2 overflow-hidden rounded-xl border bg-white px-3 py-3 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md",
+        summaryCardAccent: "absolute inset-y-0 left-0 w-1.5 rounded-l-xl",
+        summaryLabel: "truncate text-sm font-semibold text-slate-600",
+        summaryValue: "mt-1.5 text-2xl font-bold leading-none tabular-nums text-[#14213D]",
+        summaryIcon: "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border",
+        filterPanel: "mb-6 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5",
+        tableSection: "overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm",
+        tableHeader: "flex flex-col gap-2 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6",
+        tableTitle: "text-xl font-bold text-[#14213D]",
+        tableDescription: "mt-1 text-base text-slate-600",
+        clearFilters: "inline-flex cursor-pointer items-center rounded-lg px-3 py-2 text-base font-semibold text-blue-700 transition hover:bg-blue-50 hover:text-blue-900",
+        loadingState: "flex min-h-64 flex-col items-center justify-center gap-3 text-slate-600",
+        spinner: "h-9 w-9 animate-spin rounded-full border-[3px] border-blue-100 border-t-blue-600",
+        loadingText: "text-base font-medium text-slate-600",
+        errorState: "flex min-h-64 flex-col items-center justify-center px-6 text-center",
+        errorTitle: "mt-3 text-lg font-semibold text-[#14213D]",
+        errorMessage: "mt-1 text-base text-slate-600",
+        retryButton: "mt-4 cursor-pointer rounded-lg bg-blue-600 px-5 py-2.5 text-base font-semibold text-white shadow-sm transition hover:bg-blue-700",
+        tableContent: "p-3 sm:p-5",
+    };
+
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
     const [roleFilter, setRoleFilter] = useState("");
@@ -143,33 +175,53 @@ export default function UserVerification() {
     ];
 
     const toneClasses = {
-        indigo: "border-indigo-400/20 bg-indigo-500/10 text-indigo-300",
-        amber: "border-amber-400/20 bg-amber-500/10 text-amber-300",
-        emerald: "border-emerald-400/20 bg-emerald-500/10 text-emerald-300",
-        rose: "border-rose-400/20 bg-rose-500/10 text-rose-300",
+        indigo: {
+            card: "border-blue-200 bg-gradient-to-br from-blue-50 to-white",
+            accent: "bg-blue-500",
+            icon: "border-blue-200 bg-blue-100 text-blue-700",
+            value: "text-blue-900",
+        },
+        amber: {
+            card: "border-amber-200 bg-gradient-to-br from-amber-50 to-white",
+            accent: "bg-amber-500",
+            icon: "border-amber-200 bg-amber-100 text-amber-700",
+            value: "text-amber-900",
+        },
+        emerald: {
+            card: "border-emerald-200 bg-gradient-to-br from-emerald-50 to-white",
+            accent: "bg-emerald-500",
+            icon: "border-emerald-200 bg-emerald-100 text-emerald-700",
+            value: "text-emerald-900",
+        },
+        rose: {
+            card: "border-rose-200 bg-gradient-to-br from-rose-50 to-white",
+            accent: "bg-rose-500",
+            icon: "border-rose-200 bg-rose-100 text-rose-700",
+            value: "text-rose-900",
+        },
     };
 
     return (
-        <main className="min-h-screen bg-[#0a1220] px-4 py-6 text-slate-100 sm:px-6 lg:px-8">
-            <div className="mx-auto max-w-[1600px]">
+        <main className={styles.page}>
+            <div className={styles.container}>
                 <button
                     type="button"
                     onClick={() => navigate("/admindashboard")}
-                    className="mb-6 inline-flex items-center gap-2 rounded-lg text-base font-semibold text-slate-200 transition hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-400/50"
+                    className={styles.backButton}
                 >
                     <FiArrowLeft size={18} />
                     Back to dashboard
                 </button>
 
-                <header className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <header className={styles.header}>
                     <div className="min-w-0 text-left">
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-300">
+                        <p className={styles.eyebrow}>
                             Administration
                         </p>
-                        <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                        <h1 className={styles.title}>
                             User verification
                         </h1>
-                        <p className="mt-2 max-w-2xl text-base leading-7 text-slate-300">
+                        <p className={styles.subtitle}>
                             Review registered accounts, check their details, and manage access approval.
                         </p>
                     </div>
@@ -178,7 +230,7 @@ export default function UserVerification() {
                         type="button"
                         onClick={() => fetchUsers(true)}
                         disabled={refreshing || loading}
-                        className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-slate-500 bg-[#182943] px-4 py-3 text-base font-semibold text-slate-100 shadow-sm transition hover:border-indigo-300 hover:bg-[#203653] disabled:cursor-not-allowed disabled:opacity-50 sm:self-center"
+                        className={styles.refreshButton}
                     >
                         <FiRefreshCw className={refreshing ? "animate-spin" : ""} size={18} />
                         Refresh users
@@ -187,31 +239,32 @@ export default function UserVerification() {
 
                 {/* Compact summary cards */}
                 <section
-                    className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4"
+                    className={styles.summaryGrid}
                     aria-label="User verification summary"
                 >
                     {summaryCards.map(({ label, value, icon: Icon, tone }) => (
                         <div
                             key={label}
-                            className="flex min-h-[88px] items-center justify-between gap-3 rounded-xl border border-slate-700/80 bg-[#111d31] px-4 py-3 shadow-md shadow-black/10"
+                            className={`${styles.summaryCard} ${toneClasses[tone].card}`}
                         >
-                            <div className="min-w-0">
-                                <p className="truncate text-sm font-medium text-slate-400">
+                            <span className={`${styles.summaryCardAccent} ${toneClasses[tone].accent}`} />
+                            <div className="min-w-0 pl-1">
+                                <p className={styles.summaryLabel}>
                                     {label}
                                 </p>
-                                <p className="mt-1 text-2xl font-bold leading-none tabular-nums text-white">
+                                <p className={`${styles.summaryValue} ${toneClasses[tone].value}`}>
                                     {value}
                                 </p>
                             </div>
-                            <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border ${toneClasses[tone]}`}>
-                                <Icon size={17} />
+                            <div className={`${styles.summaryIcon} ${toneClasses[tone].icon}`}>
+                                <Icon size={19} />
                             </div>
                         </div>
                     ))}
                 </section>
 
                 {/* Search and filters */}
-                <section className="mb-5 rounded-2xl border border-slate-700/80 bg-[#111d31] p-5 shadow-lg shadow-black/10 sm:p-6">
+                <section className={styles.filterPanel}>
                     <FilterBar
                         search={search}
                         setSearch={setSearch}
@@ -223,13 +276,13 @@ export default function UserVerification() {
                 </section>
 
                 {/* Registered users table */}
-                <section className="overflow-hidden rounded-2xl border border-slate-700/80 bg-[#111d31] shadow-xl shadow-black/10">
-                    <div className="flex flex-col gap-1 border-b border-slate-700/80 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <section className={styles.tableSection}>
+                    <div className={styles.tableHeader}>
                         <div>
-                            <h2 className="text-lg font-semibold text-white">
+                            <h2 className={styles.tableTitle}>
                                 Registered accounts
                             </h2>
-                            <p className="mt-1 text-sm text-slate-400">
+                            <p className={styles.tableDescription}>
                                 Showing {filteredUsers.length} of {users.length} users
                             </p>
                         </div>
@@ -242,7 +295,7 @@ export default function UserVerification() {
                                     setRoleFilter("");
                                     setStatusFilter("");
                                 }}
-                                className="self-start text-sm font-semibold text-indigo-300 transition hover:text-indigo-200"
+                                className={styles.clearFilters}
                             >
                                 Clear filters
                             </button>
@@ -250,29 +303,29 @@ export default function UserVerification() {
                     </div>
 
                     {loading ? (
-                        <div className="flex min-h-64 flex-col items-center justify-center gap-3 text-slate-400">
-                            <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-600 border-t-indigo-400" />
-                            <p className="text-sm font-medium">
+                        <div className={styles.loadingState}>
+                            <div className={styles.spinner} />
+                            <p className={styles.loadingText}>
                                 Loading user accounts...
                             </p>
                         </div>
                     ) : error ? (
-                        <div className="flex min-h-64 flex-col items-center justify-center px-6 text-center">
-                            <FiAlertCircle size={30} className="text-rose-400" />
-                            <p className="mt-3 text-base font-semibold text-slate-200">
+                        <div className={styles.errorState}>
+                            <FiAlertCircle size={32} className="text-rose-600" />
+                            <p className={styles.errorTitle}>
                                 Unable to load users
                             </p>
-                            <p className="mt-1 text-sm text-slate-400">{error}</p>
+                            <p className={styles.errorMessage}>{error}</p>
                             <button
                                 type="button"
                                 onClick={() => fetchUsers()}
-                                className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500"
+                                className={styles.retryButton}
                             >
                                 Try again
                             </button>
                         </div>
                     ) : (
-                        <div className="p-3 sm:p-4">
+                        <div className={styles.tableContent}>
                             <UserTable
                                 users={filteredUsers}
                                 onView={setSelectedUser}

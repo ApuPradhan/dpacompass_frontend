@@ -1,5 +1,13 @@
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+    FiArrowLeft,
+    FiUser,
+    FiRefreshCw,
+    FiCheckCircle,
+    FiAlertCircle,
+} from "react-icons/fi";
 
 import ProfileHeader from "./components/ProfileHeader";
 import ProfileInformation from "./components/ProfileInformation";
@@ -24,6 +32,8 @@ const INITIAL_PROFILE = {
 };
 
 export default function ProfilePage() {
+    const navigate = useNavigate();
+
     const [profile, setProfile] = useState(INITIAL_PROFILE);
 
     const [loading, setLoading] = useState(true);
@@ -37,18 +47,19 @@ export default function ProfilePage() {
         message: "",
     });
 
-    // Fetch profile when the page loads
-    useEffect(() => {
+    // ================= FETCH PROFILE =================
 
+    useEffect(() => {
         const fetchProfile = async () => {
             setLoading(true);
+
             try {
                 const profileData = await getProfile();
+
                 setProfile({
                     ...INITIAL_PROFILE,
                     ...profileData,
                 });
-
             } catch (error) {
                 console.error("PROFILE FETCH ERROR:", error);
 
@@ -56,16 +67,16 @@ export default function ProfilePage() {
                     type: "error",
                     message: error.message || "Unable to load profile.",
                 });
-
             } finally {
                 setLoading(false);
             }
         };
 
         fetchProfile();
-
     }, []);
-    // Handle profile input changes
+
+    // ================= PROFILE INPUT CHANGE =================
+
     const handleProfileChange = (e) => {
         const { name, value } = e.target;
 
@@ -75,12 +86,16 @@ export default function ProfilePage() {
         }));
     };
 
-    // Update profile
+    // ================= UPDATE PROFILE =================
+
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
 
         setProfileSaving(true);
-        setNotification({ type: "", message: "" });
+        setNotification({
+            type: "",
+            message: "",
+        });
 
         try {
             const updatedProfile = await updateProfile({
@@ -110,10 +125,15 @@ export default function ProfilePage() {
         }
     };
 
-    // Change password
+    // ================= CHANGE PASSWORD =================
+
     const handlePasswordSubmit = async (passwordData) => {
         setPasswordSaving(true);
-        setNotification({ type: "", message: "" });
+
+        setNotification({
+            type: "",
+            message: "",
+        });
 
         try {
             await changePassword(passwordData);
@@ -131,74 +151,159 @@ export default function ProfilePage() {
         }
     };
 
-    // Loading state
+    // ================= LOADING STATE =================
+
     if (loading) {
         return (
-            <div className="min-h-screen bg-[#0B1220] flex items-center justify-center">
-                <div className="text-center">
-                    <div className="w-9 h-9 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto" />
+            <div className="min-h-screen w-full bg-[#F4F7FB] flex items-center justify-center p-6">
+                <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm">
+                    <div className="relative w-12 h-12 mx-auto">
+                        <div className="absolute inset-0 rounded-full border-4 border-blue-100" />
 
-                    <p className="text-sm text-slate-400 mt-4">
-                        Loading profile...
+                        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#075EB5] animate-spin" />
+                    </div>
+
+                    <h3 className="text-base font-semibold text-[#173B70] mt-5">
+                        Loading your profile
+                    </h3>
+
+                    <p className="text-sm text-slate-500 mt-2">
+                        Please wait while we retrieve your account information.
                     </p>
                 </div>
             </div>
         );
     }
 
+    // ================= MAIN UI =================
+
     return (
-        <div className="min-h-screen bg-[#0B1220] text-slate-100 p-5 md:p-8">
-            <div className="max-w-5xl mx-auto">
+        <div className="min-h-screen w-full bg-[#F4F7FB] p-4 md:p-6 xl:p-8">
 
-                {/* Page Header */}
-                <div className="mb-7">
-                    <h1 className="text-2xl font-bold text-white">
-                        My Profile
-                    </h1>
+            <div className="w-full mx-auto">
 
-                    <p className="text-sm text-slate-400 mt-1">
-                        Manage your personal information and account security.
-                    </p>
+                {/* ================= PAGE HEADER ================= */}
+
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 mb-8">
+
+                    <div className="flex items-start gap-4">
+
+                        <button
+                            type="button"
+                            onClick={() => navigate("/admindashboard")}
+                            title="Back to dashboard"
+                            className="mt-1 p-3 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-blue-700 hover:bg-blue-50 transition cursor-pointer shadow-sm"
+                        >
+                            <FiArrowLeft size={21} />
+                        </button>
+
+                        <div>
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 rounded-xl bg-blue-100 text-blue-700">
+                                    <FiUser size={22} />
+                                </div>
+
+                                <h1 className="text-2xl md:text-3xl font-bold text-[#14213D]">
+                                    My Profile
+                                </h1>
+                            </div>
+
+                            <p className="text-sm md:text-base text-slate-500 mt-3">
+                                Manage your personal information and account security.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Notification */}
+                {/* ================= NOTIFICATION ================= */}
+
                 {notification.message && (
                     <div
-                        className={`mb-5 p-4 rounded-lg text-sm border ${notification.type === "success"
-                                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
-                                : "bg-red-500/10 text-red-400 border-red-500/30"
-                            }`}
+                        role="alert"
+                        className={`mb-6 flex items-start gap-3 rounded-xl border p-5 shadow-sm ${
+                            notification.type === "success"
+                                ? "bg-emerald-50 border-emerald-200"
+                                : "bg-red-50 border-red-200"
+                        }`}
                     >
-                        {notification.message}
+                        {notification.type === "success" ? (
+                            <FiCheckCircle
+                                size={21}
+                                className="mt-0.5 shrink-0 text-emerald-600"
+                            />
+                        ) : (
+                            <FiAlertCircle
+                                size={21}
+                                className="mt-0.5 shrink-0 text-red-600"
+                            />
+                        )}
+
+                        <div className="flex-1">
+                            <p
+                                className={`text-sm font-bold ${
+                                    notification.type === "success"
+                                        ? "text-emerald-700"
+                                        : "text-red-700"
+                                }`}
+                            >
+                                {notification.type === "success"
+                                    ? "Success"
+                                    : "Something went wrong"}
+                            </p>
+
+                            <p
+                                className={`text-sm mt-1 ${
+                                    notification.type === "success"
+                                        ? "text-emerald-700"
+                                        : "text-red-600"
+                                }`}
+                            >
+                                {notification.message}
+                            </p>
+                        </div>
                     </div>
                 )}
 
-                <div className="space-y-6">
+                {/* ================= PROFILE CONTENT ================= */}
 
-                    <ProfileHeader profile={profile} />
+                <div className="space-y-7">
 
-                    <ProfileInformation
-                        profile={profile}
-                        onChange={handleProfileChange}
-                        onSubmit={handleProfileSubmit}
-                        saving={profileSaving}
-                    />
+                    {/* PROFILE HEADER */}
 
-                    <AccountSecurity
-                        onChangePassword={() => {
-                            setNotification({
-                                type: "",
-                                message: "",
-                            });
+                    <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                        <ProfileHeader profile={profile} />
+                    </section>
 
-                            setShowPasswordModal(true);
-                        }}
-                    />
+                    {/* PROFILE INFORMATION */}
 
+                    <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                        <ProfileInformation
+                            profile={profile}
+                            onChange={handleProfileChange}
+                            onSubmit={handleProfileSubmit}
+                            saving={profileSaving}
+                        />
+                    </section>
+
+                    {/* ACCOUNT SECURITY */}
+
+                    <section className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+                        <AccountSecurity
+                            onChangePassword={() => {
+                                setNotification({
+                                    type: "",
+                                    message: "",
+                                });
+
+                                setShowPasswordModal(true);
+                            }}
+                        />
+                    </section>
                 </div>
             </div>
 
-            {/* Change Password Modal */}
+            {/* ================= CHANGE PASSWORD MODAL ================= */}
+
             <ChangePasswordModal
                 open={showPasswordModal}
                 onClose={() => setShowPasswordModal(false)}

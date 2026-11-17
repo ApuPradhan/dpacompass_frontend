@@ -140,306 +140,221 @@ function formatDateTime(value) {
 function StatusBadge({ published }) {
     return (
         <span
-            className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
+            className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-semibold ${
                 published
-                    ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                    : "border-indigo-500/40 bg-indigo-500/10 text-indigo-300"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : "border-blue-200 bg-blue-50 text-blue-700"
             }`}
         >
-            <CheckCircle2 size={12} />
-
+            <span className={`h-2 w-2 rounded-full ${published ? "bg-emerald-500" : "bg-blue-500"}`} />
             {published ? "Published" : "Generated"}
         </span>
     );
 }
 
 // ============================================================
-// REPORT SECTION
+// COMBINED REPORT TABLE
 // ============================================================
 
-function ReportSection({
-    title,
-    description,
+function ReportTable({
     audits,
-    published,
     onView,
     onPublish,
     busyAuditId,
     errors,
 }) {
+    const styles = {
+        section: "overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm",
+        header: "flex flex-col gap-3 border-b border-slate-200 px-6 py-5 sm:flex-row sm:items-center sm:justify-between",
+        title: "text-xl font-bold text-[#14213D]",
+        description: "mt-1 text-base text-slate-600",
+        summary: "flex flex-wrap items-center gap-2",
+        summaryBadge: "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold",
+        tableViewport: "overflow-x-auto",
+        table: "w-full min-w-[1450px] border-separate border-spacing-0 text-left",
+        tableHead: "bg-[#EAF3FF]",
+        th: "whitespace-nowrap border-b border-blue-100 px-5 py-4 text-sm font-bold uppercase tracking-wide text-[#24466F]",
+        thActions: "whitespace-nowrap border-b border-blue-100 px-5 py-4 text-right text-sm font-bold uppercase tracking-wide text-[#24466F]",
+        row: "transition-colors hover:bg-blue-50/70",
+        cell: "border-b border-slate-100 px-5 py-4 text-base text-slate-700",
+        idBadge: "inline-flex rounded-md border border-slate-200 bg-white px-2.5 py-1.5 font-mono text-sm font-medium text-slate-700",
+        application: "block max-w-[220px] truncate font-semibold text-[#14213D]",
+        url: "block max-w-[220px] truncate font-medium text-blue-700 hover:text-blue-900 hover:underline",
+        actions: "flex items-center justify-end gap-2",
+        viewButton: "inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border border-blue-700 bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60",
+        actionButton: "inline-flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-60",
+        empty: "px-5 py-16 text-center",
+    };
+
+    const generatedCount = audits.filter((audit) => !isPublished(audit)).length;
+    const publishedCount = audits.filter(isPublished).length;
+
     return (
-        <section className="overflow-hidden rounded-xl border border-slate-700/80 bg-[#0c1425]">
-
-            {/* SECTION HEADER */}
-
-            <div className="flex flex-col gap-2 border-b border-slate-700/80 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <section className={styles.section}>
+            <div className={styles.header}>
                 <div>
-                    <h2 className="flex items-center gap-2 font-semibold text-white">
-
-                        {published ? (
-                            <ShieldCheck
-                                size={19}
-                                className="text-emerald-400"
-                            />
-                        ) : (
-                            <Clock3
-                                size={19}
-                                className="text-indigo-400"
-                            />
-                        )}
-
-                        {title}
-
-                        <span className="rounded-full bg-slate-800 px-2 py-0.5 text-xs text-slate-300">
-                            {audits.length}
-                        </span>
-
-                    </h2>
-
-                    <p className="mt-1 text-xs text-slate-500">
-                        {description}
+                    <h2 className={styles.title}>All Audit Reports</h2>
+                    <p className={styles.description}>
+                        View, publish and manage auditor-generated reports from one place.
                     </p>
+                </div>
+
+                <div className={styles.summary}>
+                    <span className={`${styles.summaryBadge} bg-blue-50 text-blue-700`}>
+                        <Clock3 size={15} />
+                        Generated: {generatedCount}
+                    </span>
+                    <span className={`${styles.summaryBadge} bg-emerald-50 text-emerald-700`}>
+                        <ShieldCheck size={15} />
+                        Published: {publishedCount}
+                    </span>
+                    <span className={`${styles.summaryBadge} bg-slate-100 text-slate-700`}>
+                        Total: {audits.length}
+                    </span>
                 </div>
             </div>
 
-            {/* TABLE */}
-
-            <div className="overflow-x-auto">
-
-                <table className="w-full min-w-[1120px] text-left">
-
-                    <thead className="border-b border-slate-700 bg-[#0a1120]">
-
-                        <tr className="text-xs font-medium text-slate-400">
-
-                            <th className="px-5 py-4">
-                                Audit ID
-                            </th>
-
-                            <th className="px-5 py-4">
-                                Application
-                            </th>
-
-                            <th className="px-5 py-4">
-                                Type
-                            </th>
-
-                            <th className="px-5 py-4">
-                                Application URL
-                            </th>
-
-                            <th className="px-5 py-4">
-                                Auditor
-                            </th>
-
-                            <th className="px-5 py-4">
-                                Generation Time
-                            </th>
-
-                            {published && (
-                                <th className="px-5 py-4">
-                                    Published Time
-                                </th>
-                            )}
-
-                            <th className="px-5 py-4">
-                                Status
-                            </th>
-
-                            <th className="px-5 py-4 text-right">
-                                Actions
-                            </th>
-
+            <div className={styles.tableViewport}>
+                <table className={styles.table}>
+                    <thead>
+                        <tr className={styles.tableHead}>
+                            <th className={styles.th}>Audit ID</th>
+                            <th className={styles.th}>Application</th>
+                            <th className={styles.th}>Type</th>
+                            <th className={styles.th}>Application URL</th>
+                            <th className={styles.th}>Auditor</th>
+                            <th className={styles.th}>Generation Time</th>
+                            <th className={styles.th}>Published Time</th>
+                            <th className={styles.th}>Report Status</th>
+                            <th className={styles.thActions}>Actions</th>
                         </tr>
-
                     </thead>
 
-                    <tbody className="divide-y divide-slate-700/70">
-
+                    <tbody>
                         {audits.length === 0 ? (
-
                             <tr>
-                                <td
-                                    colSpan={published ? 9 : 8}
-                                    className="px-5 py-12 text-center text-sm text-slate-500"
-                                >
-                                    <FileText
-                                        size={25}
-                                        className="mx-auto mb-3 text-slate-600"
-                                    />
-
-                                    No {published
-                                        ? "published"
-                                        : "generated"} reports found.
+                                <td colSpan={9} className={styles.empty}>
+                                    <div className="mx-auto flex max-w-sm flex-col items-center">
+                                        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
+                                            <FileText size={23} />
+                                        </div>
+                                        <p className="text-base font-semibold text-slate-700">
+                                            No audit reports found
+                                        </p>
+                                        <p className="mt-1 text-sm text-slate-500">
+                                            Generated and published reports will appear here.
+                                        </p>
+                                    </div>
                                 </td>
                             </tr>
-
                         ) : (
-
-                            audits.map((audit) => {
-
-                                const busy =
-                                    busyAuditId ===
-                                    audit.public_audit_id;
+                            audits.map((audit, index) => {
+                                const published = isPublished(audit);
+                                const busy = busyAuditId === audit.public_audit_id;
 
                                 return (
                                     <tr
-                                        key={
-                                            audit.audit_id ||
-                                            audit.public_audit_id
-                                        }
-                                        className="transition-colors hover:bg-indigo-500/[0.035]"
+                                        key={audit.public_audit_id || audit.audit_id}
+                                        className={`${styles.row} ${index % 2 ? "bg-slate-50/60" : "bg-white"}`}
                                     >
-
-                                        {/* AUDIT ID */}
-
-                                        <td className="px-5 py-5">
-                                            <span className="rounded-md border border-slate-700 bg-slate-800/60 px-2 py-1 font-mono text-xs text-slate-300">
+                                        <td className={`${styles.cell} whitespace-nowrap`}>
+                                            <span className={styles.idBadge}>
                                                 {audit.public_audit_id || "—"}
                                             </span>
                                         </td>
 
-                                        {/* APPLICATION */}
-
-                                        <td className="px-5 py-5 text-sm font-medium text-white">
-                                            {getApplicationName(audit)}
+                                        <td className={styles.cell}>
+                                            <span
+                                                className={styles.application}
+                                                title={getApplicationName(audit)}
+                                            >
+                                                {getApplicationName(audit)}
+                                            </span>
                                         </td>
 
-                                        {/* APPLICATION TYPE */}
-
-                                        <td className="px-5 py-5 text-sm text-slate-300">
+                                        <td className={styles.cell}>
                                             {getApplicationType(audit)}
                                         </td>
 
-                                        {/* APPLICATION URL */}
-
-                                        <td className="max-w-[240px] px-5 py-5 text-sm">
-
+                                        <td className={styles.cell}>
                                             {getApplicationUrl(audit) !== "—" ? (
                                                 <a
                                                     href={getApplicationUrl(audit)}
                                                     target="_blank"
                                                     rel="noreferrer"
                                                     title={getApplicationUrl(audit)}
-                                                    className="block truncate text-indigo-300 hover:text-indigo-200 hover:underline"
+                                                    className={styles.url}
                                                 >
                                                     {getApplicationUrl(audit)}
                                                 </a>
-                                            ) : (
-                                                <span className="text-slate-500">
-                                                    —
-                                                </span>
-                                            )}
-
+                                            ) : "—"}
                                         </td>
 
-                                        {/* AUDITOR */}
-
-                                        <td className="px-5 py-5 text-sm text-slate-300">
+                                        <td className={`${styles.cell} whitespace-nowrap font-medium`}>
                                             {getAuditorUsername(audit)}
                                         </td>
 
-                                        {/* GENERATION TIME */}
-
-                                        <td className="whitespace-nowrap px-5 py-5 text-sm text-slate-300">
-                                            {formatDateTime(
-                                                getGeneratedAt(audit)
-                                            )}
+                                        <td className={`${styles.cell} whitespace-nowrap`}>
+                                            {formatDateTime(getGeneratedAt(audit))}
                                         </td>
 
-                                        {/* PUBLISHED TIME */}
+                                        <td className={`${styles.cell} whitespace-nowrap`}>
+                                            {published ? formatDateTime(getPublishedAt(audit)) : "—"}
+                                        </td>
 
-                                        {published && (
-                                            <td className="whitespace-nowrap px-5 py-5 text-sm text-slate-300">
-                                                {formatDateTime(
-                                                    getPublishedAt(audit)
-                                                )}
-                                            </td>
-                                        )}
-
-                                        {/* STATUS */}
-
-                                        <td className="px-5 py-5">
-
-                                            <StatusBadge
-                                                published={published}
-                                            />
-
+                                        <td className={styles.cell}>
+                                            <StatusBadge published={published} />
                                             {errors[audit.public_audit_id] && (
-                                                <p className="mt-2 max-w-56 text-xs text-red-400">
+                                                <p className="mt-2 max-w-56 text-sm font-medium text-red-700">
                                                     {errors[audit.public_audit_id]}
                                                 </p>
                                             )}
-
                                         </td>
 
-                                        {/* ACTIONS */}
-
-                                        <td className="px-5 py-5">
-
-                                            <div className="flex items-center justify-end gap-2">
-
-                                                {/* VIEW BUTTON */}
-
+                                        <td className={styles.cell}>
+                                            <div className={styles.actions}>
                                                 <button
+                                                    type="button"
                                                     onClick={() => onView(audit)}
                                                     disabled={busy}
-                                                    className="inline-flex items-center gap-2 rounded-lg border border-indigo-400 bg-indigo-600 px-3.5 py-2 text-xs font-semibold text-white shadow-md shadow-indigo-950/40 transition hover:border-indigo-300 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-[#0c1425] disabled:cursor-not-allowed disabled:opacity-60"
+                                                    className={styles.viewButton}
                                                 >
-                                                    {busy ? (
-                                                        <LoaderCircle
-                                                            size={14}
-                                                            className="animate-spin"
-                                                        />
-                                                    ) : (
-                                                        <Eye size={14} />
-                                                    )}
-
+                                                    {busy
+                                                        ? <LoaderCircle size={16} className="animate-spin" />
+                                                        : <Eye size={16} />}
                                                     View
                                                 </button>
 
-                                                {/* PUBLISH / UNPUBLISH */}
-
                                                 <button
-                                                    onClick={() =>
-                                                        onPublish(
-                                                            audit,
-                                                            !published
-                                                        )
-                                                    }
+                                                    type="button"
+                                                    onClick={() => onPublish(audit, !published)}
                                                     disabled={busy}
-                                                    className={`inline-flex items-center gap-2 rounded-lg border px-3.5 py-2 text-xs font-semibold text-white transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0c1425] disabled:cursor-not-allowed disabled:opacity-60 ${
+                                                    className={`${styles.actionButton} ${
                                                         published
-                                                            ? "border-amber-400 bg-amber-600 hover:bg-amber-500 focus:ring-amber-400"
-                                                            : "border-emerald-400 bg-emerald-600 hover:bg-emerald-500 focus:ring-emerald-400"
+                                                            ? "border-red-700 bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-red-500"
+                                                            : "border-emerald-700 bg-emerald-600 hover:bg-emerald-700 focus:ring-2 focus:ring-emerald-500"
                                                     }`}
                                                 >
                                                     {published ? (
                                                         <>
-                                                            <Undo2 size={14} />
+                                                            <Undo2 size={16} />
                                                             Unpublish
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <Send size={14} />
+                                                            <Send size={16} />
                                                             Publish
                                                         </>
                                                     )}
                                                 </button>
-
                                             </div>
-
                                         </td>
-
                                     </tr>
                                 );
                             })
                         )}
-
                     </tbody>
-
                 </table>
-
             </div>
         </section>
     );
@@ -451,11 +366,50 @@ function ReportSection({
 
 export default function AdminReports({ onBack }) {
 
+    const styles = {
+        page: "min-h-screen bg-[#F4F7FB] px-4 py-6 text-slate-700 sm:px-6 lg:px-8",
+        container: "mx-auto max-w-[1800px] space-y-7",
+        backButton: "inline-flex cursor-pointer items-center gap-2 text-base font-semibold text-blue-700 transition hover:text-blue-900",
+        refreshButton: "inline-flex cursor-pointer items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-base font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 disabled:cursor-not-allowed disabled:opacity-60",
+        pageError: "flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-base text-red-700",
+        statCard: "rounded-2xl border border-slate-200 bg-white p-6 shadow-sm",
+        statLabel: "text-base font-medium text-slate-600",
+        statValue: "mt-2 text-4xl font-bold text-[#14213D]",
+        statDescription: "mt-3 text-base text-slate-500",
+        searchWrapper: "relative max-w-xl",
+        searchIcon: "absolute left-3 top-1/2 -translate-y-1/2 text-slate-500",
+        searchInput: "w-full rounded-lg border border-slate-200 bg-white py-3 pl-10 pr-4 text-base text-[#14213D] outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100",
+        categoryBar: "flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white p-2 shadow-sm",
+        categoryButton: "inline-flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1",
+        categoryCount: "rounded-full px-2 py-0.5 text-xs font-bold",
+        loadingPanel: "rounded-xl border border-slate-200 bg-white py-16 text-center shadow-sm",
+        loadingText: "mt-3 text-base text-slate-700",
+        previewOverlay: "fixed inset-0 z-50 flex items-center justify-center bg-slate-900/65 p-3 backdrop-blur-sm sm:p-6",
+        previewModal: "flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl",
+        modalHeader: "flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-5 py-4",
+        modalTitle: "text-xl font-bold text-[#14213D]",
+        pageDescription: "mt-1 text-base leading-6 text-slate-600",
+        modalSubtitle: "mt-1 text-base text-slate-600",
+        modalAction: "inline-flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold shadow-sm transition",
+        modalClose: "cursor-pointer rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 hover:text-[#14213D]",
+        previewFrameArea: "min-h-0 flex-1 bg-slate-100 p-2 sm:p-4",
+        previewFrame: "h-[72vh] w-full rounded-lg border border-slate-300 bg-white",
+        previewFooter: "flex items-center gap-2 border-t border-slate-200 px-5 py-3 text-sm text-slate-600",
+        confirmOverlay: "fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-sm",
+        confirmModal: "w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl",
+        confirmTitle: "text-lg font-bold text-[#14213D]",
+        confirmDescription: "mt-2 text-base leading-6 text-slate-600",
+        confirmIdentifier: "mt-3 font-mono text-base text-slate-700",
+        cancelButton: "cursor-pointer rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-base font-semibold text-slate-700 transition hover:bg-slate-100",
+        confirmButton: "inline-flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2.5 text-base font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-60",
+    };
+
     const [audits, setAudits] = useState([]);
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(false);
 
     const [search, setSearch] = useState("");
+    const [category, setCategory] = useState("all");
 
     const [busyAuditId, setBusyAuditId] = useState(null);
 
@@ -662,6 +616,20 @@ export default function AdminReports({ onBack }) {
             )
         );
     };
+
+    const visibleAudits = useMemo(() => {
+        const searchedAudits = filterBySearch(audits);
+
+        if (category === "generated") {
+            return searchedAudits.filter((audit) => !isPublished(audit));
+        }
+
+        if (category === "published") {
+            return searchedAudits.filter(isPublished);
+        }
+
+        return searchedAudits;
+    }, [audits, search, category]);
 
     // ========================================================
     // PUBLISH / UNPUBLISH REPORT
@@ -960,9 +928,9 @@ export default function AdminReports({ onBack }) {
     // ========================================================
 
     return (
-        <div className="min-h-screen bg-[#080e1d] px-4 py-5 text-slate-200 sm:px-6 lg:px-8">
+        <div className={styles.page}>
 
-            <div className="mx-auto max-w-[1800px] space-y-7">
+            <div className={styles.container}>
 
                 {/* PAGE HEADER */}
 
@@ -977,7 +945,7 @@ export default function AdminReports({ onBack }) {
                                     onBack ||
                                     (() => window.history.back())
                                 }
-                                className="inline-flex items-center gap-2 text-sm text-indigo-400 transition hover:text-indigo-300"
+                                className={styles.backButton}
                             >
                                 <span aria-hidden="true">
                                     ←
@@ -990,17 +958,17 @@ export default function AdminReports({ onBack }) {
 
                         <div className="flex items-start gap-3">
 
-                            <div className="rounded-xl border border-indigo-500/30 bg-indigo-500/10 p-3 text-indigo-400">
+                            <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-blue-700">
                                 <FileCheck2 size={27} />
                             </div>
 
                             <div>
 
-                                <h1 className="text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+                                <h1 className="text-3xl font-bold tracking-tight text-[#14213D] sm:text-3xl">
                                     Audit Reports
                                 </h1>
 
-                                <p className="mt-1 text-sm text-slate-400">
+                                <p className={styles.pageDescription}>
                                     Review auditor-generated reports and manage publication.
                                 </p>
 
@@ -1013,7 +981,7 @@ export default function AdminReports({ onBack }) {
                     <button
                         onClick={fetchReports}
                         disabled={refreshing}
-                        className="inline-flex items-center justify-center gap-2 self-start rounded-lg border border-slate-700 bg-[#111827] px-4 py-2.5 text-sm text-slate-200 transition hover:border-indigo-500/60 hover:bg-slate-800 disabled:opacity-60"
+                        className={styles.refreshButton}
                     >
 
                         <RefreshCw
@@ -1036,7 +1004,7 @@ export default function AdminReports({ onBack }) {
                 {/* PAGE ERROR */}
 
                 {pageError && (
-                    <div className="flex items-start gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
+                    <div className={styles.pageError}>
 
                         <AlertCircle
                             size={18}
@@ -1054,53 +1022,53 @@ export default function AdminReports({ onBack }) {
 
                 <div className="grid gap-4 sm:grid-cols-3">
 
-                    <div className="rounded-xl border border-slate-700/70 bg-[#111827]/80 p-5">
+                    <div className={styles.statCard}>
 
-                        <p className="text-sm text-slate-400">
+                        <p className={styles.statLabel}>
                             Total Reports
                         </p>
 
-                        <p className="mt-2 text-3xl font-semibold text-white">
+                        <p className={styles.statValue}>
                             {loading ? "—" : audits.length}
                         </p>
 
-                        <p className="mt-3 text-xs text-slate-500">
+                        <p className={styles.statDescription}>
                             All generated and published reports
                         </p>
 
                     </div>
 
-                    <div className="rounded-xl border border-indigo-500/30 bg-[#111827]/80 p-5">
+                    <div className={`${styles.statCard} border-blue-200`}>
 
-                        <p className="text-sm text-slate-400">
+                        <p className="text-base text-slate-600">
                             Generated
                         </p>
 
-                        <p className="mt-2 text-3xl font-semibold text-indigo-300">
+                        <p className={`${styles.statValue} text-blue-700`}>
                             {loading
                                 ? "—"
                                 : generatedAudits.length}
                         </p>
 
-                        <p className="mt-3 text-xs text-slate-500">
+                        <p className="mt-3 text-base text-slate-500">
                             Awaiting administrator publication
                         </p>
 
                     </div>
 
-                    <div className="rounded-xl border border-emerald-500/30 bg-[#111827]/80 p-5">
+                    <div className={`${styles.statCard} border-emerald-200`}>
 
-                        <p className="text-sm text-slate-400">
+                        <p className="text-base text-slate-600">
                             Published
                         </p>
 
-                        <p className="mt-2 text-3xl font-semibold text-emerald-300">
+                        <p className={`${styles.statValue} text-emerald-700`}>
                             {loading
                                 ? "—"
                                 : publishedAudits.length}
                         </p>
 
-                        <p className="mt-3 text-xs text-slate-500">
+                        <p className="mt-3 text-base text-slate-500">
                             Reports published by administrators
                         </p>
 
@@ -1110,11 +1078,11 @@ export default function AdminReports({ onBack }) {
 
                 {/* SEARCH */}
 
-                <div className="relative max-w-xl">
+                <div className={styles.searchWrapper}>
 
                     <Search
                         size={16}
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"
+                        className={styles.searchIcon}
                     />
 
                     <input
@@ -1123,7 +1091,7 @@ export default function AdminReports({ onBack }) {
                             setSearch(event.target.value)
                         }
                         placeholder="Search audit ID, application, URL or auditor..."
-                        className="w-full rounded-lg border border-slate-700 bg-[#0c1425] py-3 pl-9 pr-3 text-sm text-white outline-none transition focus:border-indigo-500"
+                        className={styles.searchInput}
                     />
 
                 </div>
@@ -1132,14 +1100,14 @@ export default function AdminReports({ onBack }) {
 
                 {loading ? (
 
-                    <div className="rounded-xl border border-slate-700 bg-[#0c1425] py-16 text-center">
+                    <div className={styles.loadingPanel}>
 
                         <LoaderCircle
                             size={30}
-                            className="mx-auto animate-spin text-indigo-400"
+                            className="mx-auto animate-spin text-blue-700"
                         />
 
-                        <p className="mt-3 text-sm text-slate-300">
+                        <p className={styles.loadingText}>
                             Loading audit reports...
                         </p>
 
@@ -1149,36 +1117,71 @@ export default function AdminReports({ onBack }) {
 
                     <>
 
-                        {/* GENERATED REPORTS */}
+                        {/* CATEGORY SWITCHER */}
 
-                        <ReportSection
-                            title="Generated Reports"
-                            description="Reports generated by auditors and awaiting administrator publication."
-                            audits={filterBySearch(generatedAudits)}
-                            published={false}
+                        <div className={styles.categoryBar} role="tablist" aria-label="Report categories">
+                            {[
+                                {
+                                    id: "all",
+                                    label: "All Reports",
+                                    count: audits.length,
+                                    activeClass: "bg-[#075EB5] text-white shadow-sm",
+                                    inactiveClass: "text-slate-600 hover:bg-slate-100 hover:text-[#14213D]",
+                                    countActive: "bg-white/20 text-white",
+                                    countInactive: "bg-slate-200 text-slate-700",
+                                },
+                                {
+                                    id: "generated",
+                                    label: "Generated",
+                                    count: generatedAudits.length,
+                                    activeClass: "bg-blue-600 text-white shadow-sm",
+                                    inactiveClass: "text-blue-700 hover:bg-blue-50",
+                                    countActive: "bg-white/20 text-white",
+                                    countInactive: "bg-blue-100 text-blue-700",
+                                },
+                                {
+                                    id: "published",
+                                    label: "Published",
+                                    count: publishedAudits.length,
+                                    activeClass: "bg-emerald-600 text-white shadow-sm",
+                                    inactiveClass: "text-emerald-700 hover:bg-emerald-50",
+                                    countActive: "bg-white/20 text-white",
+                                    countInactive: "bg-emerald-100 text-emerald-700",
+                                },
+                            ].map((item) => {
+                                const active = category === item.id;
+
+                                return (
+                                    <button
+                                        key={item.id}
+                                        type="button"
+                                        role="tab"
+                                        aria-selected={active}
+                                        onClick={() => setCategory(item.id)}
+                                        className={`${styles.categoryButton} ${
+                                            active ? item.activeClass : item.inactiveClass
+                                        }`}
+                                    >
+                                        {item.label}
+                                        <span className={`${styles.categoryCount} ${
+                                            active ? item.countActive : item.countInactive
+                                        }`}>
+                                            {item.count}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+
+                        {/* SINGLE REPORT TABLE WITH CATEGORY FILTER */}
+
+                        <ReportTable
+                            audits={visibleAudits}
                             onView={openReport}
-                            onPublish={(audit) =>
+                            onPublish={(audit, published) =>
                                 setConfirmAction({
                                     audit,
-                                    published: true,
-                                })
-                            }
-                            busyAuditId={busyAuditId}
-                            errors={errors}
-                        />
-
-                        {/* PUBLISHED REPORTS */}
-
-                        <ReportSection
-                            title="Published Reports"
-                            description="Reports already published by an administrator."
-                            audits={filterBySearch(publishedAudits)}
-                            published={true}
-                            onView={openReport}
-                            onPublish={(audit) =>
-                                setConfirmAction({
-                                    audit,
-                                    published: false,
+                                    published,
                                 })
                             }
                             busyAuditId={busyAuditId}
@@ -1197,7 +1200,7 @@ export default function AdminReports({ onBack }) {
             {selectedReport && (
 
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 backdrop-blur-sm sm:p-6"
+                    className={styles.previewOverlay}
                     onMouseDown={(event) => {
                         if (
                             event.target === event.currentTarget
@@ -1207,19 +1210,19 @@ export default function AdminReports({ onBack }) {
                     }}
                 >
 
-                    <div className="flex max-h-[94vh] w-full max-w-6xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-[#0c1425] shadow-2xl">
+                    <div className={styles.previewModal}>
 
                         {/* MODAL HEADER */}
 
-                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700 px-5 py-4">
+                        <div className={styles.modalHeader}>
 
                             <div>
 
-                                <h2 className="font-semibold text-white">
+                                <h2 className={styles.modalTitle}>
                                     Report Preview
                                 </h2>
 
-                                <p className="mt-1 text-xs text-slate-400">
+                                <p className="mt-1 text-base text-slate-600">
                                     {getApplicationName(selectedReport)}
                                     {" · "}
                                     {selectedReport.public_audit_id}
@@ -1231,7 +1234,7 @@ export default function AdminReports({ onBack }) {
 
                                 <button
                                     onClick={downloadHTML}
-                                    className="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-xs font-medium text-white transition hover:bg-slate-700"
+                                    className={`${styles.modalAction} border-slate-300 bg-slate-100 text-slate-800 hover:bg-slate-200`}
                                 >
                                     <Download size={14} />
                                     HTML
@@ -1239,7 +1242,7 @@ export default function AdminReports({ onBack }) {
 
                                 <button
                                     onClick={downloadPDF}
-                                    className="inline-flex items-center gap-2 rounded-lg border border-emerald-500 bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-500"
+                                    className={`${styles.modalAction} border-emerald-700 bg-emerald-600 text-white hover:bg-emerald-700`}
                                 >
                                     <Download size={14} />
                                     PDF
@@ -1250,7 +1253,7 @@ export default function AdminReports({ onBack }) {
                                         setSelectedReport(null)
                                     }
                                     aria-label="Close report preview"
-                                    className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                                    className={styles.modalClose}
                                 >
                                     <X size={17} />
                                 </button>
@@ -1261,22 +1264,22 @@ export default function AdminReports({ onBack }) {
 
                         {/* REPORT HTML */}
 
-                        <div className="min-h-0 flex-1 bg-slate-200 p-2 sm:p-4">
+                        <div className={styles.previewFrameArea}>
 
                             <iframe
                                 title={`Report preview - ${selectedReport.public_audit_id}`}
                                 srcDoc={selectedReport.report_html}
                                 sandbox=""
-                                className="h-[72vh] w-full rounded-lg border border-slate-300 bg-white"
+                                className={styles.previewFrame}
                             />
 
                         </div>
 
-                        <div className="flex items-center gap-2 border-t border-slate-700 px-5 py-3 text-xs text-slate-400">
+                        <div className={styles.previewFooter}>
 
                             <CheckCircle2
                                 size={14}
-                                className="text-emerald-400"
+                                className="text-emerald-700"
                             />
 
                             HTML report loaded from the report API
@@ -1295,17 +1298,17 @@ export default function AdminReports({ onBack }) {
 
             {confirmAction && (
 
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm">
+                <div className={styles.confirmOverlay}>
 
-                    <div className="w-full max-w-md rounded-2xl border border-slate-700 bg-[#111827] p-6 shadow-2xl">
+                    <div className={styles.confirmModal}>
 
                         <div className="flex items-start gap-3">
 
                             <div
                                 className={`rounded-lg border p-2 ${
                                     confirmAction.published
-                                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                                        : "border-amber-500/30 bg-amber-500/10 text-amber-400"
+                                        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                                        : "border-amber-200 bg-amber-50 text-amber-700"
                                 }`}
                             >
 
@@ -1319,19 +1322,19 @@ export default function AdminReports({ onBack }) {
 
                             <div>
 
-                                <h3 className="text-lg font-semibold text-white">
+                                <h3 className={styles.confirmTitle}>
                                     {confirmAction.published
                                         ? "Publish report?"
                                         : "Unpublish report?"}
                                 </h3>
 
-                                <p className="mt-2 text-sm leading-6 text-slate-400">
+                                <p className={styles.confirmDescription}>
                                     {confirmAction.published
                                         ? "This will publish the report and move it to the Published Reports section."
                                         : "This will unpublish the report and move it back to Generated Reports."}
                                 </p>
 
-                                <p className="mt-3 font-mono text-xs text-slate-300">
+                                <p className={styles.confirmIdentifier}>
                                     {confirmAction.audit.public_audit_id}
                                 </p>
 
@@ -1345,7 +1348,7 @@ export default function AdminReports({ onBack }) {
                                 onClick={() =>
                                     setConfirmAction(null)
                                 }
-                                className="rounded-lg border border-slate-600 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:bg-slate-800"
+                                className={styles.cancelButton}
                             >
                                 Cancel
                             </button>
@@ -1361,10 +1364,10 @@ export default function AdminReports({ onBack }) {
                                     busyAuditId ===
                                     confirmAction.audit.public_audit_id
                                 }
-                                className={`inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 ${
+                                className={`${styles.confirmButton} ${
                                     confirmAction.published
-                                        ? "bg-emerald-600 hover:bg-emerald-500"
-                                        : "bg-amber-600 hover:bg-amber-500"
+                                        ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                                        : "bg-red-600 text-white hover:bg-red-700"
                                 }`}
                             >
 

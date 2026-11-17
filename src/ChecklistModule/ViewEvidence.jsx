@@ -1,83 +1,222 @@
-import { FiFileText } from "react-icons/fi";
+
+import {
+    FiFileText,
+    FiX,
+    FiLayers,
+    FiSettings,
+    FiUser,
+    FiCheckCircle,
+} from "react-icons/fi";
 
 const ViewEvidence = ({ evidence, onClose }) => {
     if (!evidence) return null;
 
-    return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+    const isActive = evidence.is_active;
+    const isAutomatic = evidence.collection_type === "automated";
 
-            <div className="bg-[#0f172a] border border-gray-700 rounded-xl w-[450px] p-6 shadow-xl animate-scaleIn text-white">
+    const formatValue = (value) => {
+        if (!value) return "—";
+
+        return String(value)
+            .replaceAll("_", " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase());
+    };
+
+    const detailCard = (label, value, icon) => (
+        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <div className="mb-2 flex items-center gap-2 text-slate-400">
+                {icon}
+                <p className="text-xs font-semibold uppercase tracking-wide">
+                    {label}
+                </p>
+            </div>
+
+            <p className="text-sm font-semibold text-slate-800">
+                {value || "—"}
+            </p>
+        </div>
+    );
+
+    return (
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/40 p-4 backdrop-blur-sm"
+            onMouseDown={(e) => {
+                if (e.target === e.currentTarget) onClose();
+            }}
+        >
+            <div className="my-auto w-full max-w-xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
 
                 {/* HEADER */}
-                <div className="flex flex-col items-center text-center mb-5">
-                    <div className="bg-indigo-500/20 text-indigo-400 p-3 rounded-full mb-3">
-                        <FiFileText size={22} />
+
+                <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5 sm:px-7">
+
+                    <div className="flex items-center gap-4">
+
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-[#075EB5]">
+                            <FiFileText size={23} />
+                        </div>
+
+                        <div>
+                            <h2 className="text-xl font-bold text-[#14213D]">
+                                Evidence Details
+                            </h2>
+
+                            <p className="mt-1 text-sm text-slate-500">
+                                View complete evidence information
+                            </p>
+                        </div>
+
                     </div>
 
-                    <h3 className="text-lg font-semibold">
-                        Evidence Details
-                    </h3>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 cursor-pointer"
+                        aria-label="Close"
+                    >
+                        <FiX size={21} />
+                    </button>
 
-                    <p className="text-gray-400 text-sm">
-                        View complete evidence information
-                    </p>
                 </div>
 
                 {/* CONTENT */}
-                <div className="space-y-3 text-sm">
+
+                <div className="space-y-5 p-6 sm:p-7">
+
+                    {/* EVIDENCE NAME */}
 
                     <div>
-                        <p className="text-gray-400">Name</p>
-                        <p className="text-white font-medium">{evidence.name}</p>
-                    </div>
-
-                    <div>
-                        <p className="text-gray-400">Description</p>
-                        <p className="text-gray-300">
-                            {evidence.description || "—"}
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Evidence Name
                         </p>
+
+                        <div className="flex items-center gap-3 rounded-xl border border-blue-100 bg-blue-50/60 p-4">
+
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-blue-600 shadow-sm">
+                                <FiLayers size={19} />
+                            </div>
+
+                            <p className="text-base font-bold text-[#14213D]">
+                                {evidence.name}
+                            </p>
+
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    {/* DESCRIPTION */}
 
-                        <div>
-                            <p className="text-gray-400">Field Type</p>
-                            <p className="text-white">{evidence.field_type}</p>
+                    <div>
+                        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                            Description
+                        </p>
+
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                            <p className="whitespace-pre-wrap text-sm leading-6 text-slate-600">
+                                {evidence.description || "No description provided."}
+                            </p>
                         </div>
+                    </div>
 
-                        <div>
-                            <p className="text-gray-400">Collection</p>
-                            <p className="text-white">{evidence.collection_type}</p>
-                        </div>
+                    {/* DETAILS */}
 
-                        <div>
-                            <p className="text-gray-400">Data Provider</p>
-                            <p className="text-white">{evidence.data_provider}</p>
-                        </div>
+                    <div>
+                        <h3 className="mb-3 text-sm font-bold text-[#14213D]">
+                            Configuration Details
+                        </h3>
 
-                        <div>
-                            <p className="text-gray-400">Status</p>
-                            <span
-                                className={`px-2 py-1 text-xs rounded-full ${evidence.is_active
-                                        ? "bg-green-500/20 text-green-400"
-                                        : "bg-yellow-500/20 text-yellow-400"
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+
+                            {detailCard(
+                                "Field Type",
+                                formatValue(evidence.field_type),
+                                <FiSettings size={15} />
+                            )}
+
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                <div className="mb-2 flex items-center gap-2 text-slate-400">
+                                    <FiFileText size={15} />
+                                    <p className="text-xs font-semibold uppercase tracking-wide">
+                                        Collection Type
+                                    </p>
+                                </div>
+
+                                <span
+                                    className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
+                                        isAutomatic
+                                            ? "bg-violet-50 text-violet-700"
+                                            : "bg-blue-50 text-blue-700"
                                     }`}
-                            >
-                                {evidence.is_active ? "Published" : "Draft"}
-                            </span>
-                        </div>
+                                >
+                                    {isAutomatic ? "Automatic" : "Manual"}
+                                </span>
+                            </div>
 
+                            {detailCard(
+                                "Data Provider",
+                                formatValue(evidence.data_provider),
+                                <FiUser size={15} />
+                            )}
+
+                            <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                <div className="mb-2 flex items-center gap-2 text-slate-400">
+                                    <FiCheckCircle size={15} />
+                                    <p className="text-xs font-semibold uppercase tracking-wide">
+                                        Status
+                                    </p>
+                                </div>
+
+                                <span
+                                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ${
+                                        isActive
+                                            ? "bg-emerald-50 text-emerald-700"
+                                            : "bg-amber-50 text-amber-700"
+                                    }`}
+                                >
+                                    <span
+                                        className={`h-1.5 w-1.5 rounded-full ${
+                                            isActive
+                                                ? "bg-emerald-500"
+                                                : "bg-amber-500"
+                                        }`}
+                                    />
+
+                                    {isActive ? "Published" : "Draft"}
+                                </span>
+                            </div>
+
+                        </div>
                     </div>
+
+                    {/* SCANNER INFORMATION */}
+
+                    {isAutomatic && evidence.scanner && (
+                        <div className="rounded-xl border border-violet-100 bg-violet-50/60 p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wide text-violet-600">
+                                Associated Scanner
+                            </p>
+
+                            <p className="mt-2 text-sm font-semibold text-slate-800">
+                                {typeof evidence.scanner === "object"
+                                    ? evidence.scanner.name
+                                    : `Scanner ID: ${evidence.scanner}`}
+                            </p>
+                        </div>
+                    )}
+
                 </div>
 
-                {/* ACTION */}
-                <div className="flex justify-center mt-6">
+                {/* FOOTER */}
+
+                <div className="flex justify-end border-t border-slate-100 bg-slate-50/70 px-6 py-4 sm:px-7">
+
                     <button
+                        type="button"
                         onClick={onClose}
-                        className="px-4 py-1.5 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-700 transition"
+                        className="rounded-xl bg-[#075EB5] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#064D94] cursor-pointer"
                     >
                         Close
                     </button>
+
                 </div>
 
             </div>

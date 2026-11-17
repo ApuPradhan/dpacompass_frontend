@@ -1,23 +1,38 @@
+
 import AuditRow from "./AuditRow";
 
 export default function AuditTable({ audits, onView }) {
     return (
-        <table className="w-full text-sm text-left">
-            <thead className="text-gray-400 border-b border-gray-700">
-                <tr>
-                    <th className="py-3 px-4">Name</th>
-                    <th className="py-3 px-4">Owner</th>
-                    {/* <th className="py-3 px-4">Department</th> */}
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4 text-center">Actions</th>
-                </tr>
-            </thead>
+        <div className="w-full overflow-x-auto">
+            <table className="w-full min-w-[650px] text-base text-left border-collapse">
 
-            <tbody>
-                {audits.map((audit) => (
-                    <AuditRow key={audit.id} audit={audit} onView={onView} />
-                ))}
-            </tbody>
-        </table>
+                <thead className="bg-[#EAF3FF] text-[#173B70] border-b-2 border-[#C5D9F2]">
+                    <tr>
+                        <th className="py-4 px-5 text-sm font-bold uppercase tracking-wide">
+                            Name
+                        </th>
+
+                        <th className="py-4 px-5 text-sm font-bold uppercase tracking-wide">
+                            Owner
+                        </th>
+
+                        <th className="py-4 px-5 text-sm font-bold uppercase tracking-wide text-center">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody className="divide-y divide-[#E2EAF4]">
+                    {audits.map((audit) => (
+                        <AuditRow
+                            key={audit.id}
+                            audit={audit}
+                            onView={onView}
+                        />
+                    ))}
+                </tbody>
+
+            </table>
+        </div>
     );
 }
