@@ -1,4 +1,4 @@
-nimport { useState } from 'react'
+import { useState } from 'react'
 import './App.css'
 
 import Signup from './login/Signup'
