@@ -114,8 +114,8 @@ export default function SelfCheckDataBreachScans() {
 
             setScans(uniqueScans);
         } catch (err) {
-            console.error("Unable to load Self-Check Data Breach scans:", err);
-            setError(err?.message || "Unable to load your Data Breach scans.");
+            console.error("Unable to load Self-Check PII-in-Transit scans:", err);
+            setError(err?.message || "Unable to load your PII-in-Transit scans.");
         } finally {
             pollingRef.current = false;
             setLoading(false);
@@ -153,7 +153,7 @@ export default function SelfCheckDataBreachScans() {
             const html = await getSelfCheckBreachScanHTMLReport(auditId);
             setSelectedReport({ ...scan, report_html: html });
         } catch (err) {
-            console.error("Unable to load Data Breach report:", err);
+            console.error("Unable to load PII-in-Transit Scanner report:", err);
             setReportError(err?.message || "Unable to load the report.");
         } finally {
             setReportLoadingId(null);
@@ -272,7 +272,7 @@ export default function SelfCheckDataBreachScans() {
 
                 <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h1 className="text-2xl font-semibold">My Data Breach Scans</h1>
+                        <h1 className="text-2xl font-semibold">My PII-in-Transit Scans</h1>
                         <p className="mt-2 text-sm text-slate-400">View submitted scans and monitor their execution status.</p>
                     </div>
                     <div className="flex gap-3">
@@ -308,7 +308,7 @@ export default function SelfCheckDataBreachScans() {
                     <div className="rounded-xl border border-slate-800 bg-[#0b1324] p-10 text-center">
                         <ShieldCheck size={34} className="mx-auto text-slate-500" />
                         <h2 className="mt-4 text-lg font-semibold">No scans found</h2>
-                        <p className="mt-2 text-sm text-slate-400">You have not submitted a Self-Check Data Breach scan yet.</p>
+                        <p className="mt-2 text-sm text-slate-400">You have not submitted a Self-Check PII-in-Transit scan yet.</p>
                         <button onClick={startNew} className="mt-5 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium hover:bg-indigo-500">Start Your First Scan</button>
                     </div>
                 ) : (
@@ -468,7 +468,7 @@ export default function SelfCheckDataBreachScans() {
                     </section>
                 )}
 
-                <div className="mt-10 border-t border-slate-800 pt-5 text-center text-xs text-slate-500">Self-Check Data Breach Scanner · DPACOMPASS</div>
+                <div className="mt-10 border-t border-slate-800 pt-5 text-center text-xs text-slate-500">Self-Check PII-in-Transit Scanner · DPACOMPASS</div>
             </div>
 
             {/* HTML REPORT PREVIEW MODAL */}
@@ -484,7 +484,7 @@ export default function SelfCheckDataBreachScans() {
                             <div className="flex items-center gap-3">
                                 <div className="rounded-lg border border-indigo-500/30 bg-indigo-500/10 p-2 text-indigo-400"><ShieldCheck size={20} /></div>
                                 <div>
-                                    <h2 className="font-semibold text-white">Data Breach Scan Report</h2>
+                                    <h2 className="font-semibold text-white">PII-in-Transit Scan Report</h2>
                                     <p className="mt-1 text-xs text-slate-400">{selectedReport.public_audit_id || selectedReport.audit_id || selectedReport.job_id || "Audit ID unavailable"}</p>
                                 </div>
                             </div>
@@ -520,9 +520,9 @@ export default function SelfCheckDataBreachScans() {
                             </div>
                         </div>
                         <div className="min-h-0 flex-1 bg-slate-200 p-2 sm:p-4">
-                            <iframe title="Data Breach Scan Report" srcDoc={selectedReport.report_html} sandbox="" className="h-[75vh] w-full rounded-lg border border-slate-300 bg-white" />
+                            <iframe title="PII-in-Transit Scan Report" srcDoc={selectedReport.report_html} sandbox="" className="h-[75vh] w-full rounded-lg border border-slate-300 bg-white" />
                         </div>
-                        <div className="border-t border-slate-800 px-5 py-3 text-xs text-slate-400">Data Breach report loaded from the backend.</div>
+                        <div className="border-t border-slate-800 px-5 py-3 text-xs text-slate-400">PII-in-Transit Scanner report loaded from the backend.</div>
                     </div>
                 </div>
             )}

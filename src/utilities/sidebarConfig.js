@@ -9,45 +9,51 @@ import {
 
 export const sidebarConfig = {
     admin: [
+        {
+            label: "Audit Application Management",
+            icon: FiLayers,
+            children: [
+                {
+                    label: "View/Approve Pending Audit Applications",
+                    icon: FiFileText,
+                    path: "/admin/pendingaudits",
+                },
+                {
+                    label: "Assign Audit Application to Auditor",
+                    icon: FiLayers,
+                    path: "/admin/assignaudits",
+                },
+                {
+                    label: "Re-assign Declined Audit Applications",
+                    icon: FiLayers,
+                    path: "/admin/audits/resassign/",
+                },
+                {
+                    label: "View Rejected Audit Applications",
+                    icon: FiLayers,
+                    path: "/admin/rejectedaudits",
+                },
+                {
+                    label: "View Assigned/In-Progress Audit Applications",
+                    icon: FiBarChart2,
+                    path: "/admin/ongoingaudits",
+                },
+                {
+                    label: "Audit Applications Reports",
+                    icon: FiBarChart2,
+                    path: "/admin/reports",
+                },
+            ]
+        },
 
         {
-            label: "View/Approve Pending Applications",
-            icon: FiFileText,
-            path: "/admin/pendingaudits",
-        },
-        {
-            label: "Assign Audit to Auditor",
-            icon: FiLayers,
-            path: "/admin/assignaudits",
-        },
-        {
-            label: "Re-assign Declined Applications",
-            icon: FiLayers,
-            path: "/admin/audits/resassign/",
-        },
-        {
-            label: "View Rejected Applications",
-            icon: FiLayers,
-            path: "/admin/rejectedaudits",
-        },
-        {
-            label: "View Assigned/In-Progress Audits",
-            icon: FiBarChart2,
-            path: "/admin/ongoingaudits",
-        },
-         {
-            label: "Audit Reports",
-            icon: FiBarChart2,
-            path: "/admin/reports",
-        },
-        {
-            label: "Manage Users",
+            label: "User Management",
             icon: FiBarChart2,
             path: "/admin/verify/users",
         },
         // 🔥 GROUP ITEM
         {
-            label: "Checklist & Domain",
+            label: "Checklist Management",
             icon: FiLayers,
             children: [
                 { label: "Create Domain", path: "/domain/create" },
@@ -80,41 +86,56 @@ export const sidebarConfig = {
     ],
 
     auditor: [
+        // 🔥 GROUP ITEM
         {
-            label: "New Pending Audits",
-            icon: FiFileText,
-            path: '/auditor/pendingAudits',
-        },
-        {
-            label: "Accepted Audits",
-            icon: FiFileText,
-            path: "/auditor/acceptedAudits",
-        },
-        {
-            label: "In Progress Audits",
-            icon: FiFileText,
-            path: "/auditor/inprogress",
-        },
-        {
-            label: "Rejected Audits",
-            icon: FiFileText,
-            path: "/auditor/declinedAudits",
-        },
-        {
-            label: "Completed Audits",
-            icon: FiBarChart2,
-            path: "/auditor/completedaudits",
-        },
-        {
-            label: "Data Breach Scanner",  // Ongoing Audits
+            label: "Audit Status",
             icon: FiLayers,
-            path: "/auditor/databreachscanner",
+            children: [
+                {
+                    label: "Pending Audit Applications",
+                    icon: FiFileText,
+                    path: '/auditor/pendingAudits',
+                },
+                {
+                    label: "Accepted Audit Applications",
+                    icon: FiFileText,
+                    path: "/auditor/acceptedAudits",
+                },
+                {
+                    label: "In Progress Audit Applications",
+                    icon: FiFileText,
+                    path: "/auditor/inprogress",
+                },
+                {
+                    label: "Rejected Audit Applications",
+                    icon: FiFileText,
+                    path: "/auditor/declinedAudits",
+                },
+                {
+                    label: "Completed Audit Applications",
+                    icon: FiBarChart2,
+                    path: "/auditor/completedaudits",
+                },
+            ],
         },
         {
-            label: "Consent Scanner",
-            icon: FiBarChart2,
-            path: "/auditor/consentscanner/"
+            label: "Audit Tools",
+            icon: FiLayers,
+            children: [
+                {
+                    label: "PII-in-Transit Scanner Tool",  // Ongoing Audits
+                    icon: FiLayers,
+                    path: "/auditor/databreachscanner",
+                },
+                {
+                    label: "Consent Scanner Tool",
+                    icon: FiBarChart2,
+                    path: "/auditor/consentscanner/"
+                },
+            ]
         },
+
+
         {
             label: "Learn DPDP",
             icon: FiLayers,
@@ -125,7 +146,7 @@ export const sidebarConfig = {
     auditee: {
         self_check: [
             {
-                label: "Consent Scanner",
+                label: "Consent Scanner Tool",
                 icon: FiShield,
                 children: [
                     {
@@ -141,7 +162,7 @@ export const sidebarConfig = {
                 ],
             },
             {
-                label: "Data Breach Scanner",
+                label: "PII-in-Transit Scanner Tool",
                 icon: FiShield,
                 children: [
                     {
@@ -165,40 +186,48 @@ export const sidebarConfig = {
 
         third_party_audit: [
             {
-                label: "Register for Audit",
+                label: "Apply for Audit",
                 icon: FiFileText,
                 path: "/user/register",
             },
             {
-                label: "My Approved Applications",
-                icon: FiLayers,
-                path: "/user/approvedaudits",
+                label: "Audit Applications",
+                icon: FiShield,
+                children: [
+                    {
+                        label: "Approved Audit Applications",
+                        icon: FiLayers,
+                        path: "/user/approvedaudits",
+                    },
+                    {
+                        label: "Pending Audit Applications",
+                        icon: FiLayers,
+                        path: "/application/pending",
+                    },
+                    {
+                        label: "In-progress Audit Applications",
+                        icon: FiLayers,
+                        path: "/application/inprogress",
+                    },
+                    {
+                        label: "Rejected Audit Applications",
+                        icon: FiLayers,
+                        path: "/user/rejectedaudits",
+                    },
+                    {
+                        label: "Completed Audit Applications Reports",
+                        icon: FiBarChart2,
+                        path: "/application/published-reports"
+                    },
+                ]
             },
-            {
-                label: "My Pending Applications",
-                icon: FiLayers,
-                path: "/application/pending",
-            },
-            {
-                label: "In-progress applications",
-                icon: FiLayers,
-                path: "/application/inprogress",
-            },
-            {
-                label: "Rejected Applications",
-                icon: FiLayers,
-                path: "/user/rejectedaudits",
-            },
+
             {
                 label: "Learn DPDP",
                 icon: FiBookOpen,
                 path: "/learndpdp",
             },
-            {
-                label: "Audit Reports",
-                icon: FiBarChart2,
-                path : "/application/published-reports"
-            },
+
         ],
     },
 };

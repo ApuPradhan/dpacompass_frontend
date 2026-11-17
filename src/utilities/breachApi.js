@@ -81,7 +81,7 @@ export const getDataBreachChecklistReport = async (publicAuditId) => {
     if (response?.status !== "success") {
         throw new Error(
             response?.message ||
-            "Failed to fetch Data Breach checklist report."
+            "Failed to fetch PII-in-Transit checklist report."
         );
     }
 

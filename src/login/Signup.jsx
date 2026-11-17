@@ -563,7 +563,7 @@ const Signup = () => {
                             required
                         >
                             <option key={0} value={0}>
-                                Select User Type:
+                                Select Role:
                             </option>
                             {roles.length > 0 ? (
                                 roles.map((role) => (

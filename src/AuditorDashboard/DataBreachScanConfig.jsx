@@ -30,7 +30,7 @@ export default function DataBreachScanConfig() {
         parsedPages >= 1 &&
         parsedPages <= 1000;
 
-    // A duration is deliberately not fabricated here: the Data Breach
+    // A duration is deliberately not fabricated here: the PII-in-Transit Scanner
     // scanner's measured per-page runtime has not been provided.
     const pageLimitMessage = useMemo(() => {
         if (!maxPages.trim()) return "Enter a page limit.";
@@ -76,11 +76,11 @@ export default function DataBreachScanConfig() {
                 }),
             });
 
-            toast.success(data?.message || "Data Breach scan submitted successfully.");
+            toast.success(data?.message || "PII-in-Transit scan submitted successfully.");
             navigate("/auditor/databreachscanner", { replace: true });
         } catch (error) {
-            console.error("Data Breach scan start error:", error);
-            toast.error(error.message || "Failed to start Data Breach scan.");
+            console.error("PII-in-Transit scan start error:", error);
+            toast.error(error.message || "Failed to start PII-in-Transit Scanner.");
         } finally {
             setStarting(false);
         }
@@ -96,10 +96,10 @@ export default function DataBreachScanConfig() {
 
                     <div>
                         <p className="text-xs font-semibold tracking-[0.18em] text-indigo-400">
-                            DATA BREACH AUDIT
+                            PII-in-Transit Scanner
                         </p>
                         <h1 className="mt-1 text-2xl font-semibold text-white">
-                            Configure Data Breach Scan
+                            Configure PII-in-Transit Scanner
                         </h1>
                         <p className="mt-2 text-sm text-gray-400">
                             Set the maximum number of pages the scanner should inspect before starting the scan.
@@ -197,7 +197,7 @@ export default function DataBreachScanConfig() {
                             ) : (
                                 <>
                                     <FiPlay size={16} />
-                                    Start Data Breach Scan
+                                    Start PII-in-Transit Scanner
                                 </>
                             )}
                         </button>

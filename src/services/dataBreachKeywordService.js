@@ -30,7 +30,7 @@ const request = async (endpoint, options = {}) => {
 
         return data;
     } catch (error) {
-        console.error("Data Breach Keyword API Error:", error);
+        console.error("PII-in-Transit Scanner Keyword API Error:", error);
         throw error;
     }
 };

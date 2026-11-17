@@ -442,7 +442,7 @@ export default function CompletedReports({ onBack }) {
                                 Consolidated report generation
                             </h2>
                             <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-400">
-                                Each report combines the Data Breach Management scanner
+                                Each report combines the PII-in-Transit Scanner
                                 and Consent Management scanner results for the same audit.
                                 The Generate Report action will use the configured backend
                                 endpoint to retrieve the actual HTML report.

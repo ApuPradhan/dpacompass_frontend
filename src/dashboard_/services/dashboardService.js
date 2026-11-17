@@ -76,7 +76,23 @@ class DashboardService {
         this.socket.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
+                console.log(
+                    "========== DASHBOARD RAW API RESPONSE =========="
+                );
 
+                console.log(data);
+
+                console.log(
+                    "========== DASHBOARD SUMMARY =========="
+                );
+
+                console.log(data?.summary);
+
+                console.log(
+                    "========== DASHBOARD ROLE =========="
+                );
+
+                console.log(data?.role);
                 // console.log(
                 //     "Dashboard WebSocket data:",
                 //     data

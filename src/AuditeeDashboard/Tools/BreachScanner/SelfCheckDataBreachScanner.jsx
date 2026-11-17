@@ -218,7 +218,7 @@ const formatDuration = (seconds) => {
                     data?.message ||
                     data?.error_message ||
                     data?.error ||
-                    "Unable to queue the Data Breach scan."
+                    "Unable to queue the PII-in-Transit scan."
                 );
             }
 
@@ -271,7 +271,7 @@ const formatDuration = (seconds) => {
 
                     <div>
                         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                            Data Breach Scanner
+                           PII-in-Transit Scanner Scanner
                         </h1>
 
                         <p className="text-sm md:text-base text-slate-400 mt-2 leading-relaxed">

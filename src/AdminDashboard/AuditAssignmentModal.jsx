@@ -49,6 +49,8 @@ export default function AuditAssignmentModal({
             const res = await fetchWithAuth("/api/auth/admin/get/auditors");
 
             const data = await res.json();
+            console.log(data);
+            
 
             if (!res.ok) {
                 toast.error(data.message || "Failed to fetch auditors");
@@ -507,7 +509,7 @@ export default function AuditAssignmentModal({
                                                 key={a.id}
                                                 value={a.id}
                                             >
-                                                {a.full_name || a.username} ({a.email_id})
+                                                {a.username} ({a.email_id})
                                             </option>
                                         ))}
 

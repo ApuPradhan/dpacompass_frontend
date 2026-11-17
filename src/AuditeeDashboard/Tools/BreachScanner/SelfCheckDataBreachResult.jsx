@@ -329,7 +329,7 @@ export default function SelfCheckDataBreachResult() {
                             Scan completed
                         </div>
                         <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">
-                            Data Breach Scan Result
+                            PII-in-Transit Scanner Scan Result
                         </h1>
                         <p className="mt-2 break-all text-sm text-slate-400">
                             {publicAuditId}

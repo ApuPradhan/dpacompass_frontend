@@ -327,7 +327,7 @@ export default function DataBreachScannerResult() {
                     className="mb-7 inline-flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300"
                 >
                     <ArrowLeft size={17} />
-                    Back to Data Breach Scanner
+                    Back to PII-in-Transit Scanner
                 </button>
 
                 <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -337,7 +337,7 @@ export default function DataBreachScannerResult() {
                             Scan completed
                         </div>
                         <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">
-                            Data Breach Scan Result
+                            PII-in-Transit Scanner Result
                         </h1>
                         <p className="mt-2 break-all text-sm text-slate-400">
                             {publicAuditId}

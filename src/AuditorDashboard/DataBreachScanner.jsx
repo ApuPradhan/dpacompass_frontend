@@ -146,11 +146,11 @@ export default function DataBreachScanner() {
                 )
             );
         } catch (err) {
-            console.error("Data Breach Scanner fetch error:", err);
+            console.error("PII-in-Transit Scanner fetch error:", err);
 
             setError(
                 err.message ||
-                "Failed to load Data Breach Scanner data."
+                "Failed to load PII-in-Transit Scanner data."
             );
         } finally {
             setLoading(false);
@@ -265,7 +265,7 @@ export default function DataBreachScanner() {
                 throw new Error(
                     data?.message ||
                     data?.error ||
-                    "Failed to map Data Breach results to the checklist."
+                    "Failed to map PII-in-Transit Scanner results to the checklist."
                 );
             }
 
@@ -273,9 +273,9 @@ export default function DataBreachScanner() {
                 `Checklist mapped successfully. ${data.total_saved ?? 0} results saved.`
             );
         } catch (err) {
-            console.error("Data Breach checklist mapping error:", err);
+            console.error("PII-in-Transit Scanner checklist mapping error:", err);
             toast.error(
-                err?.message || "Unable to map Data Breach results to checklist."
+                err?.message || "Unable to map PII-in-Transit Scanner results to checklist."
             );
         } finally {
             setMappingAuditId(null);
@@ -356,7 +356,7 @@ export default function DataBreachScanner() {
             <button
                 onClick={() => handleScan(row)}
                 className="text-green-400 hover:text-green-300 transition"
-                title="Start Data Breach Scan"
+                title="Start PII-in-Transit Scan"
             >
                 <FiPlay size={17} />
             </button>
@@ -491,11 +491,11 @@ export default function DataBreachScanner() {
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h1 className="text-xl font-semibold text-indigo-400">
-                        Data Breach Scanner
+                       PII-in-Transit Scanner
                     </h1>
 
                     <p className="text-sm text-gray-400 mt-1">
-                        Website security and data breach checks for accepted audits
+                        Website security and PII-in-Transit Scanner checks for accepted audits
                     </p>
 
                     <p className="text-xs text-gray-500 mt-1">
@@ -520,7 +520,7 @@ export default function DataBreachScanner() {
 
             {loading ? (
                 <div className="bg-[#111827]/80 border border-gray-700 rounded-xl p-6">
-                    <Loader text="Loading Data Breach Scanner..." />
+                    <Loader text="Loading PII-in-Transit Scanner..." />
                 </div>
             ) : error ? (
                 <div className="bg-[#111827]/80 border border-red-500/30 rounded-xl p-6">
@@ -539,7 +539,7 @@ export default function DataBreachScanner() {
                     {renderAuditSection({
                         title: "Pending Applications",
                         description:
-                            "Applications where Data Breach scanning has not been executed",
+                            "Applications where PII-in-Transit scanning has not been executed",
                         audits: pendingAudits,
                         statusLabel: "Pending",
                         statusColor:
@@ -551,7 +551,7 @@ export default function DataBreachScanner() {
                     {renderAuditSection({
                         title: "Running Applications",
                         description:
-                            "Data Breach scans currently in progress",
+                            "PII-in-Transit scans currently in progress",
                         audits: runningAudits,
                         statusLabel: "Running",
                         statusColor:
@@ -563,7 +563,7 @@ export default function DataBreachScanner() {
                     {renderAuditSection({
                         title: "Completed Applications",
                         description:
-                            "Applications with successfully completed Data Breach scans",
+                            "Applications with successfully completed PII-in-Transit scans",
                         audits: completedAudits,
                         statusLabel: "Completed",
                         statusColor:
@@ -575,7 +575,7 @@ export default function DataBreachScanner() {
                     {renderAuditSection({
                         title: "Failed Applications",
                         description:
-                            "Applications where the Data Breach scan failed",
+                            "Applications where the PII-in-Transit scan failed",
                         audits: failedAudits,
                         statusLabel: "Failed",
                         statusColor:

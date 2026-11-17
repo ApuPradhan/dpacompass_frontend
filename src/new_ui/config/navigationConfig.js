@@ -50,7 +50,7 @@ export const navigationConfig = [
     },
     {
         id: "breach-scanner",
-        label: "Data Breach Scanner",
+        label: "PII-in-Transit Scanner",
         path: "/new-ui/breach-scanner",
         icon: AlertTriangle,
         permission: "breach_scanner.view",

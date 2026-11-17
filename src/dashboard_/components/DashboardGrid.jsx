@@ -1,48 +1,51 @@
-// dashboard_/components/DashboardGrid.jsx
 
 import WidgetRenderer from "../WidgetRenderer";
-import { getColumnSpan } from "../utils/layoutUtils";
-
-/**
- * DashboardGrid
- *
- * Displays all widgets using a responsive 12-column CSS grid.
- *
- * Every widget can specify:
- *
- * cols : 4
- *
- * which determines its width.
- */
 
 export default function DashboardGrid({ widgets = [] }) {
 
     if (!widgets.length) {
         return (
-            <div className="rounded-2xl border border-dashed border-gray-700 p-12 text-center text-gray-500">
-                No dashboard widgets available.
+            <div className="rounded-2xl border border-dashed border-slate-700 p-12 text-center text-slate-400">
+                No dashboard statistics available.
             </div>
         );
     }
 
     return (
-
-        <div className="grid grid-cols-12 gap-6">
-             
-            {widgets.map((widget) => {
-                const span = getColumnSpan(widget.cols);
-                return (
-                    <div
-                        key={widget.id}
-                        className={getColumnSpan(widget.cols)}
-                    >
+        <div className="
+            grid
+            grid-cols-1
+            sm:grid-cols-2
+            xl:grid-cols-4
+            gap-5
+            items-stretch
+        ">
+            {widgets.map((widget, index) => (
+                <div
+                    key={widget.id}
+                    className="
+                        min-w-0
+                        h-full
+                        dashboard-stat-enter
+                        group
+                    "
+                    style={{
+                        animationDelay: `${index * 120}ms`,
+                    }}
+                >
+                    <div className="
+                        h-full
+                        transition-all
+                        duration-300
+                        ease-out
+                        group-hover:-translate-y-1.5
+                        group-hover:shadow-xl
+                        group-hover:shadow-indigo-500/10
+                    ">
                         <WidgetRenderer widget={widget} />
                     </div>
-                );
-            })}
-
+                </div>
+            ))}
         </div>
-
     );
-
 }
