@@ -18,79 +18,6 @@ const INITIAL_FORM = {
     max_pages: 100,
     max_depth: 2,
 };
-const NumberSlider = ({
-    label,
-    name,
-    value,
-    min,
-    max,
-    step = 1,
-    unit = "",
-    description,
-    onChange,
-}) => {
-    const updateValue = (newValue) => {
-        onChange({
-            target: {
-                name,
-                value: newValue,
-            },
-        });
-    };
-
-    return (
-        <div className="w-full">
-
-            <div className="flex items-center justify-between gap-3 mb-3">
-                <label className="text-sm font-semibold text-slate-200">
-                    {label}
-                </label>
-
-                <div className="flex items-center gap-2">
-                    <input
-                        type="number"
-                        min={min}
-                        max={max}
-                        step={step}
-                        value={value}
-                        onChange={(e) => updateValue(e.target.value)}
-                        className="w-24 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white text-center outline-none focus:border-indigo-500"
-                    />
-
-                    {unit && (
-                        <span className="text-xs text-slate-400 min-w-12">
-                            {unit}
-                        </span>
-                    )}
-                </div>
-            </div>
-
-            <input
-                type="range"
-                min={min}
-                max={max}
-                step={step}
-                value={Math.min(max, Math.max(min, Number(value) || min))}
-                onChange={(e) => updateValue(e.target.value)}
-                className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-indigo-500 bg-slate-700"
-                style={{
-                    accentColor: "#6366f1",
-                }}
-            />
-
-            <div className="flex justify-between text-xs text-slate-500 mt-2">
-                <span>{min}{unit ? ` ${unit}` : ""}</span>
-                <span>{max}{unit ? ` ${unit}` : ""}</span>
-            </div>
-
-            {description && (
-                <p className="text-xs text-slate-500 mt-2">
-                    {description}
-                </p>
-            )}
-        </div>
-    );
-};
 const SelfCheckDataBreachScanner = ({ onBack }) => {
     const navigate = useNavigate();
     const handleBack = () => {
@@ -123,24 +50,38 @@ const SelfCheckDataBreachScanner = ({ onBack }) => {
 const estimatedDuration = useMemo(() => {
     const pages = Number(form.max_pages);
 
-    if (!Number.isInteger(pages) || pages < 1) return 0;
+    if (!Number.isFinite(pages) || !Number.isInteger(pages) || pages < 1) {
+        return null;
+    }
 
     return 10 + pages * 5;
 }, [form.max_pages]);
 
 const formatDuration = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-
-    if (minutes === 0) {
-        return `${remainingSeconds} seconds`;
+    if (seconds === null || !Number.isFinite(seconds)) {
+        return "Enter a valid page count";
     }
 
-    if (remainingSeconds === 0) {
-        return `${minutes} min`;
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+
+    if (days > 0) {
+        return `${days} day${days === 1 ? "" : "s"} ${hours} hr`;
     }
 
-    return `${minutes} min ${remainingSeconds} sec`;
+    if (hours > 0) {
+        return `${hours} hr ${minutes} min`;
+    }
+
+    if (minutes > 0) {
+        return remainingSeconds > 0
+            ? `${minutes} min ${remainingSeconds} sec`
+            : `${minutes} min`;
+    }
+
+    return `${remainingSeconds} seconds`;
 };
 
     const handleSubmit = async (event) => {
@@ -165,12 +106,8 @@ const formatDuration = (seconds) => {
 
         const maxPages = Number(form.max_pages);
 
-        if (
-            !Number.isInteger(maxPages) ||
-            maxPages < 1 ||
-            maxPages > 5000
-        ) {
-            setError("Number of Pages must be an integer between 1 and 50000.");
+        if (!Number.isFinite(maxPages) || !Number.isInteger(maxPages) || maxPages < 1) {
+            setError("Number of Pages must be a positive whole number.");
             return;
         }
 
@@ -240,13 +177,13 @@ const formatDuration = (seconds) => {
     };
 
     const inputClass =
-        "w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-100 placeholder:text-slate-600 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10";
+        "w-full bg-white border border-slate-200 rounded-lg px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-[#075EB5] focus:ring-2 focus:ring-blue-500/10";
 
     const labelClass =
-        "block text-sm font-semibold text-slate-200 mb-2";
+        "mb-2 block text-sm font-semibold text-slate-700";
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 px-4 py-8 md:px-8">
+        <div className="min-h-screen bg-[#F4F7FB] text-slate-800 px-4 py-8 md:px-8">
 
             <div className="max-w-5xl mx-auto">
 
@@ -255,7 +192,7 @@ const formatDuration = (seconds) => {
                 <button
                     type="button"
                     onClick={handleBack}
-                    className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 text-sm font-medium mb-8 transition"
+                    className="inline-flex items-center gap-2 text-[#075EB5] hover:text-[#064D94] text-sm font-medium mb-8 transition cursor-pointer"
                 >
                     <FiArrowLeft size={17} />
                     Back
@@ -265,16 +202,16 @@ const formatDuration = (seconds) => {
 
                 <div className="flex items-start gap-4 mb-8">
 
-                    <div className="w-14 h-14 shrink-0 flex items-center justify-center rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
+                    <div className="w-14 h-14 shrink-0 flex items-center justify-center rounded-xl bg-blue-50 border border-blue-200 text-[#075EB5]">
                         <FiShield size={29} />
                     </div>
 
                     <div>
                         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-                           PII-in-Transit Scanner Scanner
+                           PII-in-Transit Scanner
                         </h1>
 
-                        <p className="text-sm md:text-base text-slate-400 mt-2 leading-relaxed">
+                        <p className="text-sm md:text-base text-slate-500 mt-2 leading-relaxed">
                             Configure an independent website scan to identify
                             exposed personal information and potential data
                             breach indicators.
@@ -285,15 +222,15 @@ const formatDuration = (seconds) => {
 
                 {/* INFORMATION PANEL */}
 
-                <div className="bg-slate-900/70 border border-slate-800 rounded-xl p-5 mb-7">
+                <div className="bg-white border border-slate-200 rounded-xl p-5 mb-7">
                     <div className="flex items-center gap-2 mb-2">
-                        <FiInfo className="text-indigo-400" />
+                        <FiInfo className="text-[#075EB5]" />
                         <h2 className="font-semibold">
                             Set up your scan
                         </h2>
                     </div>
 
-                    <p className="text-sm text-slate-400 leading-relaxed">
+                    <p className="text-sm text-slate-500 leading-relaxed">
                         Configure the target website and crawling limits.
                         Scan status and progress will be available under
                         View Your Scans after the server accepts the request.
@@ -304,19 +241,19 @@ const formatDuration = (seconds) => {
 
                     {/* WEBSITE DETAILS */}
 
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden mb-6">
+                    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden mb-6">
 
                         <div className="p-5 md:p-6">
 
                             <div className="flex items-center gap-3 mb-6">
-                                <FiGlobe className="text-indigo-400" size={21} />
+                                <FiGlobe className="text-[#075EB5]" size={21} />
                                 <h2 className="text-lg font-semibold">
                                     Website Details
                                 </h2>
                             </div>
 
                             <label className={labelClass}>
-                                Website URL <span className="text-red-400">*</span>
+                                Website URL <span className="text-red-600">*</span>
                             </label>
 
                             <input
@@ -338,42 +275,49 @@ const formatDuration = (seconds) => {
 
                     {/* SCAN CONFIGURATION */}
 
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 md:p-6 mb-6">
+                    <div className="bg-white border border-slate-200 rounded-xl p-5 md:p-6 mb-6">
 
                         <div className="flex items-center gap-3 mb-2">
-                            <FiSettings className="text-indigo-400" size={21} />
+                            <FiSettings className="text-[#075EB5]" size={21} />
                             <h2 className="text-lg font-semibold">
                                 Scan Settings
                             </h2>
                         </div>
 
-                        <p className="text-sm text-slate-400 mb-7">
+                        <p className="text-sm text-slate-500 mb-7">
                             Choose how many pages the scanner should check.
                         </p>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-8">
+                        <div className="max-w-xl">
+                            <label htmlFor="max-pages" className={labelClass}>
+                                Maximum Number of Pages <span className="text-red-600">*</span>
+                            </label>
 
-                            <NumberSlider
-                                label="Number of Pages"
+                            <input
+                                id="max-pages"
+                                type="number"
                                 name="max_pages"
+                                min="1"
+                                step="1"
                                 value={form.max_pages}
-                                min={10}
-                                max={5000}
-                                step={2}
-                                unit="pages"
-                                description="Choose the maximum number of pages to check."
                                 onChange={handleChange}
+                                required
+                                placeholder="Enter maximum number of pages"
+                                className={inputClass}
                             />
 
+                            <p className="mt-2 text-xs leading-5 text-slate-500">
+                                Enter any positive whole number. No maximum page limit is applied by this form.
+                            </p>
                         </div>
                     </div>
 
                     {/* ESTIMATED DURATION */}
 
-                    <div className="bg-indigo-500/5 border border-indigo-500/20 rounded-xl p-5 md:p-6 mb-6">
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 md:p-6 mb-6">
 
                         <div className="flex items-center gap-3 mb-4">
-                            <FiClock className="text-indigo-400" size={22} />
+                            <FiClock className="text-[#075EB5]" size={22} />
                             <h2 className="text-lg font-semibold">
                                 Estimated Time
                             </h2>
@@ -382,7 +326,7 @@ const formatDuration = (seconds) => {
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
                             <div>
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-slate-500">
                                     Number of Pages
                                 </p>
                                 <p className="text-xl font-bold mt-2">
@@ -391,16 +335,18 @@ const formatDuration = (seconds) => {
                             </div>
 
                             <div>
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-slate-500">
                                     Estimated Time
                                 </p>
-                                <p className="text-xl font-bold text-indigo-400 mt-2">
-                                    {formatDuration(estimatedDuration)}
+                                <p className="text-xl font-bold text-[#075EB5] mt-2">
+                                    {estimatedDuration === null
+                                        ? "Enter a valid page count"
+                                        : formatDuration(estimatedDuration)}
                                 </p>
                             </div>
 
                             {/* <div>
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs text-slate-500">
                                     Maximum Allowed Time
                                 </p>
                                 <p className="text-xl font-bold mt-2">
@@ -421,7 +367,7 @@ const formatDuration = (seconds) => {
                     {/* ERROR */}
 
                     {error && (
-                        <div className="flex items-start gap-3 p-4 mb-5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-sm">
+                        <div className="flex items-start gap-3 p-4 mb-5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
                             <FiAlertCircle className="shrink-0 mt-0.5" />
                             {error}
                         </div>
@@ -429,7 +375,7 @@ const formatDuration = (seconds) => {
 
                     {/* SUBMIT */}
 
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 md:p-6">
+                    <div className="bg-white border border-slate-200 rounded-xl p-5 md:p-6">
 
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
@@ -438,7 +384,7 @@ const formatDuration = (seconds) => {
                                     Ready to start?
                                 </h3>
 
-                                <p className="text-xs text-slate-400 mt-2">
+                                <p className="text-xs text-slate-500 mt-2">
                                     The scan will run according to the
                                     configuration provided above.
                                 </p>
@@ -447,7 +393,7 @@ const formatDuration = (seconds) => {
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition disabled:opacity-50"
+                                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-lg bg-[#075EB5] hover:bg-[#064D94] text-white text-sm font-semibold transition disabled:opacity-50 cursor-pointer"
                             >
                                 <FiPlay size={17} />
                                 {isSubmitting

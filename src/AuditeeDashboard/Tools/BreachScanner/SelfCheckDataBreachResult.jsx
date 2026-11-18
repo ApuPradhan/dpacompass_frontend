@@ -33,15 +33,15 @@ const titleCase = (value = "") =>
 const severityClass = (severity = "") => {
     switch (String(severity).toUpperCase()) {
         case "CRITICAL":
-            return "border-red-700 bg-red-950/40 text-red-300";
+            return "border-red-200 bg-red-50 text-red-700";
         case "HIGH":
-            return "border-orange-700 bg-orange-950/40 text-orange-300";
+            return "border-orange-200 bg-orange-50 text-orange-700";
         case "MEDIUM":
-            return "border-amber-700 bg-amber-950/40 text-amber-300";
+            return "border-amber-200 bg-amber-50 text-amber-700";
         case "LOW":
-            return "border-sky-700 bg-sky-950/40 text-sky-300";
+            return "border-sky-200 bg-sky-50 text-sky-700";
         default:
-            return "border-slate-700 bg-slate-800 text-slate-300";
+            return "border-slate-200 bg-slate-100 text-slate-500";
     }
 };
 
@@ -51,35 +51,35 @@ const assessmentStyle = (assessment = "") => {
             return {
                 icon: CheckCircle2,
                 text: "Passed",
-                className: "text-emerald-300",
+                className: "text-emerald-700",
             };
         case "PARTIAL":
         case "WARNING":
             return {
                 icon: AlertTriangle,
                 text: "Needs attention",
-                className: "text-amber-300",
+                className: "text-amber-700",
             };
         case "FAIL":
             return {
                 icon: XCircle,
                 text: "Not passed",
-                className: "text-red-300",
+                className: "text-red-700",
             };
         default:
             return {
                 icon: Info,
                 text: titleCase(assessment || "Not assessed"),
-                className: "text-slate-300",
+                className: "text-slate-500",
             };
     }
 };
 
 function MetricCard({ label, value, helper }) {
     return (
-        <div className="rounded-xl border border-slate-800 bg-[#0b1324] p-4">
-            <p className="text-sm text-slate-400">{label}</p>
-            <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+            <p className="text-sm text-slate-500">{label}</p>
+            <p className="mt-2 text-2xl font-semibold text-[#14213D]">{value}</p>
             {helper && <p className="mt-1 text-xs text-slate-500">{helper}</p>}
         </div>
     );
@@ -93,10 +93,10 @@ function ScannerResult({ scanner }) {
     const issues = Array.isArray(scanner.issues) ? scanner.issues : [];
 
     return (
-        <article className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+        <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                    <h4 className="font-semibold text-slate-100">
+                    <h4 className="font-semibold text-slate-800">
                         {titleCase(scanner.scanner)}
                     </h4>
                     <div className={`mt-2 flex items-center gap-2 text-sm ${assessment.className}`}>
@@ -106,7 +106,7 @@ function ScannerResult({ scanner }) {
                 </div>
 
                 <div className="text-left sm:text-right">
-                    <p className="text-lg font-semibold text-white">
+                    <p className="text-lg font-semibold text-[#14213D]">
                         {scanner.score ?? "—"}
                         <span className="text-sm font-normal text-slate-500">
                             {" "}/ {scanner.max_score ?? "—"}
@@ -121,10 +121,10 @@ function ScannerResult({ scanner }) {
                     {issues.map((issue, index) => (
                         <div
                             key={`${issue.title || "issue"}-${index}`}
-                            className="rounded-lg border border-slate-800 bg-[#070d1d] p-3"
+                            className="rounded-lg border border-slate-200 bg-[#F4F7FB] p-3"
                         >
                             <div className="flex flex-wrap items-center gap-2">
-                                <p className="text-sm font-medium text-slate-200">
+                                <p className="text-sm font-medium text-slate-700">
                                     {issue.title || "Finding"}
                                 </p>
                                 {issue.severity && (
@@ -137,17 +137,17 @@ function ScannerResult({ scanner }) {
                             </div>
 
                             {issue.description && (
-                                <p className="mt-2 text-sm leading-6 text-slate-400">
+                                <p className="mt-2 text-sm leading-6 text-slate-500">
                                     {issue.description}
                                 </p>
                             )}
 
                             {issue.recommendation && (
-                                <div className="mt-3 rounded-lg bg-indigo-500/5 p-3">
-                                    <p className="text-xs font-semibold uppercase tracking-wide text-indigo-300">
+                                <div className="mt-3 rounded-lg bg-blue-50 p-3">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-[#075EB5]">
                                         Recommended action
                                     </p>
-                                    <p className="mt-1 text-sm leading-6 text-slate-300">
+                                    <p className="mt-1 text-sm leading-6 text-slate-500">
                                         {issue.recommendation}
                                     </p>
                                 </div>
@@ -156,7 +156,7 @@ function ScannerResult({ scanner }) {
                     ))}
                 </div>
             ) : (
-                <p className="mt-4 rounded-lg bg-emerald-500/5 p-3 text-sm text-emerald-200">
+                <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">
                     No issues were reported by this check.
                 </p>
             )}
@@ -167,25 +167,25 @@ function ScannerResult({ scanner }) {
 const checklistStatusStyle = (status = "") => {
     switch (String(status).toUpperCase()) {
         case "COMPLIANT":
-            return "border-emerald-700 bg-emerald-950/40 text-emerald-300";
+            return "border-emerald-200 bg-emerald-50 text-emerald-700";
         case "NON_COMPLIANT":
-            return "border-red-700 bg-red-950/40 text-red-300";
+            return "border-red-200 bg-red-50 text-red-700";
         case "PARTIALLY_COMPLIANT":
-            return "border-amber-700 bg-amber-950/40 text-amber-300";
+            return "border-amber-200 bg-amber-50 text-amber-700";
         case "REVIEW":
-            return "border-blue-700 bg-blue-950/40 text-blue-300";
+            return "border-blue-200 bg-blue-50 text-blue-700";
         case "NOT_APPLICABLE":
-            return "border-violet-700 bg-violet-950/40 text-violet-300";
+            return "border-violet-200 bg-violet-50 text-violet-700";
         case "NOT_EVALUATED":
         default:
-            return "border-slate-700 bg-slate-800 text-slate-300";
+            return "border-slate-200 bg-slate-100 text-slate-500";
     }
 };
 
-function ChecklistMetric({ label, value, colorClass = "text-white" }) {
+function ChecklistMetric({ label, value, colorClass = "text-[#14213D]" }) {
     return (
-        <div className="rounded-lg border border-slate-800 bg-slate-900/60 p-3">
-            <p className="text-xs text-slate-400">{label}</p>
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
+            <p className="text-xs text-slate-500">{label}</p>
             <p className={`mt-1 text-2xl font-semibold ${colorClass}`}>
                 {value ?? 0}
             </p>
@@ -294,7 +294,7 @@ export default function SelfCheckDataBreachResult() {
                 title: "Potential personal information was detected",
                 description:
                     "The scan found patterns that may represent personal information. Please review the indicators below and confirm them manually.",
-                className: "border-amber-700/60 bg-amber-950/20 text-amber-200",
+                className: "border-amber-200 bg-amber-50 text-amber-800",
                 icon: AlertTriangle,
             };
         }
@@ -303,7 +303,7 @@ export default function SelfCheckDataBreachResult() {
             title: "No personal information patterns were detected",
             description:
                 "The scan did not identify personal information patterns on the pages it checked. This does not guarantee that the website contains no personal information.",
-            className: "border-sky-700/60 bg-sky-950/20 text-sky-200",
+            className: "border-sky-200/60 bg-sky-50 text-sky-800",
             icon: Info,
         };
     }, [scan.pii_detected]);
@@ -311,12 +311,12 @@ export default function SelfCheckDataBreachResult() {
     const PiiIcon = piiSummary.icon;
 
     return (
-        <div className="min-h-screen bg-[#070d1d] px-4 py-8 text-white">
-            <div className="mx-auto max-w-6xl">
+        <div className="min-h-screen bg-[#F4F7FB] px-4 py-6 text-slate-700 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-[1600px]">
                 <button
                     type="button"
                     onClick={() => navigate("/user/self-check/breach-scans")}
-                    className="mb-7 inline-flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300"
+                    className="mb-6 inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[#075EB5] transition hover:text-[#064D94]"
                 >
                     <ArrowLeft size={17} />
                     Back to My Scans
@@ -324,14 +324,14 @@ export default function SelfCheckDataBreachResult() {
 
                 <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                        <div className="flex items-center gap-2 text-sm text-emerald-300">
+                        <div className="flex items-center gap-2 text-sm text-emerald-700">
                             <CheckCircle2 size={17} />
                             Scan completed
                         </div>
                         <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">
                             PII-in-Transit Scanner Scan Result
                         </h1>
-                        <p className="mt-2 break-all text-sm text-slate-400">
+                        <p className="mt-2 break-all text-sm text-slate-500">
                             {publicAuditId}
                         </p>
                     </div>
@@ -340,7 +340,7 @@ export default function SelfCheckDataBreachResult() {
                         type="button"
                         onClick={() => loadResult(true)}
                         disabled={refreshing || loading}
-                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-[#0b1324] px-4 py-2.5 text-sm hover:bg-slate-800 disabled:opacity-60"
+                        className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-[#075EB5] disabled:opacity-60"
                     >
                         <RefreshCw
                             size={16}
@@ -353,14 +353,14 @@ export default function SelfCheckDataBreachResult() {
                 {error && (
                     <div
                         role="alert"
-                        className="mb-6 rounded-xl border border-red-800 bg-red-950/30 p-4 text-sm text-red-300"
+                        className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700"
                     >
                         {error}
                     </div>
                 )}
 
                 {loading ? (
-                    <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-800 bg-[#0b1324] p-12 text-slate-400">
+                    <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white p-12 text-slate-500">
                         <RefreshCw size={19} className="animate-spin" />
                         Loading scan result...
                     </div>
@@ -411,7 +411,7 @@ export default function SelfCheckDataBreachResult() {
                                             {indicators.map((indicator) => (
                                                 <span
                                                     key={indicator}
-                                                    className="rounded-full border border-current/20 bg-black/10 px-3 py-1 text-xs"
+                                                    className="rounded-full border border-current/20 bg-white/70 px-3 py-1 text-xs"
                                                 >
                                                     {titleCase(indicator)}
                                                 </span>
@@ -425,30 +425,30 @@ export default function SelfCheckDataBreachResult() {
                         <div className="space-y-4">
                             <details
                                 open
-                                className="overflow-hidden rounded-xl border border-slate-800 bg-[#0b1324]"
+                                className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
                             >
                                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5">
                                     <div>
-                                        <h2 className="font-semibold text-white">
+                                        <h2 className="font-semibold text-[#14213D]">
                                             1. Checklist-Based Assessment
                                         </h2>
-                                        <p className="mt-1 text-sm text-slate-400">
+                                        <p className="mt-1 text-sm text-slate-500">
                                             Compliance checklist results and recommendations.
                                         </p>
                                     </div>
-                                    <ChevronDown size={19} className="shrink-0 text-slate-400" />
+                                    <ChevronDown size={19} className="shrink-0 text-slate-500" />
                                 </summary>
 
-                                <div className="border-t border-slate-800 p-5">
+                                <div className="border-t border-slate-200 p-5">
                                     {checklistLoading ? (
-                                        <div className="flex items-center gap-3 py-8 text-sm text-slate-400">
+                                        <div className="flex items-center gap-3 py-8 text-sm text-slate-500">
                                             <RefreshCw size={17} className="animate-spin" />
                                             Loading checklist assessment...
                                         </div>
                                     ) : checklistError ? (
                                         <div
                                             role="alert"
-                                            className="rounded-lg border border-red-800 bg-red-950/30 p-4 text-sm text-red-300"
+                                            className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700"
                                         >
                                             {checklistError}
                                         </div>
@@ -459,27 +459,27 @@ export default function SelfCheckDataBreachResult() {
                                                 <ChecklistMetric
                                                     label="Compliant"
                                                     value={checklistSummary.COMPLIANT}
-                                                    colorClass="text-emerald-300"
+                                                    colorClass="text-emerald-700"
                                                 />
                                                 <ChecklistMetric
                                                     label="Non-compliant"
                                                     value={checklistSummary.NON_COMPLIANT}
-                                                    colorClass="text-red-300"
+                                                    colorClass="text-red-700"
                                                 />
                                                 <ChecklistMetric
                                                     label="Partially compliant"
                                                     value={checklistSummary.PARTIALLY_COMPLIANT}
-                                                    colorClass="text-amber-300"
+                                                    colorClass="text-amber-700"
                                                 />
                                                 <ChecklistMetric
                                                     label="Review"
                                                     value={checklistSummary.REVIEW}
-                                                    colorClass="text-blue-300"
+                                                    colorClass="text-blue-700"
                                                 />
                                             </div>
 
                                             {(checklistSummary.NOT_APPLICABLE ?? 0) > 0 && (
-                                                <p className="text-xs text-slate-400">
+                                                <p className="text-xs text-slate-500">
                                                     Not applicable: {checklistSummary.NOT_APPLICABLE}
                                                 </p>
                                             )}
@@ -493,14 +493,14 @@ export default function SelfCheckDataBreachResult() {
                                                         return (
                                                             <article
                                                                 key={checklist.id ?? checklist.code ?? index}
-                                                                className="rounded-lg border border-slate-800 bg-slate-900/60 p-4"
+                                                                className="rounded-lg border border-slate-200 bg-white p-4"
                                                             >
                                                                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                                                     <div>
-                                                                        <p className="text-sm font-semibold text-white">
+                                                                        <p className="text-sm font-semibold text-[#14213D]">
                                                                             {checklist.code || `Checklist ${index + 1}`}
                                                                         </p>
-                                                                        <p className="mt-1 text-sm leading-6 text-slate-300">
+                                                                        <p className="mt-1 text-sm leading-6 text-slate-500">
                                                                             {checklist.description || "No description available."}
                                                                         </p>
                                                                     </div>
@@ -512,11 +512,11 @@ export default function SelfCheckDataBreachResult() {
                                                                 </div>
 
                                                                 {checklist.comment && (
-                                                                    <div className="mt-3 rounded-md bg-[#070d1d] p-3">
+                                                                    <div className="mt-3 rounded-md bg-[#F4F7FB] p-3">
                                                                         <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                                                                             Assessment comment
                                                                         </p>
-                                                                        <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-300">
+                                                                        <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-slate-500">
                                                                             {checklist.comment}
                                                                         </p>
                                                                     </div>
@@ -531,13 +531,13 @@ export default function SelfCheckDataBreachResult() {
                                                     })}
                                                 </div>
                                             ) : (
-                                                <p className="rounded-lg border border-slate-800 bg-slate-900/50 p-4 text-sm text-slate-400">
+                                                <p className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
 No evaluated checklist questions are available for this audit.
                                                 </p>
                                             )}
                                         </div>
                                     ) : (
-                                        <p className="text-sm text-slate-400">
+                                        <p className="text-sm text-slate-500">
                                             Checklist assessment is not available.
                                         </p>
                                     )}
@@ -546,23 +546,23 @@ No evaluated checklist questions are available for this audit.
 
                             <details
                                 open
-                                className="overflow-hidden rounded-xl border border-slate-800 bg-[#0b1324]"
+                                className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
                             >
                                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5">
                                     <div>
-                                        <h2 className="font-semibold text-white">
+                                        <h2 className="font-semibold text-[#14213D]">
                                             2. Technical Scan Results
                                         </h2>
-                                        <p className="mt-1 text-sm text-slate-400">
+                                        <p className="mt-1 text-sm text-slate-500">
                                             Website security checks and technical findings.
                                         </p>
                                     </div>
-                                    <ChevronDown size={19} className="shrink-0 text-slate-400" />
+                                    <ChevronDown size={19} className="shrink-0 text-slate-500" />
                                 </summary>
 
-                                <div className="space-y-6 border-t border-slate-800 p-5">
+                                <div className="space-y-6 border-t border-slate-200 p-5">
                                     <div>
-                                        <h3 className="mb-3 font-semibold text-slate-200">
+                                        <h3 className="mb-3 font-semibold text-slate-700">
                                             Scan overview
                                         </h3>
                                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -587,11 +587,11 @@ No evaluated checklist questions are available for this audit.
                                     </div>
 
                                     {!executionGate.security_scans_run && (
-                                        <div className="rounded-lg border border-amber-700/60 bg-amber-950/20 p-4">
-                                            <p className="font-medium text-amber-200">
+                                        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+                                            <p className="font-medium text-amber-800">
                                                 Security checks were not run
                                             </p>
-                                            <p className="mt-1 text-sm leading-6 text-amber-100/80">
+                                            <p className="mt-1 text-sm leading-6 text-amber-800">
                                                 The initial scan did not detect personal information
                                                 patterns, so the additional website security checks
                                                 were skipped according to the scan settings.
@@ -600,19 +600,19 @@ No evaluated checklist questions are available for this audit.
                                     )}
 
                                     <div>
-                                        <h3 className="mb-3 font-semibold text-slate-200">
+                                        <h3 className="mb-3 font-semibold text-slate-700">
                                             Findings by severity
                                         </h3>
                                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
                                             {["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"].map((level) => (
                                                 <div
                                                     key={level}
-                                                    className="rounded-lg border border-slate-800 bg-slate-900/60 p-3"
+                                                    className="rounded-lg border border-slate-200 bg-white p-3"
                                                 >
                                                     <p className="text-xs text-slate-500">
                                                         {titleCase(level)}
                                                     </p>
-                                                    <p className="mt-1 text-xl font-semibold text-slate-100">
+                                                    <p className="mt-1 text-xl font-semibold text-slate-800">
                                                         {severityCounts[level] ?? 0}
                                                     </p>
                                                 </div>
@@ -622,7 +622,7 @@ No evaluated checklist questions are available for this audit.
 
                                     {scanners.length > 0 ? (
                                         <div>
-                                            <h3 className="mb-3 font-semibold text-slate-200">
+                                            <h3 className="mb-3 font-semibold text-slate-700">
                                                 Individual security checks
                                             </h3>
                                             <div className="space-y-3">
@@ -635,11 +635,11 @@ No evaluated checklist questions are available for this audit.
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-5">
-                                            <p className="font-medium text-slate-200">
+                                        <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
+                                            <p className="font-medium text-slate-700">
                                                 No additional security checks were performed
                                             </p>
-                                            <p className="mt-1 text-sm leading-6 text-slate-400">
+                                            <p className="mt-1 text-sm leading-6 text-slate-500">
                                                 The scanner did not identify personal information
                                                 patterns during its initial check. As a result, the
                                                 additional security checks were skipped.
@@ -649,14 +649,14 @@ No evaluated checklist questions are available for this audit.
 
                                     {skippedScanners.length > 0 && (
                                         <div>
-                                            <h3 className="mb-2 font-semibold text-slate-200">
+                                            <h3 className="mb-2 font-semibold text-slate-700">
                                                 Checks not performed
                                             </h3>
                                             <div className="flex flex-wrap gap-2">
                                                 {skippedScanners.map((scanner) => (
                                                     <span
                                                         key={scanner}
-                                                        className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-slate-300"
+                                                        className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-500"
                                                     >
                                                         {titleCase(scanner)}
                                                     </span>
@@ -665,22 +665,22 @@ No evaluated checklist questions are available for this audit.
                                         </div>
                                     )}
 
-                                    <div className="grid gap-3 border-t border-slate-800 pt-5 sm:grid-cols-2 lg:grid-cols-3">
+                                    <div className="grid gap-3 border-t border-slate-200 pt-5 sm:grid-cols-2 lg:grid-cols-3">
                                         <div>
                                             <p className="text-xs text-slate-500">Scan started</p>
-                                            <p className="mt-1 text-sm text-slate-300">
+                                            <p className="mt-1 text-sm text-slate-500">
                                                 {formatDate(result.started_at)}
                                             </p>
                                         </div>
                                         <div>
                                             <p className="text-xs text-slate-500">Scan completed</p>
-                                            <p className="mt-1 text-sm text-slate-300">
+                                            <p className="mt-1 text-sm text-slate-500">
                                                 {formatDate(result.completed_at)}
                                             </p>
                                         </div>
                                         <div>
                                             <p className="text-xs text-slate-500">Execution mode</p>
-                                            <p className="mt-1 text-sm text-slate-300">
+                                            <p className="mt-1 text-sm text-slate-500">
                                                 {titleCase(result.execution_mode || "Not available")}
                                             </p>
                                         </div>
@@ -690,7 +690,7 @@ No evaluated checklist questions are available for this audit.
                         </div>
 
                         {result.error_message && (
-                            <div className="mt-6 rounded-xl border border-red-800 bg-red-950/20 p-4 text-sm text-red-200">
+                            <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                                 {result.error_message}
                             </div>
                         )}

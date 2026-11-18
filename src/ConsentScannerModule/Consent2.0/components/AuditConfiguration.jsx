@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 const MIN_PAGES = 1;
-const MAX_PAGES = 1000;
+const MAX_PAGES = 1000000000000;
 const DEFAULT_PAGES = 20;
 
 const AuditConfiguration = ({ onStartAudit }) => {
@@ -111,15 +111,7 @@ const AuditConfiguration = ({ onStartAudit }) => {
     };
 
     return (
-        <div className="mx-auto w-full max-w-4xl">
-
-            {/* HEADER */}
-            <div className="mb-8">
-                <p className="mt-2 max-w-3xl text-base leading-7 text-slate-400">
-                    Provide the website details required to begin the DPDP
-                    consent and notice assessment.
-                </p>
-            </div>
+        <div className="mx-auto w-full max-w-5xl text-slate-800">
 
             {/* CONFIGURATION CARD */}
             <form
@@ -128,26 +120,26 @@ const AuditConfiguration = ({ onStartAudit }) => {
                     overflow-hidden
                     rounded-xl
                     border
-                    border-slate-800
-                    bg-slate-900/70
+                    border-slate-200
+                    bg-white
                     shadow-lg
-                    shadow-black/10
+                    shadow-slate-200/70
                 "
             >
 
                 {/* WEBSITE URL */}
                 <div className="p-6">
                     <div className="mb-5 flex items-center gap-2.5">
-                        <Globe2 className="h-5 w-5 text-indigo-400" />
+                        <Globe2 className="h-5 w-5 text-blue-700" />
 
-                        <h2 className="text-base font-semibold text-slate-100">
+                        <h2 className="text-base font-semibold text-slate-900">
                             Target Website
                         </h2>
                     </div>
 
                     <label
                         htmlFor="audit-url"
-                        className="mb-2.5 block text-sm font-medium text-slate-300"
+                        className="mb-2.5 block text-sm font-medium text-slate-700"
                     >
                         Website URL <span className="text-red-400">*</span>
                     </label>
@@ -161,7 +153,7 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                 h-5
                                 w-5
                                 -translate-y-1/2
-                                text-slate-600
+                                text-slate-400
                             "
                         />
 
@@ -176,19 +168,19 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                 w-full
                                 rounded-lg
                                 border
-                                border-slate-700
-                                bg-slate-950/60
+                                border-slate-300
+                                bg-white
                                 py-3
                                 pl-11
                                 pr-4
                                 text-base
-                                text-slate-200
-                                placeholder:text-slate-600
+                                text-slate-800
+                                placeholder:text-slate-400
                                 outline-none
                                 transition
-                                focus:border-indigo-500/50
+                                focus:border-blue-600
                                 focus:ring-2
-                                focus:ring-indigo-500/10
+                                focus:ring-blue-600/10
                             "
                         />
                     </div>
@@ -200,19 +192,19 @@ const AuditConfiguration = ({ onStartAudit }) => {
                 </div>
 
                 {/* MAXIMUM PAGES */}
-                <div className="border-t border-slate-800 p-6">
+                <div className="border-t border-slate-200 p-6">
 
                     <div className="mb-5 flex items-center gap-2.5">
-                        <Files className="h-5 w-5 text-indigo-400" />
+                        <Files className="h-5 w-5 text-blue-700" />
 
-                        <h2 className="text-base font-semibold text-slate-100">
+                        <h2 className="text-base font-semibold text-slate-900">
                             Crawl Configuration
                         </h2>
                     </div>
 
                     <label
                         htmlFor="max-pages"
-                        className="mb-2.5 block text-sm font-medium text-slate-300"
+                        className="mb-2.5 block text-sm font-medium text-slate-700"
                     >
                         Maximum Pages <span className="text-red-400">*</span>
                     </label>
@@ -231,40 +223,40 @@ const AuditConfiguration = ({ onStartAudit }) => {
                             w-full
                             rounded-lg
                             border
-                            border-slate-700
-                            bg-slate-950/60
+                            border-slate-300
+                            bg-white
                             px-4
                             py-3
                             text-base
-                            text-slate-200
-                            placeholder:text-slate-600
+                            text-slate-800
+                            placeholder:text-slate-400
                             outline-none
                             transition
-                            focus:border-indigo-500/50
+                            focus:border-blue-600
                             focus:ring-2
-                            focus:ring-indigo-500/10
+                            focus:ring-blue-600/10
                         "
                     />
 
                     <p className="mt-2.5 text-xs leading-5 text-slate-500">
                         Specify the maximum number of website pages the crawler
-                        should visit. Allowed range: 1–1000.
+                        should visit. 
                     </p>
 
                     {/* ESTIMATED TIME */}
-                    <div className="mt-5 rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-4">
+                    <div className="mt-5 rounded-lg border border-blue-200 bg-blue-50 p-4">
 
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-500/10">
-                                <Clock className="h-5 w-5 text-indigo-400" />
+                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100">
+                                <Clock className="h-5 w-5 text-blue-700" />
                             </div>
 
                             <div>
-                                <p className="text-sm font-medium text-slate-300">
+                                <p className="text-sm font-medium text-slate-700">
                                     Estimated Crawling Time
                                 </p>
 
-                                <p className="mt-1 text-xl font-semibold text-indigo-400">
+                                <p className="mt-1 text-xl font-semibold text-blue-700">
                                     {Number.isInteger(Number(maxPages)) &&
                                     Number(maxPages) >= MIN_PAGES &&
                                     Number(maxPages) <= MAX_PAGES
@@ -284,7 +276,7 @@ const AuditConfiguration = ({ onStartAudit }) => {
                 </div>
 
                 {/* AUTHENTICATION */}
-                <div className="border-t border-slate-800 p-6">
+                <div className="border-t border-slate-200 p-6">
 
                     <div className="flex items-start justify-between gap-5">
 
@@ -299,15 +291,15 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                     justify-center
                                     rounded-lg
                                     border
-                                    border-slate-700
-                                    bg-slate-950/50
+                                    border-slate-300
+                                    bg-slate-50
                                 "
                             >
                                 <LockKeyhole className="h-5 w-5 text-slate-400" />
                             </div>
 
                             <div>
-                                <h2 className="text-base font-semibold text-slate-100">
+                                <h2 className="text-base font-semibold text-slate-900">
                                     Authentication
                                 </h2>
 
@@ -341,8 +333,8 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                 duration-200
                                 ${
                                     authenticationRequired
-                                        ? "border-indigo-500/40 bg-indigo-500"
-                                        : "border-slate-700 bg-slate-800"
+                                        ? "border-blue-600 bg-[#075EB5]"
+                                        : "border-slate-300 bg-slate-200"
                                 }
                             `}
                         >
@@ -375,7 +367,7 @@ const AuditConfiguration = ({ onStartAudit }) => {
                             <div>
                                 <label
                                     htmlFor="audit-username"
-                                    className="mb-2.5 block text-sm font-medium text-slate-300"
+                                    className="mb-2.5 block text-sm font-medium text-slate-700"
                                 >
                                     Username
                                 </label>
@@ -389,7 +381,7 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                             h-5
                                             w-5
                                             -translate-y-1/2
-                                            text-slate-600
+                                            text-slate-400
                                         "
                                     />
 
@@ -405,19 +397,19 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                             w-full
                                             rounded-lg
                                             border
-                                            border-slate-700
-                                            bg-slate-950/60
+                                            border-slate-300
+                                            bg-white
                                             py-3
                                             pl-11
                                             pr-4
                                             text-base
-                                            text-slate-200
-                                            placeholder:text-slate-600
+                                            text-slate-800
+                                            placeholder:text-slate-400
                                             outline-none
                                             transition
-                                            focus:border-indigo-500/50
+                                            focus:border-blue-600
                                             focus:ring-2
-                                            focus:ring-indigo-500/10
+                                            focus:ring-blue-600/10
                                         "
                                     />
                                 </div>
@@ -427,7 +419,7 @@ const AuditConfiguration = ({ onStartAudit }) => {
                             <div>
                                 <label
                                     htmlFor="audit-password"
-                                    className="mb-2.5 block text-sm font-medium text-slate-300"
+                                    className="mb-2.5 block text-sm font-medium text-slate-700"
                                 >
                                     Password
                                 </label>
@@ -441,7 +433,7 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                             h-5
                                             w-5
                                             -translate-y-1/2
-                                            text-slate-600
+                                            text-slate-400
                                         "
                                     />
 
@@ -457,19 +449,19 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                             w-full
                                             rounded-lg
                                             border
-                                            border-slate-700
-                                            bg-slate-950/60
+                                            border-slate-300
+                                            bg-white
                                             py-3
                                             pl-11
                                             pr-11
                                             text-base
-                                            text-slate-200
-                                            placeholder:text-slate-600
+                                            text-slate-800
+                                            placeholder:text-slate-400
                                             outline-none
                                             transition
-                                            focus:border-indigo-500/50
+                                            focus:border-blue-600
                                             focus:ring-2
-                                            focus:ring-indigo-500/10
+                                            focus:ring-blue-600/10
                                         "
                                     />
 
@@ -490,9 +482,9 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                             right-3.5
                                             top-1/2
                                             -translate-y-1/2
-                                            text-slate-600
+                                            text-slate-400
                                             transition
-                                            hover:text-slate-400
+                                            hover:text-slate-700
                                         "
                                     >
                                         {showPassword ? (
@@ -516,13 +508,13 @@ const AuditConfiguration = ({ onStartAudit }) => {
                                 gap-2.5
                                 rounded-lg
                                 border
-                                border-indigo-500/10
-                                bg-indigo-500/5
+                                border-blue-200
+                                bg-blue-50
                                 px-4
                                 py-3
                             "
                         >
-                            <Info className="mt-0.5 h-4 w-4 shrink-0 text-indigo-400" />
+                            <Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-700" />
 
                             <p className="text-xs leading-5 text-slate-400">
                                 Credentials are used only to authenticate the
@@ -550,8 +542,8 @@ const AuditConfiguration = ({ onStartAudit }) => {
                         justify-between
                         gap-4
                         border-t
-                        border-slate-800
-                        bg-slate-950/20
+                        border-slate-200
+                        bg-slate-50
                         px-6
                         py-5
                         sm:flex-row
@@ -570,21 +562,21 @@ const AuditConfiguration = ({ onStartAudit }) => {
                             justify-center
                             gap-2
                             rounded-lg
-                            bg-indigo-500
+                            bg-[#075EB5]
                             px-5
                             py-3
                             text-sm
                             font-semibold
                             text-white
                             shadow-sm
-                            shadow-indigo-500/10
+                            shadow-blue-900/10
                             transition
-                            hover:bg-indigo-400
-                            active:bg-indigo-600
+                            hover:bg-[#064D94]
+                            active:bg-[#064D94]
                             focus:outline-none
                             cursor-pointer
                             focus:ring-2
-                            focus:ring-indigo-500/30
+                            focus:ring-blue-600/30
                         "
                     >
                         <Play className="h-4 w-4" />

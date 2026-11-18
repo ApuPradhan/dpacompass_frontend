@@ -12,11 +12,16 @@ import {
     ClipboardCheck,
     FileSearch,
     ChevronDown,
+    FileText,
+    Download,
+    Printer,
+    X,
 } from "lucide-react";
 
 import {
     getCompleteConsentScanResult,
     getConsentChecklistAssessment,
+    getSelfCheckConsentReport,
 } from "./selfCheckConsentApi";
 
 
@@ -47,24 +52,24 @@ const getStatusStyle = (status) => {
         case "COMPLETED":
         case "SUCCESS":
         case "PASS":
-            return "border-emerald-700 bg-emerald-950/40 text-emerald-300";
+            return "border-emerald-200 bg-emerald-50 text-emerald-700";
 
         case "PARTIALLY_COMPLIANT":
         case "NEED_REVIEW":
         case "WARNING":
-            return "border-amber-700 bg-amber-950/40 text-amber-300";
+            return "border-amber-200 bg-amber-50 text-amber-700";
 
         case "NON_COMPLIANT":
         case "FAILED":
         case "ERROR":
         case "FAIL":
-            return "border-red-700 bg-red-950/40 text-red-300";
+            return "border-red-200 bg-red-50 text-red-700";
 
         case "NOT_APPLICABLE":
-            return "border-blue-700 bg-blue-950/40 text-blue-300";
+            return "border-blue-200 bg-blue-50 text-blue-700";
 
         default:
-            return "border-slate-700 bg-slate-900 text-slate-300";
+            return "border-slate-200 bg-slate-100 text-slate-700";
     }
 };
 
@@ -152,8 +157,8 @@ function StatusBadge({ status }) {
 
 function SummaryCard({ title, count, color }) {
     return (
-        <div className="rounded-xl border border-slate-800 bg-[#0b1324] p-4">
-            <p className="text-sm text-slate-400">{title}</p>
+        <div className="rounded-xl border border-slate-200 bg-white p-4">
+            <p className="text-sm text-slate-600">{title}</p>
             <p className={`mt-2 text-2xl font-semibold ${color}`}>
                 {count}
             </p>
@@ -196,42 +201,42 @@ function ChecklistAssessment({ data, error, loading }) {
     }, [evaluatedItems]);
 
     return (
-        <section className="overflow-hidden rounded-xl border border-slate-800 bg-[#0b1324]">
+        <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
 
-            <div className="flex flex-col gap-2 border-b border-slate-800 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h2 className="flex items-center gap-2 text-xl font-semibold">
-                        <ClipboardCheck size={21} className="text-indigo-400" />
+                        <ClipboardCheck size={21} className="text-[#075EB5]" />
                         Checklist Assessment
                     </h2>
 
-                    <p className="mt-1 text-sm text-slate-400">
+                    <p className="mt-1 text-sm text-slate-600">
                         Checklist-based DPDP compliance assessment.
                     </p>
                 </div>
 
                 {data && (
-                    <span className="rounded-full border border-slate-700 px-3 py-1 text-xs text-slate-300">
+                    <span className="rounded-full border border-slate-200 px-3 py-1 text-xs text-slate-700">
                         {evaluatedItems.length} Evaluated Checklist Items
                     </span>
                 )}
             </div>
 
             {loading ? (
-                <div className="flex items-center gap-3 p-8 text-sm text-slate-400">
+                <div className="flex items-center gap-3 p-8 text-sm text-slate-600">
                     <LoaderCircle size={20} className="animate-spin" />
                     Loading checklist assessment...
                 </div>
             ) : error ? (
-                <div className="flex items-start gap-3 p-6 text-sm text-red-300">
+                <div className="flex items-start gap-3 p-6 text-sm text-red-700">
                     <AlertTriangle size={20} />
                     <div>
                         <p className="font-medium">Unable to load checklist assessment.</p>
-                        <p className="mt-1 text-red-300/80">{error}</p>
+                        <p className="mt-1 text-red-700/80">{error}</p>
                     </div>
                 </div>
             ) : !data ? (
-                <p className="p-6 text-sm text-slate-400">
+                <p className="p-6 text-sm text-slate-600">
                     Checklist assessment is not available.
                 </p>
             ) : (
@@ -266,7 +271,7 @@ function ChecklistAssessment({ data, error, loading }) {
                     </div>
 
                     <div className="mb-4 flex items-center justify-between">
-                        <h3 className="font-medium text-slate-200">
+                        <h3 className="font-medium text-slate-800">
                             Checklist Questions
                         </h3>
 
@@ -276,7 +281,7 @@ function ChecklistAssessment({ data, error, loading }) {
                     </div>
 
                     {evaluatedItems.length === 0 ? (
-                        <p className="rounded-lg border border-slate-800 p-6 text-sm text-slate-400">
+                        <p className="rounded-lg border border-slate-200 p-6 text-sm text-slate-600">
                             No evaluated checklist questions are available.
                         </p>
                     ) : (
@@ -285,7 +290,8 @@ function ChecklistAssessment({ data, error, loading }) {
                             {evaluatedItems.map((item, index) => (
                                 <details
                                     key={`${index}-${item.question || "item"}`}
-                                    className="group rounded-lg border border-slate-800 bg-slate-950/40"
+                                    open={index === 0}
+                                    className="group rounded-xl border border-slate-200 bg-white"
                                 >
                                     <summary className="flex cursor-pointer list-none items-start justify-between gap-4 p-4">
 
@@ -294,7 +300,7 @@ function ChecklistAssessment({ data, error, loading }) {
                                                 {String(index + 1).padStart(2, "0")}
                                             </span>
 
-                                            <p className="text-sm leading-6 text-slate-200">
+                                            <p className="text-sm leading-6 text-slate-800">
                                                 {item.question || item.title || "Checklist item"}
                                             </p>
                                         </div>
@@ -309,13 +315,13 @@ function ChecklistAssessment({ data, error, loading }) {
 
                                     </summary>
 
-                                    <div className="border-t border-slate-800 px-4 py-4 pl-10">
+                                    <div className="border-t border-slate-200 px-4 py-4 pl-10">
 
                                         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
                                             Assessment Comment
                                         </p>
 
-                                        <p className="text-sm leading-6 text-slate-400">
+                                        <p className="text-sm leading-6 text-slate-600">
                                             {item.comment || "No assessment comment available."}
                                         </p>
 
@@ -478,11 +484,11 @@ const getStepOutcome = (step, summary) => {
 
 const getOutcomeStyle = (tone) => {
     const styles = {
-        success: "border-emerald-800 bg-emerald-950/40 text-emerald-300",
-        warning: "border-amber-800 bg-amber-950/40 text-amber-300",
-        danger: "border-red-800 bg-red-950/40 text-red-300",
-        info: "border-blue-800 bg-blue-950/40 text-blue-300",
-        neutral: "border-slate-700 bg-slate-900 text-slate-300",
+        success: "border-emerald-200 bg-emerald-50 text-emerald-700",
+        warning: "border-amber-200 bg-amber-50 text-amber-700",
+        danger: "border-red-200 bg-red-50 text-red-700",
+        info: "border-blue-200 bg-blue-50 text-blue-700",
+        neutral: "border-slate-200 bg-slate-100 text-slate-700",
     };
     return styles[tone] || styles.neutral;
 };
@@ -603,9 +609,9 @@ const getStepNarrative = (step, summary) => {
 
 function MetricTile({ label, value }) {
     return (
-        <div className="rounded-lg border border-slate-800 bg-[#0b1324] p-3">
+        <div className="rounded-lg border border-slate-200 bg-white p-3">
             <p className="text-xs leading-5 text-slate-500">{label}</p>
-            <p className="mt-1 text-xl font-semibold text-slate-100">
+            <p className="mt-1 text-xl font-semibold text-[#14213D]">
                 {formatMetricValue(value)}
             </p>
         </div>
@@ -617,42 +623,42 @@ function TechnicalAssessment({ data, error, loading }) {
     const audit = data?.audit || {};
 
     return (
-        <section className="overflow-hidden rounded-xl border border-slate-800 bg-[#0b1324]">
-            <div className="border-b border-slate-800 px-5 py-5">
+        <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <div className="border-b border-slate-200 px-5 py-5">
                 <h2 className="flex items-center gap-2 text-xl font-semibold">
-                    <FileSearch size={21} className="text-indigo-400" />
+                    <FileSearch size={21} className="text-[#075EB5]" />
                     Technical Assessment
                 </h2>
-                <p className="mt-1 text-sm text-slate-400">
+                <p className="mt-1 text-sm text-slate-600">
                     Website observations and findings presented in a readable format.
                 </p>
             </div>
 
             {loading ? (
-                <div className="flex items-center gap-3 p-8 text-sm text-slate-400">
+                <div className="flex items-center gap-3 p-8 text-sm text-slate-600">
                     <LoaderCircle size={20} className="animate-spin" />
                     Loading technical assessment...
                 </div>
             ) : error ? (
-                <div className="flex items-start gap-3 p-6 text-sm text-red-300">
+                <div className="flex items-start gap-3 p-6 text-sm text-red-700">
                     <AlertTriangle size={20} />
                     <div>
                         <p className="font-medium">Unable to load technical assessment.</p>
-                        <p className="mt-1 text-red-300/80">{error}</p>
+                        <p className="mt-1 text-red-700/80">{error}</p>
                     </div>
                 </div>
             ) : !data ? (
-                <p className="p-6 text-sm text-slate-400">
+                <p className="p-6 text-sm text-slate-600">
                     Technical assessment is not available.
                 </p>
             ) : (
                 <div className="p-5">
-                    <div className="mb-6 rounded-lg border border-slate-800 bg-slate-950/40 p-4">
-                        <h3 className="mb-4 font-medium text-slate-200">Scan Information</h3>
+                    <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                        <h3 className="mb-4 font-medium text-slate-800">Scan Information</h3>
                         <div className="grid gap-4 sm:grid-cols-2">
                             <div>
                                 <p className="text-xs text-slate-500">Website</p>
-                                <p className="mt-1 break-all text-sm text-slate-300">
+                                <p className="mt-1 break-all text-sm text-slate-700">
                                     {audit.url || "Not available"}
                                 </p>
                             </div>
@@ -662,22 +668,22 @@ function TechnicalAssessment({ data, error, loading }) {
                             </div>
                             <div>
                                 <p className="text-xs text-slate-500">Started At</p>
-                                <p className="mt-1 text-sm text-slate-300">{formatDate(audit.started_at)}</p>
+                                <p className="mt-1 text-sm text-slate-700">{formatDate(audit.started_at)}</p>
                             </div>
                             <div>
                                 <p className="text-xs text-slate-500">Completed At</p>
-                                <p className="mt-1 text-sm text-slate-300">{formatDate(audit.completed_at)}</p>
+                                <p className="mt-1 text-sm text-slate-700">{formatDate(audit.completed_at)}</p>
                             </div>
                         </div>
                     </div>
 
                     <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                        <h3 className="font-medium text-slate-200">Technical Assessment Steps</h3>
+                        <h3 className="font-medium text-slate-800">Technical Assessment Steps</h3>
                         <span className="text-xs text-slate-500">{steps.length} Steps</span>
                     </div>
 
                     {steps.length === 0 ? (
-                        <p className="rounded-lg border border-slate-800 p-6 text-sm text-slate-400">
+                        <p className="rounded-lg border border-slate-200 p-6 text-sm text-slate-600">
                             No technical steps were returned by the scanner.
                         </p>
                     ) : (
@@ -693,13 +699,14 @@ function TechnicalAssessment({ data, error, loading }) {
                                 return (
                                     <details
                                         key={step.step_id || index}
-                                        className="group rounded-lg border border-slate-800 bg-slate-950/40"
+                                        open={index === 0}
+                                        className="group rounded-xl border border-slate-200 bg-white"
                                     >
                                         <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-4">
                                             <div className="flex min-w-0 items-center gap-3">
                                                 {getStepStatusIcon(step.status)}
                                                 <div className="min-w-0">
-                                                    <p className="wrap-break-word text-sm font-medium text-slate-200">
+                                                    <p className="wrap-break-word text-sm font-medium text-slate-800">
                                                         {getStepTitle(step, index)}
                                                     </p>
                                                     <p className="mt-1 text-xs text-slate-500">
@@ -715,7 +722,7 @@ function TechnicalAssessment({ data, error, loading }) {
                                             </div>
                                         </summary>
 
-                                        <div className="border-t border-slate-800 p-4">
+                                        <div className="border-t border-slate-200 p-4">
                                             {metrics.length > 0 && (
                                                 <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-3">
                                                     {metrics.map((metric) => (
@@ -728,13 +735,13 @@ function TechnicalAssessment({ data, error, loading }) {
                                                 </div>
                                             )}
 
-                                            <div className="rounded-lg border border-slate-800 bg-[#0b1324] p-4">
+                                            <div className="rounded-lg border border-slate-200 bg-white p-4">
                                                 <h4 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
                                                     What the scanner found
                                                 </h4>
                                                 <ul className="space-y-2">
                                                     {narrative.map((line, lineIndex) => (
-                                                        <li key={lineIndex} className="flex gap-2 text-sm leading-6 text-slate-300">
+                                                        <li key={lineIndex} className="flex gap-2 text-sm leading-6 text-slate-700">
                                                             <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-400" />
                                                             <span>{line}</span>
                                                         </li>
@@ -748,8 +755,8 @@ function TechnicalAssessment({ data, error, loading }) {
                                                         Forms inspected
                                                     </h4>
                                                     {forms.map((formItem, formIndex) => (
-                                                        <div key={`${formItem.form?.id || "form"}-${formIndex}`} className="rounded-lg border border-slate-800 p-3">
-                                                            <p className="text-sm font-medium text-slate-200">
+                                                        <div key={`${formItem.form?.id || "form"}-${formIndex}`} className="rounded-lg border border-slate-200 p-3">
+                                                            <p className="text-sm font-medium text-slate-800">
                                                                 {formItem.form?.name || formItem.form?.id || `Form ${formIndex + 1}`}
                                                             </p>
                                                             <p className="mt-1 break-all text-xs text-slate-500">
@@ -757,12 +764,12 @@ function TechnicalAssessment({ data, error, loading }) {
                                                             </p>
                                                             <div className="mt-2 flex flex-wrap gap-2">
                                                                 <StatusBadge status={formItem.status || "UNKNOWN"} />
-                                                                <span className="rounded-full border border-slate-700 px-2.5 py-1 text-xs text-slate-400">
+                                                                <span className="rounded-full border border-slate-200 px-2.5 py-1 text-xs text-slate-600">
                                                                     {formItem.collection_points_count || 0} collection points
                                                                 </span>
                                                             </div>
                                                             {(formItem.errors || []).length > 0 && (
-                                                                <p className="mt-3 text-xs leading-5 text-amber-300">
+                                                                <p className="mt-3 text-xs leading-5 text-amber-700">
                                                                     Visual evidence could not be fully captured for this form.
                                                                 </p>
                                                             )}
@@ -772,15 +779,15 @@ function TechnicalAssessment({ data, error, loading }) {
                                             )}
 
                                             {step.step_id === "STEP-13" && Array.isArray(payload.records) && payload.records.length > 0 && (
-                                                <div className="mt-4 rounded-lg border border-slate-800 p-3">
+                                                <div className="mt-4 rounded-lg border border-slate-200 p-3">
                                                     <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
                                                         Sample records requiring review
                                                     </h4>
                                                     <div className="space-y-2">
                                                         {payload.records.slice(0, 5).map((record, recordIndex) => (
-                                                            <div key={`${record.name || "record"}-${recordIndex}`} className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-800 pb-2 last:border-0 last:pb-0">
+                                                            <div key={`${record.name || "record"}-${recordIndex}`} className="flex flex-wrap items-start justify-between gap-2 border-b border-slate-200 pb-2 last:border-0 last:pb-0">
                                                                 <div>
-                                                                    <p className="text-sm text-slate-200">{record.name || "Unnamed record"}</p>
+                                                                    <p className="text-sm text-slate-800">{record.name || "Unnamed record"}</p>
                                                                     <p className="text-xs text-slate-500">{formatMetricLabel(record.type || "storage item")}</p>
                                                                 </div>
                                                                 <StatusBadge status={record.result || "NEED_REVIEW"} />
@@ -796,7 +803,7 @@ function TechnicalAssessment({ data, error, loading }) {
                                             )}
 
                                             {Array.isArray(payload.processing_activities) && payload.processing_activities.length > 0 && (
-                                                <div className="mt-4 rounded-lg border border-slate-800 p-3">
+                                                <div className="mt-4 rounded-lg border border-slate-200 p-3">
                                                     <h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
                                                         Activities requiring attention
                                                     </h4>
@@ -805,12 +812,12 @@ function TechnicalAssessment({ data, error, loading }) {
                                                             .filter((activity) => activity.classification === "uncertain" || activity.consent_dependent)
                                                             .slice(0, 5)
                                                             .map((activity, activityIndex) => (
-                                                                <div key={`${activity.type || "activity"}-${activityIndex}`} className="border-b border-slate-800 pb-3 last:border-0 last:pb-0">
-                                                                    <p className="text-sm font-medium text-slate-200">
+                                                                <div key={`${activity.type || "activity"}-${activityIndex}`} className="border-b border-slate-200 pb-3 last:border-0 last:pb-0">
+                                                                    <p className="text-sm font-medium text-slate-800">
                                                                         {formatMetricLabel(activity.type || "Processing activity")}
                                                                     </p>
                                                                     {activity.reason && (
-                                                                        <p className="mt-1 text-sm leading-5 text-slate-400">{activity.reason}</p>
+                                                                        <p className="mt-1 text-sm leading-5 text-slate-600">{activity.reason}</p>
                                                                     )}
                                                                     {activity.page_url && (
                                                                         <p className="mt-1 break-all text-xs text-slate-500">{activity.page_url}</p>
@@ -822,11 +829,11 @@ function TechnicalAssessment({ data, error, loading }) {
                                             )}
 
                                             {payload.validation?.warnings?.length > 0 && (
-                                                <div className="mt-4 rounded-lg border border-amber-900/70 bg-amber-950/20 p-3">
-                                                    <p className="text-xs font-semibold uppercase tracking-wide text-amber-300">
+                                                <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-3">
+                                                    <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
                                                         Review notes
                                                     </p>
-                                                    <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-amber-200/80">
+                                                    <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-amber-800">
                                                         {payload.validation.warnings.slice(0, 5).map((warning, warningIndex) => (
                                                             <li key={warningIndex}>{warning}</li>
                                                         ))}
@@ -845,6 +852,130 @@ function TechnicalAssessment({ data, error, loading }) {
     );
 }
 
+
+function ConsentReportModal({ html, scanId, onClose }) {
+    const [actionError, setActionError] = useState("");
+
+    const handleDownloadHtml = () => {
+        try {
+            const blob = new Blob([html], {
+                type: "text/html;charset=utf-8",
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = `${scanId}-consent-report.html`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        } catch {
+            setActionError("Unable to download the HTML report.");
+        }
+    };
+
+    const handleDownloadPdf = () => {
+        setActionError("");
+        const printWindow = window.open("", "_blank");
+
+        if (!printWindow) {
+            setActionError("Pop-up blocked. Please allow pop-ups and try again.");
+            return;
+        }
+
+        try {
+            printWindow.document.open();
+            printWindow.document.write(html);
+            printWindow.document.close();
+
+            const printReport = () => {
+                printWindow.focus();
+                printWindow.print();
+            };
+
+            if (printWindow.document.readyState === "complete") {
+                printReport();
+            } else {
+                printWindow.onload = printReport;
+            }
+        } catch {
+            printWindow.close();
+            setActionError("Unable to open the PDF print dialog.");
+        }
+    };
+
+    return (
+        <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-50/60 p-3 backdrop-blur-sm sm:p-5"
+            onClick={onClose}
+        >
+            <div
+                className="flex max-h-[95vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+                onClick={(event) => event.stopPropagation()}
+            >
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+                    <div className="flex items-center gap-3">
+                        <div className="rounded-lg bg-blue-50 p-2.5 text-[#075EB5]">
+                            <FileText size={21} />
+                        </div>
+                        <div>
+                            <h2 className="font-bold text-[#14213D]">
+                                Consent Assessment Report
+                            </h2>
+                            <p className="mt-1 text-xs text-slate-500">
+                                Scan ID: {scanId}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={handleDownloadHtml}
+                            className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-[#075EB5]"
+                        >
+                            <Download size={15} />
+                            Download HTML
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleDownloadPdf}
+                            className="flex cursor-pointer items-center gap-2 rounded-lg bg-[#075EB5] px-3 py-2 text-sm font-semibold text-[#14213D] transition hover:bg-[#064D94]"
+                        >
+                            <Printer size={15} />
+                            Save as PDF
+                        </button>
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="cursor-pointer rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-800"
+                        >
+                            <X size={20} />
+                        </button>
+                    </div>
+                </div>
+
+                {actionError && (
+                    <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm text-red-700">
+                        {actionError}
+                    </div>
+                )}
+
+                <div className="min-h-0 flex-1 bg-slate-100">
+                    <iframe
+                        title="Consent Scan Report"
+                        srcDoc={html}
+                        sandbox="allow-scripts allow-same-origin"
+                        className="h-full w-full border-0 bg-white"
+                        style={{ minHeight: "75vh", display: "block" }}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function SelfCheckScanResult() {
     const navigate = useNavigate();
     const { publicAuditId } = useParams();
@@ -859,6 +990,31 @@ export default function SelfCheckScanResult() {
     const [checklistError, setChecklistError] = useState("");
 
     const [refreshing, setRefreshing] = useState(false);
+    const [reportLoading, setReportLoading] = useState(false);
+    const [reportError, setReportError] = useState("");
+    const [reportModal, setReportModal] = useState(null);
+
+    const handleViewReport = async () => {
+        if (!publicAuditId || reportLoading) return;
+
+        try {
+            setReportLoading(true);
+            setReportError("");
+
+            const html = await getSelfCheckConsentReport(publicAuditId);
+
+            setReportModal({
+                scanId: publicAuditId,
+                html,
+            });
+        } catch (err) {
+            setReportError(
+                err.message || "Unable to load the consent report."
+            );
+        } finally {
+            setReportLoading(false);
+        }
+    };
 
     const loadResults = async (manual = false) => {
         if (!publicAuditId) {
@@ -916,9 +1072,9 @@ export default function SelfCheckScanResult() {
     const audit = technicalResult?.audit || {};
 
     return (
-        <div className="min-h-screen bg-[#070d1d] text-white">
+        <div className="min-h-screen bg-[#F4F7FB] text-[#14213D]">
 
-            <div className="mx-auto max-w-7xl px-4 py-8">
+            <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
 
                 {/* Header */}
 
@@ -928,7 +1084,7 @@ export default function SelfCheckScanResult() {
                         <button
                             type="button"
                             onClick={() => navigate("/user/self-check/scans")}
-                            className="mb-5 flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300"
+                            className="mb-5 flex items-center gap-2 text-sm text-[#075EB5] hover:text-[#064D94]"
                         >
                             <ArrowLeft size={18} />
                             Back to Scans
@@ -938,30 +1094,46 @@ export default function SelfCheckScanResult() {
                             Self-Check Scan Results
                         </h1>
 
-                        <p className="mt-2 break-all text-sm text-slate-400">
+                        <p className="mt-2 break-all text-sm text-slate-600">
                             {publicAuditId}
                         </p>
                     </div>
 
-                    <button
-                        type="button"
-                        onClick={() => loadResults(true)}
-                        disabled={refreshing}
-                        className="flex items-center justify-center gap-2 rounded-lg border border-slate-700 bg-[#0b1324] px-4 py-2.5 text-sm hover:bg-slate-800 disabled:opacity-60"
-                    >
-                        <RefreshCw
-                            size={16}
-                            className={refreshing ? "animate-spin" : ""}
-                        />
-                        Refresh Results
-                    </button>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <button
+                            type="button"
+                            onClick={handleViewReport}
+                            disabled={reportLoading}
+                            className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {reportLoading ? (
+                                <LoaderCircle size={16} className="animate-spin" />
+                            ) : (
+                                <FileText size={16} />
+                            )}
+                            {reportLoading ? "Loading Report..." : "Download Report"}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => loadResults(true)}
+                            disabled={refreshing}
+                            className="flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-blue-50 hover:text-[#075EB5] disabled:opacity-60"
+                        >
+                            <RefreshCw
+                                size={16}
+                                className={refreshing ? "animate-spin" : ""}
+                            />
+                            Refresh Results
+                        </button>
+                    </div>
 
                 </div>
 
 
                 {/* Scan information */}
 
-                <div className="mb-8 rounded-xl border border-slate-800 bg-[#0b1324] p-5">
+                <div className="mb-8 rounded-xl border border-slate-200 bg-white p-5">
 
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
@@ -970,8 +1142,8 @@ export default function SelfCheckScanResult() {
                                 Scan Overview
                             </p>
 
-                            <div className="flex items-center gap-2 text-sm text-slate-300">
-                                <Globe size={16} className="text-indigo-400" />
+                            <div className="flex items-center gap-2 text-sm text-slate-700">
+                                <Globe size={16} className="text-[#075EB5]" />
                                 <span className="break-all">
                                     {audit.url || "Loading website information..."}
                                 </span>
@@ -998,7 +1170,7 @@ export default function SelfCheckScanResult() {
 
                 <div className="mb-10">
                     <div className="mb-4">
-                        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400">
+                        <p className="text-xs font-semibold uppercase tracking-widest text-[#075EB5]">
                             Section 01
                         </p>
 
@@ -1019,7 +1191,7 @@ export default function SelfCheckScanResult() {
 
                 <div>
                     <div className="mb-4">
-                        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-400">
+                        <p className="text-xs font-semibold uppercase tracking-widest text-[#075EB5]">
                             Section 02
                         </p>
 
@@ -1036,12 +1208,37 @@ export default function SelfCheckScanResult() {
                 </div>
 
 
-                <div className="mt-8 border-t border-slate-800 pt-5 text-center text-xs text-slate-500">
+                <div className="mt-8 border-t border-slate-200 pt-5 text-center text-xs text-slate-500">
                     Self-Check Consent Scanner · DPACOMPASS
                 </div>
 
             </div>
 
+            {reportError && (
+                <div
+                    role="alert"
+                    className="fixed bottom-5 right-5 z-[110] max-w-md rounded-xl border border-red-200 bg-white p-4 text-sm text-red-700 shadow-xl"
+                >
+                    <div className="flex items-start justify-between gap-4">
+                        <p>{reportError}</p>
+                        <button
+                            type="button"
+                            onClick={() => setReportError("")}
+                            className="cursor-pointer text-red-500 transition hover:text-red-800"
+                        >
+                            <X size={17} />
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {reportModal && (
+                <ConsentReportModal
+                    html={reportModal.html}
+                    scanId={reportModal.scanId}
+                    onClose={() => setReportModal(null)}
+                />
+            )}
         </div>
     );
 }

@@ -1,5 +1,6 @@
 
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Search,
   Eye,
@@ -9,7 +10,6 @@ import {
   CalendarDays,
   Clock,
   FileText,
-  Building2,
   User,
   Lock,
   Server,
@@ -19,9 +19,10 @@ import {
   AlertCircle,
   CheckCircle2,
   EyeOff,
-  ShieldCheck,
   ClipboardList,
   CheckCircle,
+  ArrowLeft,
+  ArrowUpRight,
 } from "lucide-react";
 
 import { fetchWithAuth } from "../utilities/fetchWithAuth";
@@ -29,9 +30,9 @@ import { fetchWithAuth } from "../utilities/fetchWithAuth";
 const APPROVED_APPLICATIONS_ENDPOINT =
   "/api/applications/applications/approved/";
 
-// --------------------------------------------------
-// Helpers
-// --------------------------------------------------
+// ============================================================
+// HELPERS
+// ============================================================
 
 const formatDate = (dateString) => {
   if (!dateString) return "—";
@@ -70,18 +71,18 @@ const getStatusStyle = (status) => {
   const normalized = String(status || "").toLowerCase();
 
   if (normalized === "approved") {
-    return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
+    return "bg-emerald-50 text-emerald-700 border-emerald-200";
   }
 
   if (normalized === "pending") {
-    return "bg-amber-500/10 text-amber-400 border-amber-500/30";
+    return "bg-amber-50 text-amber-700 border-amber-200";
   }
 
   if (normalized === "rejected") {
-    return "bg-red-500/10 text-red-400 border-red-500/30";
+    return "bg-red-50 text-red-700 border-red-200";
   }
 
-  return "bg-gray-700/50 text-gray-300 border-gray-600";
+  return "bg-slate-100 text-slate-600 border-slate-200";
 };
 
 const getTypeIcon = (typeName) => {
@@ -122,9 +123,9 @@ const getCredentials = (application) => {
   return { username, password };
 };
 
-// --------------------------------------------------
-// Reusable detail item
-// --------------------------------------------------
+// ============================================================
+// REUSABLE DETAIL ITEM
+// ============================================================
 
 const DetailItem = ({
   icon: Icon,
@@ -133,15 +134,15 @@ const DetailItem = ({
   fullWidth = false,
 }) => (
   <div className={fullWidth ? "sm:col-span-2" : ""}>
-    <p className="mb-1.5 text-xs font-medium text-gray-400">
+    <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
       {label}
     </p>
 
-    <div className="flex items-start gap-2 break-words text-sm text-gray-200">
+    <div className="flex items-start gap-2 break-words text-sm text-slate-700">
       {Icon && (
         <Icon
           size={15}
-          className="mt-0.5 shrink-0 text-gray-500"
+          className="mt-0.5 shrink-0 text-slate-400"
         />
       )}
 
@@ -152,14 +153,11 @@ const DetailItem = ({
   </div>
 );
 
-// --------------------------------------------------
-// Application details modal
-// --------------------------------------------------
+// ============================================================
+// APPLICATION DETAILS MODAL
+// ============================================================
 
-const ApplicationDetailsModal = ({
-  application,
-  onClose,
-}) => {
+const ApplicationDetailsModal = ({ application, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   if (!application) return null;
@@ -193,16 +191,6 @@ const ApplicationDetailsModal = ({
           icon: Server,
         },
         {
-          label: "Version",
-          value: application.version,
-          icon: Layers,
-        },
-        {
-          label: "Department",
-          value: application.department,
-          icon: Building2,
-        },
-        {
           label: "Application URL",
           value: application.url,
           icon: Globe,
@@ -214,52 +202,41 @@ const ApplicationDetailsModal = ({
           icon: FileText,
           fullWidth: true,
         },
-        {
-          label: "Data Categories",
-          value: application.data_categories,
-          icon: ShieldCheck,
-          fullWidth: true,
-        },
-        {
-          label: "Remarks",
-          value: application.remarks,
-          icon: ClipboardList,
-          fullWidth: true,
-        },
       ],
     },
   ];
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-gray-700 bg-[#0f172a] shadow-2xl"
+        className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-start justify-between border-b border-gray-700 px-6 py-5">
+        <div className="flex items-start justify-between border-b border-slate-200 px-6 py-5">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-[#075EB5]">
               <FileText size={21} />
             </div>
 
             <div>
-              <h2 className="text-lg font-semibold text-white">
+              <h2 className="text-lg font-bold text-[#14213D]">
                 Application Details
               </h2>
 
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="mt-1 text-sm text-slate-500">
                 Complete information submitted for this application
               </p>
             </div>
           </div>
 
           <button
+            type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-800 hover:text-white"
+            className="cursor-pointer rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
             aria-label="Close modal"
           >
             <X size={20} />
@@ -268,20 +245,19 @@ const ApplicationDetailsModal = ({
 
         {/* Modal Content */}
         <div className="overflow-y-auto px-6 py-5">
-
           {/* Application Summary */}
-          <div className="mb-6 rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-4">
+          <div className="mb-6 rounded-xl border border-blue-100 bg-blue-50/70 p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-medium uppercase tracking-wide text-indigo-400">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#075EB5]">
                   Application
                 </p>
 
-                <h3 className="mt-1 text-lg font-semibold text-white">
+                <h3 className="mt-1 text-lg font-bold text-[#14213D]">
                   {application.name || "Unnamed Application"}
                 </h3>
 
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-slate-500">
                   Application ID: {application.id}
                 </p>
               </div>
@@ -302,13 +278,13 @@ const ApplicationDetailsModal = ({
 
             return (
               <div key={section.title} className="mb-6">
-                <div className="mb-4 flex items-center gap-2 border-b border-gray-700 pb-3">
+                <div className="mb-4 flex items-center gap-2 border-b border-slate-200 pb-3">
                   <SectionIcon
                     size={17}
-                    className="text-indigo-400"
+                    className="text-[#075EB5]"
                   />
 
-                  <h4 className="text-sm font-semibold text-white">
+                  <h4 className="text-sm font-bold text-[#14213D]">
                     {section.title}
                   </h4>
                 </div>
@@ -328,29 +304,28 @@ const ApplicationDetailsModal = ({
           {/* Credentials */}
           {hasCredentials && (
             <div className="mb-6">
-              <div className="mb-4 flex items-center gap-2 border-b border-gray-700 pb-3">
+              <div className="mb-4 flex items-center gap-2 border-b border-slate-200 pb-3">
                 <Lock
                   size={17}
-                  className="text-indigo-400"
+                  className="text-[#075EB5]"
                 />
 
-                <h4 className="text-sm font-semibold text-white">
+                <h4 className="text-sm font-bold text-[#14213D]">
                   Access Credentials
                 </h4>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 sm:grid-cols-2">
-
+              <div className="grid grid-cols-1 gap-4 rounded-xl border border-amber-200 bg-amber-50/60 p-4 sm:grid-cols-2">
                 {credentials.username !== undefined && (
                   <div>
-                    <p className="mb-1.5 text-xs font-medium text-gray-400">
+                    <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Username
                     </p>
 
-                    <div className="flex items-center gap-2 break-all text-sm font-medium text-gray-200">
+                    <div className="flex items-center gap-2 break-all text-sm font-medium text-slate-700">
                       <User
                         size={15}
-                        className="shrink-0 text-gray-500"
+                        className="shrink-0 text-slate-400"
                       />
 
                       {getValue(credentials.username)}
@@ -360,27 +335,28 @@ const ApplicationDetailsModal = ({
 
                 {credentials.password !== undefined && (
                   <div>
-                    <p className="mb-1.5 text-xs font-medium text-gray-400">
+                    <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
                       Password
                     </p>
 
                     <div className="flex items-center gap-2">
                       <Lock
                         size={15}
-                        className="shrink-0 text-gray-500"
+                        className="shrink-0 text-slate-400"
                       />
 
-                      <span className="break-all text-sm font-medium text-gray-200">
+                      <span className="break-all text-sm font-medium text-slate-700">
                         {showPassword
                           ? getValue(credentials.password)
                           : "••••••••••••"}
                       </span>
 
                       <button
+                        type="button"
                         onClick={() =>
                           setShowPassword((prev) => !prev)
                         }
-                        className="ml-auto rounded-md p-1.5 text-gray-400 transition hover:bg-gray-700 hover:text-white"
+                        className="ml-auto cursor-pointer rounded-md p-1.5 text-slate-500 transition hover:bg-amber-100 hover:text-slate-800"
                         title={
                           showPassword
                             ? "Hide password"
@@ -398,7 +374,7 @@ const ApplicationDetailsModal = ({
                 )}
               </div>
 
-              <p className="mt-2 text-xs text-amber-400/80">
+              <p className="mt-2 text-xs text-amber-700">
                 Handle these credentials securely.
               </p>
             </div>
@@ -406,13 +382,13 @@ const ApplicationDetailsModal = ({
 
           {/* Submission Information */}
           <div className="mb-2">
-            <div className="mb-4 flex items-center gap-2 border-b border-gray-700 pb-3">
+            <div className="mb-4 flex items-center gap-2 border-b border-slate-200 pb-3">
               <Clock
                 size={17}
-                className="text-indigo-400"
+                className="text-[#075EB5]"
               />
 
-              <h4 className="text-sm font-semibold text-white">
+              <h4 className="text-sm font-bold text-[#14213D]">
                 Submission Information
               </h4>
             </div>
@@ -426,12 +402,6 @@ const ApplicationDetailsModal = ({
 
               <DetailItem
                 icon={User}
-                label="Owner ID"
-                value={application.owner}
-              />
-
-              <DetailItem
-                icon={User}
                 label="Assigned Auditor ID"
                 value={application.auditor}
               />
@@ -440,10 +410,11 @@ const ApplicationDetailsModal = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex justify-end border-t border-gray-700 bg-[#111827] px-6 py-4">
+        <div className="flex justify-end border-t border-slate-200 bg-slate-50 px-6 py-4">
           <button
+            type="button"
             onClick={onClose}
-            className="rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700"
+            className="cursor-pointer rounded-lg bg-[#075EB5] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#064D94]"
           >
             Close
           </button>
@@ -453,11 +424,13 @@ const ApplicationDetailsModal = ({
   );
 };
 
-// --------------------------------------------------
-// Main Approved Applications Component
-// --------------------------------------------------
+// ============================================================
+// MAIN APPROVED APPLICATIONS COMPONENT
+// ============================================================
 
 const ApprovedApplications = () => {
+  const navigate = useNavigate();
+
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -543,84 +516,96 @@ const ApprovedApplications = () => {
   }, [applications]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0b1120] to-[#1e293b] px-4 py-6 text-white sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#F4F7FB] px-4 py-6 text-slate-800 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
 
         {/* Page Heading */}
         <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <div className="mb-2 flex items-center gap-2 text-sm font-medium text-indigo-400">
+            <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-[#075EB5]">
               <ClipboardList size={16} />
               Auditee Dashboard
             </div>
 
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-[#14213D] sm:text-3xl">
               Approved Applications
             </h1>
 
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-slate-500">
               View and track applications approved for audit.
             </p>
           </div>
 
-          <button
-            onClick={fetchApplications}
-            disabled={loading}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-700 bg-[#111827] px-4 py-2.5 text-sm font-medium text-gray-300 shadow-sm transition hover:border-indigo-500 hover:bg-[#1f2937] hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            <RefreshCw
-              size={16}
-              className={loading ? "animate-spin" : ""}
-            />
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/devdashboard")}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:text-[#075EB5]"
+            >
+              <ArrowLeft size={16} />
+              Back to Dashboard
+            </button>
 
-            Refresh
-          </button>
+            <button
+              type="button"
+              onClick={fetchApplications}
+              disabled={loading}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#075EB5] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#064D94] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <RefreshCw
+                size={16}
+                className={loading ? "animate-spin" : ""}
+              />
+
+              Refresh
+            </button>
+          </div>
         </div>
 
         {/* Summary Cards */}
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
 
           {/* Approved Count */}
-          <div className="rounded-xl border border-gray-700 bg-[#111827]/80 p-5 shadow-lg shadow-black/10">
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400">
+                <p className="text-sm font-medium text-slate-500">
                   Total Approved Applications
                 </p>
 
-                <p className="mt-2 text-3xl font-bold text-white">
+                <p className="mt-2 text-3xl font-bold text-[#14213D]">
                   {applications.length}
                 </p>
 
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-slate-400">
                   Applications approved for audit
                 </p>
               </div>
 
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
                 <CheckCircle size={23} />
               </div>
             </div>
           </div>
 
           {/* Application Types */}
-          <div className="rounded-xl border border-gray-700 bg-[#111827]/80 p-5 shadow-lg shadow-black/10">
+          <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-400">
+                <p className="text-sm font-medium text-slate-500">
                   Application Types
                 </p>
 
-                <p className="mt-2 text-3xl font-bold text-white">
+                <p className="mt-2 text-3xl font-bold text-[#14213D]">
                   {applicationTypeCount}
                 </p>
 
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-slate-400">
                   Different application categories
                 </p>
               </div>
 
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-[#075EB5]">
                 <Layers size={23} />
               </div>
             </div>
@@ -628,16 +613,16 @@ const ApprovedApplications = () => {
         </div>
 
         {/* Application Records */}
-        <div className="overflow-hidden rounded-xl border border-gray-700 bg-[#111827]/80 shadow-xl shadow-black/10">
+        <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
 
           {/* Table Toolbar */}
-          <div className="flex flex-col gap-4 border-b border-gray-700 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-base font-semibold text-white">
+              <h2 className="text-base font-bold text-[#14213D]">
                 Approved Application Records
               </h2>
 
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-slate-500">
                 {filteredApplications.length} application(s) found
               </p>
             </div>
@@ -645,7 +630,7 @@ const ApprovedApplications = () => {
             <div className="relative w-full sm:max-w-xs">
               <Search
                 size={17}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
               />
 
               <input
@@ -653,7 +638,7 @@ const ApprovedApplications = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search applications..."
-                className="w-full rounded-lg border border-gray-700 bg-[#1f2937] py-2.5 pl-10 pr-4 text-sm text-white outline-none transition placeholder:text-gray-500 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-lg border border-slate-200 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-[#075EB5] focus:ring-2 focus:ring-blue-100"
               />
             </div>
           </div>
@@ -663,10 +648,10 @@ const ApprovedApplications = () => {
             <div className="flex flex-col items-center justify-center py-20">
               <RefreshCw
                 size={28}
-                className="animate-spin text-indigo-400"
+                className="animate-spin text-[#075EB5]"
               />
 
-              <p className="mt-3 text-sm text-gray-400">
+              <p className="mt-3 text-sm text-slate-500">
                 Loading approved applications...
               </p>
             </div>
@@ -677,20 +662,21 @@ const ApprovedApplications = () => {
             <div className="flex flex-col items-center justify-center px-5 py-16 text-center">
               <AlertCircle
                 size={32}
-                className="text-red-400"
+                className="text-red-500"
               />
 
-              <p className="mt-3 font-semibold text-white">
+              <p className="mt-3 font-semibold text-[#14213D]">
                 Failed to load applications
               </p>
 
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="mt-1 text-sm text-slate-500">
                 {error}
               </p>
 
               <button
+                type="button"
                 onClick={fetchApplications}
-                className="mt-5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+                className="mt-5 cursor-pointer rounded-lg bg-[#075EB5] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#064D94]"
               >
                 Try Again
               </button>
@@ -702,27 +688,27 @@ const ApprovedApplications = () => {
             !error &&
             filteredApplications.length === 0 && (
               <div className="flex flex-col items-center justify-center px-5 py-20 text-center">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-gray-700 bg-[#1f2937]">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
                   {search ? (
                     <Search
                       size={24}
-                      className="text-gray-400"
+                      className="text-slate-400"
                     />
                   ) : (
                     <CheckCircle2
                       size={25}
-                      className="text-emerald-400"
+                      className="text-emerald-500"
                     />
                   )}
                 </div>
 
-                <h3 className="mt-4 text-base font-semibold text-white">
+                <h3 className="mt-4 text-base font-bold text-[#14213D]">
                   {search
                     ? "No matching applications"
                     : "No approved applications"}
                 </h3>
 
-                <p className="mt-1 max-w-sm text-sm text-gray-400">
+                <p className="mt-1 max-w-sm text-sm text-slate-500">
                   {search
                     ? "Try changing your search keywords."
                     : "You currently have no approved applications."}
@@ -737,35 +723,35 @@ const ApprovedApplications = () => {
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[900px] text-left">
 
-                  <thead className="bg-[#0f172a]/90">
-                    <tr className="border-b border-gray-700">
-                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                  <thead className="bg-[#EAF3FF]">
+                    <tr className="border-b border-blue-100">
+                      <th className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-[#173B70]">
                         Application
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                      <th className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-[#173B70]">
                         Type
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                      <th className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-[#173B70]">
                         Application URL
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                      <th className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-[#173B70]">
                         Submission Date
                       </th>
 
-                      <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
+                      <th className="px-5 py-4 text-xs font-bold uppercase tracking-wider text-[#173B70]">
                         Status
                       </th>
 
-                      <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wider text-gray-400">
+                      <th className="px-5 py-4 text-right text-xs font-bold uppercase tracking-wider text-[#173B70]">
                         Action
                       </th>
                     </tr>
                   </thead>
 
-                  <tbody className="divide-y divide-gray-700">
+                  <tbody className="divide-y divide-slate-100">
                     {filteredApplications.map((application) => {
                       const TypeIcon = getTypeIcon(
                         application.type_name
@@ -774,22 +760,22 @@ const ApprovedApplications = () => {
                       return (
                         <tr
                           key={application.id}
-                          className="transition hover:bg-[#2a3446]/60"
+                          className="transition hover:bg-blue-50/50"
                         >
                           {/* Application Name */}
                           <td className="px-5 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
+                              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-[#075EB5]">
                                 <TypeIcon size={19} />
                               </div>
 
                               <div>
-                                <p className="text-sm font-semibold text-white">
+                                <p className="text-sm font-semibold text-[#14213D]">
                                   {application.name ||
                                     "Unnamed Application"}
                                 </p>
 
-                                <p className="mt-1 text-xs text-gray-500">
+                                <p className="mt-1 text-xs text-slate-400">
                                   ID: {application.id}
                                 </p>
                               </div>
@@ -798,7 +784,7 @@ const ApprovedApplications = () => {
 
                           {/* Application Type */}
                           <td className="px-5 py-4">
-                            <span className="text-sm text-gray-300">
+                            <span className="text-sm text-slate-600">
                               {application.type_name || "—"}
                             </span>
                           </td>
@@ -810,7 +796,7 @@ const ApprovedApplications = () => {
                                 href={application.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex max-w-[190px] items-center gap-1.5 truncate text-sm text-indigo-400 transition hover:text-indigo-300 hover:underline"
+                                className="inline-flex max-w-[190px] items-center gap-1.5 truncate text-sm text-[#075EB5] transition hover:text-[#064D94] hover:underline"
                                 title={application.url}
                               >
                                 <span className="truncate">
@@ -823,7 +809,7 @@ const ApprovedApplications = () => {
                                 />
                               </a>
                             ) : (
-                              <span className="text-sm text-gray-500">
+                              <span className="text-sm text-slate-400">
                                 —
                               </span>
                             )}
@@ -831,10 +817,10 @@ const ApprovedApplications = () => {
 
                           {/* Submission Date */}
                           <td className="px-5 py-4">
-                            <div className="flex items-center gap-2 text-sm text-gray-300">
+                            <div className="flex items-center gap-2 text-sm text-slate-600">
                               <CalendarDays
                                 size={15}
-                                className="text-gray-500"
+                                className="text-slate-400"
                               />
 
                               {formatDate(application.created_at)}
@@ -857,10 +843,11 @@ const ApprovedApplications = () => {
                           {/* View Details */}
                           <td className="px-5 py-4 text-right">
                             <button
+                              type="button"
                               onClick={() =>
                                 setSelectedApplication(application)
                               }
-                              className="inline-flex items-center gap-2 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-3.5 py-2 text-sm font-semibold text-indigo-400 transition hover:border-indigo-500 hover:bg-indigo-600 hover:text-white"
+                              className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3.5 py-2 text-sm font-semibold text-[#075EB5] transition hover:border-[#075EB5] hover:bg-[#075EB5] hover:text-white"
                             >
                               <Eye size={15} />
                               View Details
@@ -875,7 +862,7 @@ const ApprovedApplications = () => {
             )}
         </div>
 
-        <p className="mt-4 text-xs text-gray-500">
+        <p className="mt-4 text-xs text-slate-400">
           Application information is retrieved from the approved
           applications service.
         </p>
