@@ -661,6 +661,17 @@ function App() {
           />
 
           <Route
+            path='/auditor/consentscanner/'
+            element={
+              <ProtectedRoute allowedRoles={[2]}>
+                <DashboardLayout role="auditor">
+                  <ConsentScanner />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/consent-management/:publicAuditId"
             element={
               <ProtectedRoute allowedRoles={[2]}>
@@ -673,14 +684,6 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={[2]}>
                 <ConsentAutoAudit />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path='/auditor/consentscanner/'
-            element={
-              <ProtectedRoute allowedRoles={[2]}>
-                <ConsentScanner />
               </ProtectedRoute>
             }
           />
