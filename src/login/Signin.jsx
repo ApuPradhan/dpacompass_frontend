@@ -40,11 +40,11 @@ const Signin = () => {
     const otpInputRefs = useRef([]);
 
     // Username role-check state: controls the Auditee-only selector.
-    const [usernameCheckLoading, setUsernameCheckLoading] = useState(false);
-    const [isAuditee, setIsAuditee] = useState(false);
-    const [auditOptions, setAuditOptions] = useState([]);
-    const [selectedAuditOption, setSelectedAuditOption] = useState("");
-    const usernameCheckRequest = useRef(0);
+    // const [usernameCheckLoading, setUsernameCheckLoading] = useState(false);
+    // const [isAuditee, setIsAuditee] = useState(false);
+    // const [auditOptions, setAuditOptions] = useState([]);
+    // const [selectedAuditOption, setSelectedAuditOption] = useState("");
+    // const usernameCheckRequest = useRef(0);
 
     const fetchCaptcha = async () => {
         try {
@@ -80,88 +80,88 @@ const Signin = () => {
         fetchCaptcha();
     }, []);
 
-    // Check the username role while the user types.
-    // Debounce requests to avoid calling the API on every keystroke.
-    useEffect(() => {
-        const username = formData.username.trim();
-        const requestId = ++usernameCheckRequest.current;
+    // // Check the username role while the user types.
+    // // Debounce requests to avoid calling the API on every keystroke.
+    // useEffect(() => {
+    //     const username = formData.username.trim();
+    //     const requestId = ++usernameCheckRequest.current;
 
-        if (!username) {
-            setIsAuditee(false);
-            setAuditOptions([]);
-            setSelectedAuditOption("");
-            setUsernameCheckLoading(false);
-            return undefined;
-        }
+    //     if (!username) {
+    //         setIsAuditee(false);
+    //         setAuditOptions([]);
+    //         setSelectedAuditOption("");
+    //         setUsernameCheckLoading(false);
+    //         return undefined;
+    //     }
 
-        const timeoutId = window.setTimeout(async () => {
-            setUsernameCheckLoading(true);
+    //     const timeoutId = window.setTimeout(async () => {
+    //         setUsernameCheckLoading(true);
 
-            try {
-                const response = await fetch(
-                    `${API_BASE_URL}/api/auth/username-role-check/`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Accept: "application/json",
-                        },
-                        body: JSON.stringify({ username }),
-                    }
-                );
+    //         try {
+    //             const response = await fetch(
+    //                 `${API_BASE_URL}/api/auth/username-role-check/`,
+    //                 {
+    //                     method: "POST",
+    //                     headers: {
+    //                         "Content-Type": "application/json",
+    //                         Accept: "application/json",
+    //                     },
+    //                     body: JSON.stringify({ username }),
+    //                 }
+    //             );
 
-                if (!response.ok) {
-                    throw new Error(
-                        `Username role check failed. HTTP ${response.status}`
-                    );
-                }
+    //             if (!response.ok) {
+    //                 throw new Error(
+    //                     `Username role check failed. HTTP ${response.status}`
+    //                 );
+    //             }
 
-                const data = await response.json();
+    //             const data = await response.json();
 
-                // Ignore responses for an older username.
-                if (requestId !== usernameCheckRequest.current) return;
+    //             // Ignore responses for an older username.
+    //             if (requestId !== usernameCheckRequest.current) return;
 
-                const auditee = data.is_auditee === true;
-                const options = Array.isArray(data.audit_options)
-                    ? data.audit_options.filter(
-                        (option) =>
-                            option &&
-                            typeof option.value === "string" &&
-                            typeof option.label === "string"
-                    )
-                    : [];
+    //             const auditee = data.is_auditee === true;
+    //             const options = Array.isArray(data.audit_options)
+    //                 ? data.audit_options.filter(
+    //                     (option) =>
+    //                         option &&
+    //                         typeof option.value === "string" &&
+    //                         typeof option.label === "string"
+    //                 )
+    //                 : [];
 
-                setIsAuditee(auditee);
-                setAuditOptions(auditee ? options : []);
+    //             setIsAuditee(auditee);
+    //             setAuditOptions(auditee ? options : []);
 
-                setSelectedAuditOption((current) => {
-                    if (!auditee || options.length === 0) return "";
+    //             setSelectedAuditOption((current) => {
+    //                 if (!auditee || options.length === 0) return "";
 
-                    return options.some((option) => option.value === current)
-                        ? current
-                        : options[0].value;
-                });
+    //                 return options.some((option) => option.value === current)
+    //                     ? current
+    //                     : options[0].value;
+    //             });
 
-                if (!auditee) {
-                    localStorage.removeItem("auditee_audit_option");
-                }
-            } catch (error) {
-                if (requestId !== usernameCheckRequest.current) return;
+    //             if (!auditee) {
+    //                 localStorage.removeItem("auditee_audit_option");
+    //             }
+    //         } catch (error) {
+    //             if (requestId !== usernameCheckRequest.current) return;
 
-                console.error("Username role check error:", error);
-                setIsAuditee(false);
-                setAuditOptions([]);
-                setSelectedAuditOption("");
-                localStorage.removeItem("auditee_audit_option");
-            } finally {
-                if (requestId === usernameCheckRequest.current) {
-                    setUsernameCheckLoading(false);
-                }
-            }
-        }, 400);
+    //             console.error("Username role check error:", error);
+    //             setIsAuditee(false);
+    //             setAuditOptions([]);
+    //             setSelectedAuditOption("");
+    //             localStorage.removeItem("auditee_audit_option");
+    //         } finally {
+    //             if (requestId === usernameCheckRequest.current) {
+    //                 setUsernameCheckLoading(false);
+    //             }
+    //         }
+    //     }, 400);
 
-        return () => window.clearTimeout(timeoutId);
-    }, [formData.username]);
+    //     return () => window.clearTimeout(timeoutId);
+    // }, [formData.username]);
 
     // Five-minute resend cooldown, active only while the OTP screen is visible.
     useEffect(() => {
@@ -319,12 +319,12 @@ const Signin = () => {
         localStorage.setItem("refresh", data.refresh);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        if (data.user?.role === 3 && isAuditee && selectedAuditOption) {
-            localStorage.setItem("auditee_mode", selectedAuditOption);
-        } else {
-            localStorage.removeItem("auditee_mode");
-            localStorage.removeItem("auditee_audit_option");
-        }
+        // if (data.user?.role === 3 && isAuditee && selectedAuditOption) {
+        //     localStorage.setItem("auditee_mode", selectedAuditOption);
+        // } else {
+        //     localStorage.removeItem("auditee_mode");
+        //     localStorage.removeItem("auditee_audit_option");
+        // }
 
         const role = data.user?.role;
         if (role === 3) navigate("/devdashboard");
@@ -399,15 +399,15 @@ const Signin = () => {
             return;
         }
 
-        if (usernameCheckLoading) {
-            toast.info("Please wait while we verify your username.");
-            return;
-        }
+        // if (usernameCheckLoading) {
+        //     toast.info("Please wait while we verify your username.");
+        //     return;
+        // }
 
-        if (isAuditee && !selectedAuditOption) {
-            toast.warn("Please select an audit type.");
-            return;
-        }
+        // if (isAuditee && !selectedAuditOption) {
+        //     toast.warn("Please select an audit type.");
+        //     return;
+        // }
 
         try {
             setLoginLoading(true);
@@ -683,7 +683,7 @@ const Signin = () => {
                         />
                     </div>
 
-                    {/* AUDIT OPTION - AUDITEE USERS ONLY */}
+                    {/* AUDIT OPTION - AUDITEE USERS ONLY
                     {isAuditee && (
                         <div className="rounded-xl border border-sky-200 bg-sky-50/80 p-4">
                             <div className="mb-2 flex items-center justify-between gap-3">
@@ -732,13 +732,13 @@ const Signin = () => {
                                 )}
                             </select>
                         </div>
-                    )}
+                    )} */}
 
-                    {usernameCheckLoading && (
+                    {/* {usernameCheckLoading && (
                         <p className="text-xs text-slate-500">
                             Checking account type...
                         </p>
-                    )}
+                    )} */}
 
                     <div>
                         <label

@@ -1,6 +1,6 @@
+
 import { useEffect, useState } from "react";
 import AuditTable from "../AdminDashboard/AuditTable";
-import { cardClass } from "../theme";
 import { useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import Loader from "../utilities/Loader";
@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import { fetchWithAuth } from "../utilities/fetchWithAuth";
 
 export default function RejectedApplications() {
-
     const navigate = useNavigate();
 
     const [userMap, setUserMap] = useState({});
@@ -24,6 +23,7 @@ export default function RejectedApplications() {
     // =========================
     const safeJson = async (res) => {
         const text = await res.text();
+
         try {
             return JSON.parse(text);
         } catch {
@@ -47,12 +47,12 @@ export default function RejectedApplications() {
             }
 
             const map = {};
+
             data.data.forEach((t) => {
                 map[t.id] = t.name;
             });
 
             setTypeMap(map);
-
         } catch (err) {
             console.error(err);
             toast.error(err.message);
@@ -73,12 +73,13 @@ export default function RejectedApplications() {
 
             if (!res.ok) {
                 throw new Error(
-                    data?.detail || data?.message || "Failed to fetch applications"
+                    data?.detail ||
+                    data?.message ||
+                    "Failed to fetch applications"
                 );
             }
 
             setAudits(data);
-
         } catch (err) {
             console.error(err);
             setError(err.message);
@@ -105,7 +106,6 @@ export default function RejectedApplications() {
             }
 
             return data.data;
-
         } catch (err) {
             console.error(err);
             return null;
@@ -128,13 +128,16 @@ export default function RejectedApplications() {
 
         const fetchOwners = async () => {
             try {
-                const uniqueOwnerIds = [...new Set(audits.map(a => a.owner))];
+                const uniqueOwnerIds = [
+                    ...new Set(audits.map((a) => a.owner)),
+                ];
 
                 const results = await Promise.all(
-                    uniqueOwnerIds.map(id => fetchUserById(id))
+                    uniqueOwnerIds.map((id) => fetchUserById(id))
                 );
 
                 const map = {};
+
                 results.forEach((user) => {
                     if (user) {
                         map[user.id] = user.name;
@@ -142,7 +145,6 @@ export default function RejectedApplications() {
                 });
 
                 setUserMap(map);
-
             } catch (err) {
                 console.error(err);
             }
@@ -167,48 +169,129 @@ export default function RejectedApplications() {
         description: a.description,
         created_at: a.created_at,
         status: a.status,
-        remarks: a.remarks
+        remarks: a.remarks,
     }));
 
     // =========================
     // UI
     // =========================
     return (
-        <div className="min-h-screen bg-linear-to-br from-[#0f172a] to-[#1e293b] text-white p-6">
+        <div className="min-h-screen bg-[#F4F7FB] px-4 py-6 sm:px-6 lg:px-8">
 
-            {/* Back */}
-            <div
-                className="mb-10 flex items-center gap-2 text-xl text-indigo-400 cursor-pointer hover:text-indigo-300"
-                onClick={() => navigate("/devdashboard")}
-            >
-                <FiArrowLeft size={16} />
-                <span>Back to Dashboard</span>
-            </div>
+            <div className="mx-auto w-full max-w-[1600px]">
 
-            <h1 className="text-2xl font-semibold text-indigo-300 mb-6">
-                Rejected Applications
-            </h1>
+                {/* Page Header */}
+                <div className="mb-7">
 
-            <div className={`${cardClass} p-4`}>
+                    <button
+                        onClick={() => navigate("/devdashboard")}
+                        className="mb-6 inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 hover:text-[#075EB5]"
+                    >
+                        <FiArrowLeft size={17} />
+                        Back to Dashboard
+                    </button>
 
-                {loading ? (
-                    <div className="flex items-center justify-center h-[40vh]">
-                        <Loader text="Loading applications..." />
+                    <div>
+                        <div className="mb-2 text-sm font-semibold text-[#075EB5]">
+                            Application Management
+                        </div>
+
+                        <h1 className="text-2xl font-bold tracking-tight text-[#14213D] sm:text-3xl">
+                            Rejected Applications
+                        </h1>
+
+                        <p className="mt-2 text-sm text-slate-500">
+                            View and review applications that have been rejected.
+                        </p>
                     </div>
-                ) : error ? (
-                    <div className="flex items-center justify-center h-[40vh]">
-                        <p className="text-red-400">{error}</p>
-                    </div>
-                ) : formattedAudits.length === 0 ? (
-                    <div>No records to show</div>
-                ) : (
-                    <AuditTable
-                        audits={formattedAudits}
-                        onView={setSelectedAudit}
-                        userMap={userMap}
-                    />
-                )}
+                </div>
 
+                {/* Application Records */}
+                <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+
+                    <div className="border-b border-slate-200 px-5 py-4 sm:px-6">
+                        <h2 className="text-base font-semibold text-[#14213D]">
+                            Rejected Application Records
+                        </h2>
+
+                        <p className="mt-1 text-sm text-slate-500">
+                            {formattedAudits.length} application(s) found
+                        </p>
+                    </div>
+
+                    <div className="p-4 sm:p-6">
+
+                        {/* Loading State */}
+                        {loading ? (
+                            <div className="flex min-h-[40vh] items-center justify-center">
+                                <Loader text="Loading applications..." />
+                            </div>
+                        ) : error ? (
+                            /* Error State */
+                            <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
+                                <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-red-500">
+                                    <span className="text-2xl font-bold">!</span>
+                                </div>
+
+                                <h3 className="font-semibold text-[#14213D]">
+                                    Unable to load applications
+                                </h3>
+
+                                <p className="mt-2 text-sm text-red-600">
+                                    {error}
+                                </p>
+
+                                <button
+                                    onClick={() => {
+                                        setLoading(true);
+                                        setError(null);
+                                        fetchAudits();
+                                    }}
+                                    className="mt-5 cursor-pointer rounded-lg bg-[#075EB5] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#064D94]"
+                                >
+                                    Try Again
+                                </button>
+                            </div>
+                        ) : formattedAudits.length === 0 ? (
+                            /* Empty State */
+                            <div className="flex min-h-[35vh] flex-col items-center justify-center text-center">
+                                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-slate-200 bg-slate-50">
+                                    <svg
+                                        className="h-7 w-7 text-slate-400"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        strokeWidth={1.7}
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2Z"
+                                        />
+                                    </svg>
+                                </div>
+
+                                <h3 className="mt-4 text-base font-semibold text-[#14213D]">
+                                    No Rejected Applications
+                                </h3>
+
+                                <p className="mt-1 max-w-sm text-sm text-slate-500">
+                                    There are currently no rejected applications to display.
+                                </p>
+                            </div>
+                        ) : (
+                            /* Audit Table */
+                            <div className="overflow-x-auto">
+                                <AuditTable
+                                    audits={formattedAudits}
+                                    onView={setSelectedAudit}
+                                    userMap={userMap}
+                                />
+                            </div>
+                        )}
+
+                    </div>
+                </div>
             </div>
 
             {/* Modal */}

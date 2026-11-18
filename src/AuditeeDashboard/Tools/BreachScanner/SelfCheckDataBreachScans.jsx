@@ -24,11 +24,11 @@ const done = ["COMPLETED", "SUCCESS", "SUCCEEDED"];
 const failed = ["FAILED", "ERROR", "CANCELLED"];
 
 const sections = [
-    { key: "QUEUED", title: "Queued Scans", description: "Scans submitted and waiting to begin.", color: "text-amber-300", badge: "border-amber-700 bg-amber-950/30 text-amber-300" },
-    { key: "RUNNING", title: "Running Scans", description: "Scans currently being processed.", color: "text-blue-300", badge: "border-blue-700 bg-blue-950/30 text-blue-300" },
-    { key: "COMPLETED", title: "Completed Scans", description: "Scans that have finished successfully.", color: "text-emerald-300", badge: "border-emerald-700 bg-emerald-950/30 text-emerald-300" },
-    { key: "FAILED", title: "Failed Scans", description: "Scans that failed or were cancelled.", color: "text-red-300", badge: "border-red-800 bg-red-950/30 text-red-300" },
-    { key: "OTHER", title: "Other Status", description: "Scans with an unclassified status.", color: "text-slate-300", badge: "border-slate-700 bg-slate-800/60 text-slate-300" },
+    { key: "QUEUED", title: "Queued Scans", description: "Scans submitted and waiting to begin.", color: "text-amber-700", badge: "border-amber-200 bg-amber-50 text-amber-700" },
+    { key: "RUNNING", title: "Running Scans", description: "Scans currently being processed.", color: "text-blue-700", badge: "border-blue-200 bg-blue-50 text-blue-700" },
+    { key: "COMPLETED", title: "Completed Scans", description: "Scans that have finished successfully.", color: "text-emerald-700", badge: "border-emerald-200 bg-emerald-50 text-emerald-700" },
+    { key: "FAILED", title: "Failed Scans", description: "Scans that failed or were cancelled.", color: "text-red-700", badge: "border-red-200 bg-red-50 text-red-700" },
+    { key: "OTHER", title: "Other Status", description: "Scans with an unclassified status.", color: "text-slate-600", badge: "border-slate-200 bg-slate-100 text-slate-600" },
 ];
 
 const groupScans = (scans) => {
@@ -45,11 +45,11 @@ const groupScans = (scans) => {
 };
 
 function StatusIcon({ status }) {
-    if (done.includes(status)) return <CircleCheck size={17} className="text-emerald-400" />;
-    if (failed.includes(status)) return <CircleX size={17} className="text-red-400" />;
-    if (["RUNNING", "IN_PROGRESS", "PROCESSING"].includes(status)) return <LoaderCircle size={17} className="animate-spin text-blue-400" />;
-    if (["PENDING", "QUEUED"].includes(status)) return <Clock3 size={17} className="text-amber-400" />;
-    return <CircleAlert size={17} className="text-slate-400" />;
+    if (done.includes(status)) return <CircleCheck size={17} className="text-emerald-700" />;
+    if (failed.includes(status)) return <CircleX size={17} className="text-red-600" />;
+    if (["RUNNING", "IN_PROGRESS", "PROCESSING"].includes(status)) return <LoaderCircle size={17} className="animate-spin text-blue-700" />;
+    if (["PENDING", "QUEUED"].includes(status)) return <Clock3 size={17} className="text-amber-700" />;
+    return <CircleAlert size={17} className="text-slate-500" />;
 }
 
 export default function SelfCheckDataBreachScans() {
@@ -264,52 +264,57 @@ export default function SelfCheckDataBreachScans() {
     const startNew = () => navigate("/user/self-check/data-breach-scanner");
 
     return (
-        <div className="min-h-screen bg-[#070d1d] text-white">
+        <div className="min-h-screen bg-[#F4F7FB] text-[#14213D]">
             <div className="mx-auto max-w-7xl px-4 py-8">
-                <button onClick={() => navigate("/devdashboard")} className="mb-8 flex items-center gap-2 text-indigo-400 hover:text-indigo-300">
+                <button onClick={() => navigate("/devdashboard")} className="mb-8 flex cursor-pointer items-center gap-2 text-[#075EB5] hover:text-[#064D94]">
                     <ArrowLeft size={18} /> Back to Dashboard
                 </button>
 
                 <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h1 className="text-2xl font-semibold">My PII-in-Transit Scans</h1>
-                        <p className="mt-2 text-sm text-slate-400">View submitted scans and monitor their execution status.</p>
+                        <p className="mt-2 text-sm text-slate-500">View submitted scans and monitor their execution status.</p>
                     </div>
                     <div className="flex gap-3">
-                        <button onClick={() => loadScans(true)} disabled={refreshing} className="flex items-center gap-2 rounded-lg border border-slate-700 bg-[#0b1324] px-4 py-2.5 text-sm hover:bg-slate-800 disabled:opacity-60">
+                        <button onClick={() => loadScans(true)} disabled={refreshing} className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm hover:bg-slate-100 disabled:opacity-60">
                             <RefreshCw size={16} className={refreshing ? "animate-spin" : ""} /> Refresh
                         </button>
-                        <button onClick={startNew} className="rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium hover:bg-indigo-500">Start New Scan</button>
+                        <button
+                            onClick={startNew}
+                            className="cursor-pointer rounded-lg bg-[#075EB5] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#064D94]"
+                        >
+                            Start New Scan
+                        </button>
                     </div>
                 </div>
 
-                {error && <div role="alert" className="mb-6 rounded-lg border border-red-800 bg-red-950/30 p-4 text-sm text-red-300">{error}</div>}
+                {error && <div role="alert" className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>}
                 {reportError && (
-                    <div role="alert" className="mb-6 flex items-center justify-between gap-3 rounded-lg border border-red-800 bg-red-950/30 p-4 text-sm text-red-300">
+                    <div role="alert" className="mb-6 flex items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                         <span>{reportError}</span>
-                        <button onClick={() => setReportError("")} aria-label="Dismiss report error" className="text-red-300 hover:text-white"><X size={17} /></button>
+                        <button onClick={() => setReportError("")} aria-label="Dismiss report error" className="cursor-pointer text-red-700 hover:text-[#14213D]"><X size={17} /></button>
                     </div>
                 )}
 
                 <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-5">
                     {sections.map((section) => (
-                        <div key={section.key} className="rounded-xl border border-slate-800 bg-[#0b1324] p-4">
-                            <p className="text-sm text-slate-400">{section.title}</p>
+                        <div key={section.key} className="rounded-xl border border-slate-200 bg-white p-4">
+                            <p className="text-sm text-slate-500">{section.title}</p>
                             <p className={`mt-2 text-2xl font-semibold ${section.color}`}>{groups[section.key].length}</p>
                         </div>
                     ))}
                 </div>
 
                 {loading ? (
-                    <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-800 bg-[#0b1324] p-12 text-slate-400">
+                    <div className="flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white p-12 text-slate-500">
                         <LoaderCircle size={20} className="animate-spin" /> Fetching your scans...
                     </div>
                 ) : scans.length === 0 ? (
-                    <div className="rounded-xl border border-slate-800 bg-[#0b1324] p-10 text-center">
+                    <div className="rounded-xl border border-slate-200 bg-white p-10 text-center">
                         <ShieldCheck size={34} className="mx-auto text-slate-500" />
                         <h2 className="mt-4 text-lg font-semibold">No scans found</h2>
-                        <p className="mt-2 text-sm text-slate-400">You have not submitted a Self-Check PII-in-Transit scan yet.</p>
-                        <button onClick={startNew} className="mt-5 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium hover:bg-indigo-500">Start Your First Scan</button>
+                        <p className="mt-2 text-sm text-slate-500">You have not submitted a Self-Check PII-in-Transit scan yet.</p>
+                        <button onClick={startNew} className="mt-5 cursor-pointer rounded-lg bg-[#075EB5] px-4 py-2.5 text-sm text-white font-medium hover:bg-[#064D94]">Start Your First Scan</button>
                     </div>
                 ) : (
                     <div className="space-y-8">
@@ -324,12 +329,12 @@ export default function SelfCheckDataBreachScans() {
                                 </div>
 
                                 {groups[section.key].length === 0 ? (
-                                    <div className="rounded-xl border border-slate-800 bg-[#0b1324] p-6 text-sm text-slate-500">No {section.title.toLowerCase()}.</div>
+                                    <div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">No {section.title.toLowerCase()}.</div>
                                 ) : (
-                                    <div className="overflow-x-auto rounded-xl border border-slate-800 bg-[#0b1324]">
+                                    <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
                                         <table className="w-full min-w-[1100px]">
                                             <thead>
-                                                <tr className="border-b border-slate-800 text-left text-xs text-slate-400">
+                                                <tr className="border-b border-slate-200 text-left text-xs text-slate-500">
                                                     <th className="px-5 py-4">Website</th>
                                                     <th className="px-5 py-4">Scan ID</th>
                                                     <th className="px-5 py-4">Job ID</th>
@@ -346,14 +351,14 @@ export default function SelfCheckDataBreachScans() {
                                                     const isReportLoading = reportLoadingId === String(reportId);
 
                                                     return (
-                                                        <tr key={idOf(scan) ?? i} className={`border-b border-slate-800 last:border-0 hover:bg-slate-900/50 ${String(idOf(selected)) === String(idOf(scan)) ? "bg-indigo-500/5" : ""}`}>
+                                                        <tr key={idOf(scan) ?? i} className={`border-b border-slate-200 last:border-0 hover:bg-slate-50/50 ${String(idOf(selected)) === String(idOf(scan)) ? "bg-blue-50" : ""}`}>
                                                             <td className="max-w-xs break-all px-5 py-4 text-sm">
-                                                                <span className="inline-flex items-start gap-2"><Globe size={16} className="mt-0.5 shrink-0 text-indigo-400" />{urlOf(scan)}</span>
+                                                                <span className="inline-flex items-start gap-2"><Globe size={16} className="mt-0.5 shrink-0 text-[#075EB5]" />{urlOf(scan)}</span>
                                                             </td>
-                                                            <td className="px-5 py-4 text-sm text-slate-300">{scan.public_audit_id ?? "N/A"}</td>
-                                                            <td className="px-5 py-4 text-sm text-slate-400">{scan.job_id ?? "N/A"}</td>
-                                                            <td className="px-5 py-4 text-sm text-slate-400">{dateOf(scan.created_at ?? scan.submitted_at ?? scan.started_at)}</td>
-                                                            <td className="px-5 py-4 text-sm text-slate-400">{scan.max_pages ?? "N/A"}</td>
+                                                            <td className="px-5 py-4 text-sm text-slate-600">{scan.public_audit_id ?? "N/A"}</td>
+                                                            <td className="px-5 py-4 text-sm text-slate-500">{scan.job_id ?? "N/A"}</td>
+                                                            <td className="px-5 py-4 text-sm text-slate-500">{dateOf(scan.created_at ?? scan.submitted_at ?? scan.started_at)}</td>
+                                                            <td className="px-5 py-4 text-sm text-slate-500">{scan.max_pages ?? "N/A"}</td>
                                                             <td className="px-5 py-4">
                                                                 <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs ${section.badge}`}>
                                                                     <StatusIcon status={status} />{status.replaceAll("_", " ")}
@@ -361,44 +366,36 @@ export default function SelfCheckDataBreachScans() {
                                                             </td>
                                                             <td className="px-5 py-4 text-center">
                                                                 {done.includes(status) ? (
-                                                                    <div className="flex flex-wrap items-center justify-center gap-2">
-                                                                        {/* Original scan-result/details action: keep this separate from the HTML report. */}
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => {
-                                                                                const publicAuditId = scan.public_audit_id;
-                                                                                if (!publicAuditId) {
-                                                                                    setError("Public Audit ID is unavailable for this completed scan.");
-                                                                                    return;
-                                                                                }
-                                                                                setSelected(null);
-                                                                                navigate(`/user/self-check/breach-scans/${encodeURIComponent(publicAuditId)}/result`);
-                                                                            }}
-                                                                            className="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800/70 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-700"
-                                                                            title="View Scan Result"
-                                                                        >
-                                                                            <Eye size={15} /> View Result
-                                                                        </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            const publicAuditId = scan.public_audit_id;
 
-                                                                        {/* Fetch and preview the generated HTML report. */}
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => handleViewReport(scan)}
-                                                                            disabled={reportLoadingId !== null}
-                                                                            className="inline-flex items-center gap-2 rounded-lg border border-indigo-500/40 bg-indigo-600/15 px-3 py-2 text-sm font-medium text-indigo-300 transition hover:border-indigo-400 hover:bg-indigo-600/25 disabled:cursor-not-allowed disabled:opacity-50"
-                                                                            title="View HTML Report"
-                                                                        >
-                                                                            {isReportLoading ? <LoaderCircle size={15} className="animate-spin" /> : <FileText size={15} />}
-                                                                            {isReportLoading ? "Loading..." : "View Report"}
-                                                                        </button>
-                                                                    </div>
+                                                                            if (!publicAuditId) {
+                                                                                setError("Public Audit ID is unavailable for this completed scan.");
+                                                                                return;
+                                                                            }
+
+                                                                            setSelected(null);
+                                                                            navigate(
+                                                                                `/user/self-check/breach-scans/${encodeURIComponent(publicAuditId)}/result`
+                                                                            );
+                                                                        }}
+                                                                        className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-medium text-[#075EB5] transition hover:border-blue-300 hover:bg-blue-100"
+                                                                        title="View Scan Result"
+                                                                    >
+                                                                        <Eye size={15} />
+                                                                        View Result
+                                                                    </button>
                                                                 ) : (
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => setSelected(scan)}
-                                                                        className="inline-flex items-center gap-2 text-sm text-indigo-400 hover:text-indigo-300"
+                                                                        className="inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-[#075EB5] transition hover:text-[#064D94]"
+                                                                        title="View Scan Details"
                                                                     >
-                                                                        <Eye size={16} /> View Details
+                                                                        <Eye size={16} />
+                                                                        View Details
                                                                     </button>
                                                                 )}
                                                             </td>
@@ -415,13 +412,13 @@ export default function SelfCheckDataBreachScans() {
                 )}
 
                 {selected && (
-                    <section className="mt-10 overflow-hidden rounded-xl border border-slate-800 bg-[#0b1324]">
-                        <div className="flex items-center justify-between border-b border-slate-800 px-5 py-4">
+                    <section className="mt-10 overflow-hidden rounded-xl border border-slate-200 bg-white">
+                        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
                             <div>
-                                <h2 className="flex items-center gap-2 font-semibold"><Eye size={18} className="text-indigo-400" /> Scan Details</h2>
+                                <h2 className="flex items-center gap-2 font-semibold"><Eye size={18} className="text-[#075EB5]" /> Scan Details</h2>
                                 <p className="mt-1 break-all text-xs text-slate-500">{idOf(selected) ?? "Scan ID unavailable"}</p>
                             </div>
-                            <button onClick={() => setSelected(null)} className="rounded-lg border border-slate-700 px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-800">Close</button>
+                            <button onClick={() => setSelected(null)} className="cursor-pointer rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100">Close</button>
                         </div>
 
                         <div className="grid gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -438,37 +435,37 @@ export default function SelfCheckDataBreachScans() {
                             ].map(([label, value]) => (
                                 <div key={label}>
                                     <p className="text-xs text-slate-500">{label}</p>
-                                    <p className="mt-1 break-words text-sm text-slate-200">{value}</p>
+                                    <p className="mt-1 break-words text-sm text-slate-700">{value}</p>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="border-t border-slate-800 p-5">
-                            <div className="mb-3 flex items-center gap-2"><Layers3 size={17} className="text-indigo-400" /><h3 className="text-sm font-semibold text-slate-200">Selected Scanners</h3></div>
+                        <div className="border-t border-slate-200 p-5">
+                            <div className="mb-3 flex items-center gap-2"><Layers3 size={17} className="text-[#075EB5]" /><h3 className="text-sm font-semibold text-slate-700">Selected Scanners</h3></div>
                             {Array.isArray(selected.selected_scanners) && selected.selected_scanners.length ? (
                                 <div className="flex flex-wrap gap-2">
-                                    {selected.selected_scanners.map((scanner) => <span key={scanner} className="rounded-lg border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs text-slate-300">{scanner.replaceAll("_", " ")}</span>)}
+                                    {selected.selected_scanners.map((scanner) => <span key={scanner} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-600">{scanner.replaceAll("_", " ")}</span>)}
                                 </div>
                             ) : <p className="text-sm text-slate-500">Scanner selection details are not available.</p>}
                         </div>
 
                         {selected.error_message && (
-                            <div className="border-t border-red-900/60 bg-red-950/20 p-5">
-                                <p className="text-xs font-semibold uppercase tracking-wide text-red-300">Scan Error</p>
-                                <p className="mt-2 break-words whitespace-pre-wrap text-sm text-red-200">{selected.error_message}</p>
+                            <div className="border-t border-red-200 bg-red-50 p-5">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-red-700">Scan Error</p>
+                                <p className="mt-2 break-words whitespace-pre-wrap text-sm text-red-700">{selected.error_message}</p>
                             </div>
                         )}
 
                         {selected.result && (
-                            <div className="border-t border-slate-800 p-5">
+                            <div className="border-t border-slate-200 p-5">
                                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Result Data</p>
-                                <pre className="max-h-[500px] overflow-auto whitespace-pre-wrap break-words rounded-lg border border-slate-800 bg-slate-950/60 p-4 text-xs leading-5 text-slate-300">{JSON.stringify(selected.result, null, 2)}</pre>
+                                <pre className="max-h-[500px] overflow-auto whitespace-pre-wrap break-words rounded-lg border border-slate-200 bg-slate-50 p-4 text-xs leading-5 text-slate-600">{JSON.stringify(selected.result, null, 2)}</pre>
                             </div>
                         )}
                     </section>
                 )}
 
-                <div className="mt-10 border-t border-slate-800 pt-5 text-center text-xs text-slate-500">Self-Check PII-in-Transit Scanner · DPACOMPASS</div>
+                <div className="mt-10 border-t border-slate-200 pt-5 text-center text-xs text-slate-500">Self-Check PII-in-Transit Scanner · DPACOMPASS</div>
             </div>
 
             {/* HTML REPORT PREVIEW MODAL */}
@@ -479,19 +476,19 @@ export default function SelfCheckDataBreachScans() {
                         if (event.target === event.currentTarget) setSelectedReport(null);
                     }}
                 >
-                    <div className="flex max-h-[95vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-[#0b1324] shadow-2xl">
-                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 px-5 py-4">
+                    <div className="flex max-h-[95vh] w-full max-w-7xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
                             <div className="flex items-center gap-3">
-                                <div className="rounded-lg border border-indigo-500/30 bg-indigo-500/10 p-2 text-indigo-400"><ShieldCheck size={20} /></div>
+                                <div className="rounded-lg border border-blue-200 bg-blue-50 p-2 text-[#075EB5]"><ShieldCheck size={20} /></div>
                                 <div>
-                                    <h2 className="font-semibold text-white">PII-in-Transit Scan Report</h2>
-                                    <p className="mt-1 text-xs text-slate-400">{selectedReport.public_audit_id || selectedReport.audit_id || selectedReport.job_id || "Audit ID unavailable"}</p>
+                                    <h2 className="font-semibold text-[#14213D]">PII-in-Transit Scan Report</h2>
+                                    <p className="mt-1 text-xs text-slate-500">{selectedReport.public_audit_id || selectedReport.audit_id || selectedReport.job_id || "Audit ID unavailable"}</p>
                                 </div>
                             </div>
                             <div className="flex flex-wrap items-center gap-2">
                                 <button
                                     onClick={handleDownloadReport}
-                                    className="inline-flex items-center gap-2 rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-xs font-medium text-white transition hover:bg-slate-700"
+                                    className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-xs font-medium text-[#14213D] transition hover:bg-slate-200"
                                 >
                                     <Download size={14} />
                                     Download HTML
@@ -500,7 +497,7 @@ export default function SelfCheckDataBreachScans() {
                                 <button
                                     onClick={handleDownloadPDF}
                                     disabled={pdfLoading}
-                                    className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-3 py-2 text-xs font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#075EB5] px-3 py-2 text-xs font-medium text-[#14213D] transition hover:bg-[#064D94] disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     {pdfLoading ? (
                                         <LoaderCircle size={14} className="animate-spin" />
@@ -513,7 +510,7 @@ export default function SelfCheckDataBreachScans() {
                                 <button
                                     onClick={() => setSelectedReport(null)}
                                     aria-label="Close report preview"
-                                    className="rounded-lg border border-slate-700 p-2 text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                                    className="cursor-pointer rounded-lg border border-slate-200 p-2 text-slate-600 transition hover:bg-slate-100 hover:text-[#14213D]"
                                 >
                                     <X size={17} />
                                 </button>
@@ -522,7 +519,7 @@ export default function SelfCheckDataBreachScans() {
                         <div className="min-h-0 flex-1 bg-slate-200 p-2 sm:p-4">
                             <iframe title="PII-in-Transit Scan Report" srcDoc={selectedReport.report_html} sandbox="" className="h-[75vh] w-full rounded-lg border border-slate-300 bg-white" />
                         </div>
-                        <div className="border-t border-slate-800 px-5 py-3 text-xs text-slate-400">PII-in-Transit Scanner report loaded from the backend.</div>
+                        <div className="border-t border-slate-200 px-5 py-3 text-xs text-slate-500">PII-in-Transit Scanner report loaded from the backend.</div>
                     </div>
                 </div>
             )}

@@ -1,9 +1,13 @@
+
 import { useNavigate } from "react-router-dom";
 import {
     FiArrowLeft,
     FiCheckCircle,
     FiClock,
     FiShield,
+    FiMail,
+    FiCheck,
+    FiArrowRight,
 } from "react-icons/fi";
 import dpacompassBg from "../assets/background_landingpage.jpeg";
 
@@ -11,15 +15,13 @@ export default function PendingApproval() {
     const navigate = useNavigate();
 
     return (
-        <main
-            className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#eaf7ff] bg-cover bg-center bg-no-repeat px-4 py-10"
-            style={{ backgroundImage: `url(${dpacompassBg})` }}
-        >
+        <main className="pending-approval-page relative flex min-h-screen items-center justify-center overflow-x-hidden bg-[#F4F7FB] px-4 py-4 sm:px-6">
+
             <style>{`
-                @keyframes approvalCardEnter {
+                @keyframes cardEnter {
                     0% {
                         opacity: 0;
-                        transform: translateY(28px) scale(0.97);
+                        transform: translateY(25px) scale(0.98);
                         filter: blur(5px);
                     }
                     100% {
@@ -29,14 +31,14 @@ export default function PendingApproval() {
                     }
                 }
 
-                @keyframes approvalIconEnter {
+                @keyframes iconEnter {
                     0% {
                         opacity: 0;
-                        transform: scale(0.55) rotate(-18deg);
+                        transform: scale(0.5) rotate(-15deg);
                     }
                     70% {
                         opacity: 1;
-                        transform: scale(1.08) rotate(4deg);
+                        transform: scale(1.08) rotate(5deg);
                     }
                     100% {
                         opacity: 1;
@@ -44,134 +46,328 @@ export default function PendingApproval() {
                     }
                 }
 
-                @keyframes approvalPulse {
-                    0%, 100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.18); }
-                    50% { box-shadow: 0 0 0 12px rgba(14, 165, 233, 0); }
+                @keyframes softPulse {
+                    0%, 100% {
+                        box-shadow: 0 0 0 0 rgba(7, 94, 181, 0.12);
+                    }
+                    50% {
+                        box-shadow: 0 0 0 10px rgba(7, 94, 181, 0);
+                    }
                 }
 
-                @keyframes approvalProgress {
-                    0% { transform: scaleX(0); }
-                    100% { transform: scaleX(1); }
+                @keyframes pendingPulse {
+                    0%, 100% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                    50% {
+                        opacity: 0.4;
+                        transform: scale(0.8);
+                    }
+                }
+
+                @keyframes contentEnter {
+                    from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+
+                @keyframes backgroundFloat {
+                    0%, 100% {
+                        transform: translate(0, 0);
+                    }
+                    50% {
+                        transform: translate(15px, -15px);
+                    }
                 }
 
                 .approval-card-enter {
-                    animation: approvalCardEnter 650ms cubic-bezier(.2,.8,.2,1) both;
+                    animation: cardEnter 650ms cubic-bezier(.2,.8,.2,1) both;
                 }
 
                 .approval-icon-enter {
                     animation:
-                        approvalIconEnter 650ms cubic-bezier(.2,.8,.2,1) 180ms both,
-                        approvalPulse 2.4s ease-in-out 900ms infinite;
+                        iconEnter 650ms cubic-bezier(.2,.8,.2,1) 150ms both,
+                        softPulse 2.8s ease-in-out 1s infinite;
                 }
 
-                .approval-progress {
-                    transform-origin: left;
-                    animation: approvalProgress 900ms ease-out 500ms both;
+                .approval-content-enter {
+                    animation: contentEnter 550ms ease-out 250ms both;
+                }
+
+                .approval-background-float {
+                    animation: backgroundFloat 9s ease-in-out infinite;
+                }
+
+                .approval-pending-dot {
+                    animation: pendingPulse 1.8s ease-in-out infinite;
+                }
+
+                @media (max-height: 760px) and (min-width: 768px) {
+                    .approval-main-content {
+                        padding-top: 16px !important;
+                        padding-bottom: 16px !important;
+                    }
+
+                    .approval-brand {
+                        margin-bottom: 12px !important;
+                    }
+
+                    .approval-success-icon {
+                        width: 54px !important;
+                        height: 54px !important;
+                        border-radius: 18px !important;
+                    }
+
+                    .approval-success-icon svg {
+                        width: 30px !important;
+                        height: 30px !important;
+                    }
+
+                    .approval-heading {
+                        margin-top: 10px !important;
+                    }
+
+                    .approval-progress-card {
+                        margin-top: 16px !important;
+                    }
+
+                    .approval-info {
+                        margin-top: 12px !important;
+                    }
+
+                    .approval-login {
+                        margin-top: 12px !important;
+                    }
+
+                    .approval-footer {
+                        margin-top: 12px !important;
+                        padding-top: 10px !important;
+                    }
                 }
 
                 @media (prefers-reduced-motion: reduce) {
                     .approval-card-enter,
                     .approval-icon-enter,
-                    .approval-progress {
+                    .approval-content-enter,
+                    .approval-background-float,
+                    .approval-pending-dot {
                         animation: none !important;
                     }
                 }
             `}</style>
 
-            <div className="absolute inset-0 bg-white/35" aria-hidden="true" />
+            {/* Background */}
             <div
-                className="pointer-events-none absolute -left-24 top-1/4 h-72 w-72 rounded-full bg-sky-300/20 blur-3xl"
-                aria-hidden="true"
-            />
-            <div
-                className="pointer-events-none absolute -right-20 bottom-10 h-80 w-80 rounded-full bg-blue-300/20 blur-3xl"
+                className="absolute inset-0 bg-cover bg-center opacity-[0.055]"
+                style={{ backgroundImage: `url(${dpacompassBg})` }}
                 aria-hidden="true"
             />
 
-            <section className="approval-card-enter relative z-10 w-full max-w-xl overflow-hidden rounded-3xl border border-white/90 bg-white/95 px-6 py-9 text-center shadow-[0_24px_80px_rgba(15,70,110,0.16)] backdrop-blur-xl sm:px-10 sm:py-11">
-                <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-sky-400 via-blue-600 to-cyan-400" />
+            <div
+                className="absolute inset-0 bg-gradient-to-br from-white/90 via-[#F4F7FB]/90 to-blue-50/80"
+                aria-hidden="true"
+            />
 
-                <div className="approval-icon-enter mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-50 to-blue-100 text-sky-700 ring-1 ring-sky-100">
-                    <FiClock size={37} strokeWidth={1.7} />
-                </div>
+            {/* Decorative Elements */}
+            <div
+                className="approval-background-float pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-blue-200/30 blur-[90px]"
+                aria-hidden="true"
+            />
 
-                <p className="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">
-                    DPACOMPASS · Account Registration
-                </p>
+            <div
+                className="approval-background-float pointer-events-none absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-sky-200/40 blur-[100px]"
+                aria-hidden="true"
+            />
 
-                <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
-                    Registration Successful
-                </h1>
+            {/* Main Card */}
+            <section className="approval-card-enter relative z-10 w-full max-w-3xl overflow-hidden rounded-3xl border border-white bg-white shadow-[0_20px_70px_rgba(15,45,85,0.12)]">
 
-                <p className="mt-2 text-lg font-semibold text-sky-700">
-                    Awaiting Administrator Approval
-                </p>
+                <div className="h-1.5 w-full bg-gradient-to-r from-[#075EB5] via-sky-400 to-cyan-400" />
 
-                <p className="mx-auto mt-5 max-w-md text-sm leading-7 text-slate-600 sm:text-base">
-                    Your email has been verified and your registration has been submitted
-                    successfully. Your account is now waiting for review by the administrator.
-                </p>
+                <div className="approval-main-content px-5 py-6 sm:px-9 sm:py-7 lg:px-11">
 
-                <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50/90 p-4 text-left sm:p-5">
-                    <div className="flex items-start gap-3">
-                        <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
-                            <FiCheckCircle size={20} />
+                    {/* Brand */}
+                    <div className="approval-brand mb-4 flex items-center justify-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#075EB5] text-white shadow-md shadow-blue-900/15">
+                            <FiShield size={21} />
                         </div>
-                        <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-slate-800">
-                                Email verification completed
+
+                        <div>
+                            <h2 className="text-lg font-extrabold tracking-tight text-[#14213D]">
+                                DPACOMPASS
+                            </h2>
+                            <p className="text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+                                Data Privacy Compliance
                             </p>
-                            <p className="mt-1 text-xs leading-5 text-slate-500">
-                                Your email address has been successfully verified.
-                            </p>
-                            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-emerald-100">
-                                <div className="approval-progress h-full w-full rounded-full bg-emerald-500" />
-                            </div>
                         </div>
                     </div>
 
-                    <div className="my-5 border-t border-slate-200" />
+                    {/* Success Icon */}
+                    <div className="approval-icon-enter approval-success-icon mx-auto flex h-[68px] w-[68px] items-center justify-center rounded-[22px] border border-blue-100 bg-gradient-to-br from-blue-50 to-sky-100 text-[#075EB5]">
+                        <FiCheckCircle size={37} strokeWidth={1.6} />
+                    </div>
 
-                    <div className="flex items-start gap-3">
-                        <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
-                            <FiShield size={20} />
+                    {/* Heading */}
+                    <div className="approval-content-enter approval-heading mt-3 text-center">
+                        <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1">
+                            <FiCheck size={12} className="text-emerald-600" />
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+                                Registration Completed
+                            </span>
                         </div>
-                        <div className="min-w-0 flex-1">
-                            <div className="flex flex-wrap items-center gap-2">
-                                <p className="text-sm font-semibold text-slate-800">
-                                    Administrator review
+
+                        <h1 className="text-2xl font-extrabold tracking-tight text-[#14213D] sm:text-[27px]">
+                            Registration Successful
+                        </h1>
+
+                        <p className="mt-1 text-sm font-semibold text-[#075EB5] sm:text-base">
+                            Awaiting Administrator Approval
+                        </p>
+
+                        <p className="mx-auto mt-2 max-w-xl text-xs leading-5 text-slate-500 sm:text-sm sm:leading-6">
+                            Your email has been verified and your registration
+                            has been submitted successfully. Your account is now
+                            awaiting review by the administrator.
+                        </p>
+                    </div>
+
+                    {/* Registration Progress */}
+                    <div className="approval-content-enter approval-progress-card mt-5 rounded-2xl border border-slate-200 bg-[#F8FAFD] p-4 sm:p-5">
+
+                        <div className="mb-4 flex items-center justify-between gap-3">
+                            <div>
+                                <h3 className="text-sm font-bold text-[#14213D]">
+                                    Registration Progress
+                                </h3>
+                                <p className="mt-0.5 text-[11px] text-slate-500">
+                                    Track your account activation process
                                 </p>
-                                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-700">
-                                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-500" />
-                                    Pending
-                                </span>
                             </div>
-                            <p className="mt-1 text-xs leading-5 text-slate-500">
-                                Your account will be activated once an administrator reviews
-                                and approves your registration.
+
+                            <span className="shrink-0 rounded-lg border border-blue-100 bg-blue-50 px-3 py-1.5 text-[10px] font-bold text-[#075EB5] sm:text-xs">
+                                1 of 2 completed
+                            </span>
+                        </div>
+
+                        {/* Two Progress Cards */}
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+
+                            {/* Email Verification */}
+                            <div className="rounded-xl border border-emerald-100 bg-white p-3.5 sm:p-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
+                                        <FiCheckCircle size={21} />
+                                    </div>
+
+                                    <div className="min-w-0">
+                                        <h4 className="text-xs font-bold text-[#14213D] sm:text-sm">
+                                            Email Verification
+                                        </h4>
+                                        <span className="mt-1 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-700">
+                                            Completed
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <p className="mt-3 text-[11px] leading-5 text-slate-500">
+                                    Your email address has been successfully verified.
+                                </p>
+
+                                <div className="mt-2 flex items-center gap-2 text-[10px] font-semibold text-emerald-700 sm:text-xs">
+                                    <FiMail size={13} />
+                                    Email successfully verified
+                                </div>
+                            </div>
+
+                            {/* Administrator Approval */}
+                            <div className="rounded-xl border border-amber-100 bg-white p-3.5 sm:p-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-amber-200 bg-amber-50 text-amber-600">
+                                        <FiClock size={20} />
+                                    </div>
+
+                                    <div className="min-w-0">
+                                        <h4 className="text-xs font-bold text-[#14213D] sm:text-sm">
+                                            Administrator Approval
+                                        </h4>
+
+                                        <span className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-700">
+                                            <span className="approval-pending-dot h-1.5 w-1.5 rounded-full bg-amber-500" />
+                                            Pending
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <p className="mt-3 text-[11px] leading-5 text-slate-500">
+                                    Your registration is waiting for review.
+                                    The administrator will approve your account
+                                    after verification.
+                                </p>
+
+                                <div className="mt-2 flex items-center gap-2 text-[10px] font-semibold text-amber-700 sm:text-xs">
+                                    <FiShield size={13} />
+                                    Account activation pending
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Information Message */}
+                    <div className="approval-content-enter approval-info mt-4 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/70 px-3.5 py-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-[#075EB5]">
+                            <FiMail size={15} />
+                        </div>
+
+                        <div>
+                            <p className="text-xs font-bold text-[#173B70]">
+                                What happens next?
+                            </p>
+                            <p className="mt-0.5 text-[11px] leading-5 text-slate-600">
+                                You will be notified when your account has been reviewed.
+                                Please sign in after receiving the approval confirmation.
                             </p>
                         </div>
                     </div>
-                </div>
 
-                <div className="mt-6 rounded-xl border border-sky-100 bg-sky-50/80 px-4 py-3">
-                    <p className="text-xs leading-5 text-slate-600">
-                        You will be notified when your account has been reviewed. Please sign in
-                        only after receiving the approval confirmation.
-                    </p>
-                </div>
+                    {/* Back to Login */}
+                    <div className="approval-content-enter approval-login mt-4">
+                        <button
+                            type="button"
+                            onClick={() => navigate("/signin")}
+                            className="group flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#075EB5] px-5 py-3 text-sm font-bold text-white shadow-md shadow-blue-900/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#064D94] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#075EB5] focus:ring-offset-2 active:translate-y-0"
+                        >
+                            <FiArrowLeft
+                                size={16}
+                                className="transition-transform duration-300 group-hover:-translate-x-1"
+                            />
+                            Back to Login
+                            <FiArrowRight
+                                size={15}
+                                className="ml-auto opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100"
+                            />
+                        </button>
+                    </div>
 
-                <button
-                    type="button"
-                    onClick={() => navigate("/signin")}
-                    className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-700/15 transition duration-200 hover:-translate-y-0.5 hover:from-sky-700 hover:to-blue-800 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
-                >
-                    <FiArrowLeft size={17} />
-                    Back to Login
-                </button>
+                    {/* Footer */}
+                    <div className="approval-content-enter approval-footer mt-4 border-t border-slate-100 pt-3 text-center">
+                        <p className="text-[10px] font-semibold tracking-wide text-slate-400">
+                            DATA PRIVACY
+                            <span className="mx-2 text-blue-300">•</span>
+                            SECURITY
+                            <span className="mx-2 text-blue-300">•</span>
+                            COMPLIANCE
+                        </p>
 
-                <div className="mt-7 border-t border-slate-200 pt-5 text-xs text-slate-400">
-                    Data Privacy · Security · Compliance
+                        <p className="mt-1 text-[9px] text-slate-300">
+                            DPACOMPASS Platform
+                        </p>
+                    </div>
                 </div>
             </section>
         </main>
